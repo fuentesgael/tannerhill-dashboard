@@ -1,0 +1,71 @@
+{
+  "data_notes": [
+    "Stock on hand is a 3PL snapshot dated 2026-02-16 — NOT live. It disagrees with Lena's verbal account (Trailhead Portable Grill ~40 units until Wednesday's shipment; Grill Pro ~1 month cover, no reorder placed), and this file does not override her account. The staleness is shown, not hidden — see 'as_of' on this section.",
+    "Revenue current-month figure is pending confirmation of a clean Amazon + Shopify export for the just-closed month — not yet available from any source file.",
+    "Profit after ads is FY2025 annual, the only breakdown BidWorks' spend data supports — not a true monthly figure. Refreshed whenever a new annual cut arrives, not monthly, until BidWorks (or internal tracking) provides spend by SKU monthly.",
+    "Supplier name (Yuhang Metalworks) intentionally excluded — not needed for any metric here, and Restricted per the Day 1 classification log."
+  ],
+
+  "revenue_vs_last_year": {
+    "as_of": "pending — current month not yet sourced",
+    "current_month_value": null,
+    "current_month_label": "TBD — awaiting confirmed Amazon + Shopify export for last closed month",
+    "last_year_same_month": {
+      "month": "2025-02",
+      "amazon": 67904,
+      "shopify": 19331,
+      "total": 87235
+    },
+    "source": "D02-02 Tannerhill FY2025 Financial Summary, Revenue by Month tab",
+    "scope": "Amazon + Shopify only, Kickstarter excluded"
+  },
+
+  "weeks_of_stock_cover": {
+    "as_of": "2026-02-16 (3PL snapshot — STALE, see data_notes)",
+    "flag_under_weeks": 6,
+    "products": [
+      {"sku": "TH-GRL-01", "name": "Trailhead Portable Grill", "on_hand": 440, "weekly_rate": 28.5, "weeks_cover": 15.4},
+      {"sku": "TH-GRL-02", "name": "Trailhead Grill Pro",      "on_hand": 111, "weekly_rate": 6.9,  "weeks_cover": 16.1},
+      {"sku": "TH-CID-06", "name": "Cast Iron Dutch Oven 6qt", "on_hand": 351, "weekly_rate": 21.4, "weeks_cover": 16.4},
+      {"sku": "TH-CIS-10", "name": "Cast Iron Skillet 10in",   "on_hand": 881, "weekly_rate": 45.8, "weeks_cover": 19.2},
+      {"sku": "TH-KIT-DX", "name": "Camp Kitchen Kit, Deluxe", "on_hand": 225, "weekly_rate": 10.6, "weeks_cover": 21.2},
+      {"sku": "TH-KIT-BS", "name": "Camp Kitchen Kit, Basic",  "on_hand": 177, "weekly_rate": 12.2, "weeks_cover": 14.5},
+      {"sku": "TH-CKW-08", "name": "Nesting Cookware Set 8pc", "on_hand": 129, "weekly_rate": 8.7,  "weeks_cover": 14.8},
+      {"sku": "TH-ACC-WS", "name": "Windshield Panel Set",     "on_hand": 1063,"weekly_rate": 8.3,  "weeks_cover": 128.1},
+      {"sku": "TH-ACC-PT", "name": "Folding Prep Table",       "on_hand": 375, "weekly_rate": 5.8,  "weeks_cover": 64.7},
+      {"sku": "TH-ACC-CP", "name": "Insulated Coffee Press",   "on_hand": 301, "weekly_rate": 22.6, "weeks_cover": 13.3},
+      {"sku": "TH-ACC-TL", "name": "Fire Poker & Tool Set",    "on_hand": 250, "weekly_rate": 19.6, "weeks_cover": 12.8},
+      {"sku": "TH-ACC-CL", "name": "Grill Grate Cleaner Kit",  "on_hand": 297, "weekly_rate": 25.3, "weeks_cover": 11.7},
+      {"sku": "TH-GRD-01", "name": "Griddle Plate",            "on_hand": 0,   "weekly_rate": 0.0,  "weeks_cover": 0,
+       "note": "Kickstarter-only product, no regular-channel demand since fulfillment — treat separately, not a reorder-urgency case"}
+    ],
+    "source": "D03-01 3PL Stock Record (on hand) + D03-02 Twelve Months of Orders by SKU (Jan-26 units, Amazon+Shopify, /4.345 weeks)"
+  },
+
+  "profit_after_ads": {
+    "as_of": "FY2025 annual (see data_notes — not a true monthly figure)",
+    "products": [
+      {"sku": "TH-ACC-PT", "name": "Folding Prep Table",       "net_contribution_after_ads": -19525},
+      {"sku": "TH-ACC-WS", "name": "Windshield Panel Set",     "net_contribution_after_ads": -21685},
+      {"sku": "TH-GRL-01", "name": "Trailhead Portable Grill", "net_contribution_after_ads": 148082},
+      {"sku": "TH-GRL-02", "name": "Trailhead Grill Pro",      "net_contribution_after_ads": 56106},
+      {"sku": "TH-KIT-DX", "name": "Camp Kitchen Kit, Deluxe", "net_contribution_after_ads": 61794},
+      {"sku": "TH-CIS-10", "name": "Cast Iron Skillet 10in",   "net_contribution_after_ads": 70816},
+      {"sku": "TH-ACC-CL", "name": "Grill Grate Cleaner Kit",  "net_contribution_after_ads": 15105},
+      {"sku": "TH-KIT-BS", "name": "Camp Kitchen Kit, Basic",  "net_contribution_after_ads": 40834},
+      {"sku": "TH-CID-06", "name": "Cast Iron Dutch Oven 6qt", "net_contribution_after_ads": 58012},
+      {"sku": "TH-CKW-08", "name": "Nesting Cookware Set 8pc", "net_contribution_after_ads": 34328},
+      {"sku": "TH-ACC-CP", "name": "Insulated Coffee Press",   "net_contribution_after_ads": 28436},
+      {"sku": "TH-ACC-TL", "name": "Fire Poker & Tool Set",    "net_contribution_after_ads": 20802},
+      {"sku": "TH-GRD-01", "name": "Griddle Plate",            "net_contribution_after_ads": 117895}
+    ],
+    "source": "D04-03 BidWorks Spend by Product FY2025 + D04-04 Product Margins FY2025 (same figures as the Activity 2 scorecard's Band Calculations tab)"
+  },
+
+  "cash_in_bank": {
+    "as_of": null,
+    "value": null,
+    "status": "no_data",
+    "note": "No bank feed exists anywhere in the case files. Shown as a visible grey tile per Lena's explicit request, not omitted."
+  }
+}
