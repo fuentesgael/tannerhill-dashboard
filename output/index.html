@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tannerhill Dashboard</title>
+<link rel="icon" href="data:,">
 <style>
   :root {
     --bg: #f2f4f3;
@@ -90,8 +91,16 @@
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   .sku { color: var(--muted); font-size: 11.5px; }
   .table-wrap { overflow-x: auto; }
-  .table-wrap table { min-width: 600px; }
   td .pill { margin-top: 1px; }
+  .meta-sm { display: none; }
+  .nowrap { white-space: nowrap; }
+  /* Phones: fold on-hand and weekly rate under the product name so weeks cover and status stay on screen. */
+  @media (max-width: 600px) {
+    .col-detail { display: none; }
+    .meta-sm { display: block; color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+    td, th { padding-left: 4px; padding-right: 4px; }
+    td .pill { white-space: normal; text-align: center; line-height: 1.25; }
+  }
   tr.separate td { border-top: 2px solid var(--line); }
 
   .bars { display: grid; gap: 6px; }
@@ -211,15 +220,16 @@
       if (p.weeks_cover < flag) return pill("red", "Under " + flag + " wks");
       // Only show green alongside the snapshot date, on the same row.
       return isStale
-        ? pill("green", "OK as of " + (snapshotDate || "snapshot"))
+        ? '<span class="pill green">OK as of <span class="nowrap">' + esc(snapshotDate || "snapshot") + "</span></span>"
         : pill("green", "OK");
     }
 
     function row(p, extraClass) {
       return '<tr class="' + (extraClass || "") + '">' +
-        "<td>" + esc(p.name) + '<div class="sku">' + esc(p.sku) + (p.note ? " — " + esc(p.note) : "") + "</div></td>" +
-        '<td class="num">' + num(p.on_hand, 0) + "</td>" +
-        '<td class="num">' + num(p.weekly_rate, 1) + "</td>" +
+        "<td>" + esc(p.name) + '<div class="sku">' + esc(p.sku) + (p.note ? " — " + esc(p.note) : "") + "</div>" +
+          '<div class="meta-sm">' + num(p.on_hand, 0) + " on hand · " + num(p.weekly_rate, 1) + " / wk</div></td>" +
+        '<td class="num col-detail">' + num(p.on_hand, 0) + "</td>" +
+        '<td class="num col-detail">' + num(p.weekly_rate, 1) + "</td>" +
         '<td class="num"><strong>' + (p.note ? "—" : num(p.weeks_cover, 1)) + "</strong></td>" +
         "<td>" + statusFor(p) + "</td></tr>";
     }
@@ -239,7 +249,7 @@
         under + " of " + regular.length + " SKUs under threshold in this snapshot</p>" +
       banner +
       '<div class="table-wrap"><table>' +
-        '<thead><tr><th>Product</th><th class="num">On hand</th><th class="num">Units / week</th>' +
+        '<thead><tr><th>Product</th><th class="num col-detail">On hand</th><th class="num col-detail">Units / week</th>' +
         '<th class="num">Weeks cover</th><th>Status</th></tr></thead>' +
         "<tbody>" + rows + "</tbody></table></div>" +
       '<div class="source">As of: ' + esc(s.as_of || "—") + "<br>Source: " + esc(s.source || "—") + "</div>" +
