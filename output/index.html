@@ -186,6 +186,10 @@
     max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,.18); white-space: pre-line;
   }
 
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; font-size: 12.5px; color: var(--muted); }
+  footer .pending { color: var(--amber-ink); font-weight: 600; }
+  footer time { font-variant-numeric: tabular-nums; }
+
   #load-error { grid-column: 1 / -1; }
   #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
@@ -199,6 +203,7 @@
 <main id="app">
   <section class="card" id="load-status"><p class="note">Loading data…</p></section>
 </main>
+<footer id="run-footer" hidden></footer>
 <div id="tip" role="tooltip"></div>
 
 <script>
@@ -515,7 +520,27 @@
   app.addEventListener("focusout", hideTip);
   window.addEventListener("scroll", hideTip, { passive: true });
 
+  // The data file carries no approval field, so this status is set here by hand.
+  // Change it only once the coach has actually signed off on the schema.
+  var SCHEMA_STATUS = "schema pending coach sign-off";
+
+  function renderFooter(d, loadedAt) {
+    var metrics = Object.keys(d).filter(function (k) {
+      return k !== "data_notes" && d[k] && typeof d[k] === "object" && !Array.isArray(d[k]);
+    }).length;
+    var stamp = loadedAt.toLocaleString("en-GB", {
+      day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short"
+    });
+    var footer = document.getElementById("run-footer");
+    footer.innerHTML = metrics + " metrics · " +
+      '<span class="pending">' + esc(SCHEMA_STATUS) + "</span> · " +
+      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded dashboard-data.json">' +
+      esc(stamp) + "</time>";
+    footer.hidden = false;
+  }
+
   function render(d) {
+    renderFooter(d, new Date());
     var notes = d.data_notes || [];
     var staleNote = notes.filter(function (n) { return /stock on hand/i.test(n); })[0];
     app.innerHTML =
