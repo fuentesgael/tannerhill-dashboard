@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tannerhill Dashboard</title>
+<style>
+  :root {
+    --bg: #f2f4f3;
+    --card: #ffffff;
+    --ink: #1d2422;
+    --muted: #5f6b67;
+    --line: #e1e6e4;
+    --header: #1f2a27;
+    --header-ink: #f4f7f6;
+
+    --green-bg: #dcf1e3; --green-ink: #17663a; --green-bar: #2e9b5c;
+    --amber-bg: #fdefd0; --amber-ink: #8a5a00; --amber-line: #e8b44c;
+    --red-bg:   #fbdedb; --red-ink:   #a3261b; --red-bar:   #d2483a;
+    --grey-bg:  #e6e9e8; --grey-ink:  #4f5956;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    background: var(--header);
+    color: var(--header-ink);
+    padding: 18px 24px;
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px;
+  }
+  header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .2px; }
+  header .sub { font-size: 13px; opacity: .75; }
+
+  main {
+    max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px;
+    display: grid; gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 820px) { main { grid-template-columns: minmax(0, 1fr); } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    min-width: 0;
+  }
+  .card.wide { grid-column: 1 / -1; }
+  .card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .card h2 { margin: 0; font-size: 16px; font-weight: 600; }
+  .period { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
+
+  .pill {
+    display: inline-block; white-space: nowrap;
+    padding: 3px 11px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; letter-spacing: .2px;
+  }
+  .pill.green { background: var(--green-bg); color: var(--green-ink); }
+  .pill.amber { background: var(--amber-bg); color: var(--amber-ink); }
+  .pill.red   { background: var(--red-bg);   color: var(--red-ink); }
+  .pill.grey  { background: var(--grey-bg);  color: var(--grey-ink); }
+
+  .big { font-size: 34px; font-weight: 650; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .big.pending { color: var(--amber-ink); }
+  .big.nodata  { color: var(--grey-ink); }
+  .label { font-size: 12.5px; color: var(--muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 6px 0 14px; }
+  .kpi .val { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .banner {
+    border-left: 4px solid var(--amber-line);
+    background: var(--amber-bg); color: var(--amber-ink);
+    border-radius: 6px; padding: 10px 12px; margin: 4px 0 14px;
+    font-size: 13px;
+  }
+  .banner strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
+
+  .note { font-size: 12.5px; color: var(--muted); }
+  .source { font-size: 11.5px; color: var(--muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-weight: 600; color: var(--muted); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .sku { color: var(--muted); font-size: 11.5px; }
+  .table-wrap { overflow-x: auto; }
+  .table-wrap table { min-width: 600px; }
+  td .pill { margin-top: 1px; }
+  tr.separate td { border-top: 2px solid var(--line); }
+
+  .bars { display: grid; gap: 6px; }
+  .bar-row { display: grid; grid-template-columns: minmax(120px, 34%) 1fr 92px; align-items: center; gap: 10px; font-size: 13.5px; }
+  .bar-track { position: relative; height: 16px; }
+  .bar-track::before { content: ""; position: absolute; top: -2px; bottom: -2px; left: var(--zero); border-left: 1px solid #b9c2bf; }
+  .bar { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+  .bar.pos { background: var(--green-bar); }
+  .bar.neg { background: var(--red-bar); }
+  .bar-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .bar-val.pos { color: var(--green-ink); }
+  .bar-val.neg { color: var(--red-ink); }
+  @media (max-width: 520px) { .bar-row { grid-template-columns: 1fr 80px; } .bar-track { grid-column: 1 / -1; order: 3; } }
+
+  .card.nodata-card { background: #f7f8f8; border-style: dashed; }
+
+  .notes-list { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+  .notes-list li { margin-bottom: 6px; }
+
+  #load-error { grid-column: 1 / -1; }
+  #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tannerhill Co. — Owner Dashboard</h1>
+  <span class="sub">Source: sources/dashboard-data.json</span>
+</header>
+
+<main id="app">
+  <section class="card" id="load-status"><p class="note">Loading data…</p></section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var DATA_URL = "../sources/dashboard-data.json";
+  var app = document.getElementById("app");
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function money(n) {
+    var sign = n < 0 ? "−" : "";
+    return sign + "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+  }
+  function num(n, d) {
+    return Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function pill(color, text) {
+    return '<span class="pill ' + color + '">' + esc(text) + "</span>";
+  }
+  function monthName(ym) {
+    var p = /^(\d{4})-(\d{2})$/.exec(ym || "");
+    if (!p) return ym || "";
+    return new Date(Date.UTC(+p[1], +p[2] - 1, 1))
+      .toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+  }
+
+  // ---------- Revenue vs last year ----------
+  function renderRevenue(r) {
+    var ly = r.last_year_same_month || {};
+    var hasCurrent = r.current_month_value !== null && r.current_month_value !== undefined;
+    var big = hasCurrent
+      ? '<div class="big">' + money(r.current_month_value) + "</div>"
+      : '<div class="big pending">Pending</div>';
+    var status = hasCurrent ? pill("green", "Current") : pill("amber", "Pending");
+
+    return '<section class="card">' +
+      '<div class="card-head"><h2>Revenue vs. last year</h2>' + status + "</div>" +
+      '<p class="period">' + esc(r.scope || "") + "</p>" +
+      '<div class="kpis">' +
+        '<div class="kpi"><div class="label">This month</div>' + big +
+          '<div class="note">' + esc(r.current_month_label || "") + "</div></div>" +
+        '<div class="kpi"><div class="label">Same month last year (' + esc(monthName(ly.month)) + ")</div>" +
+          '<div class="big">' + (ly.total != null ? money(ly.total) : "—") + "</div>" +
+          '<div class="note">Amazon ' + (ly.amazon != null ? money(ly.amazon) : "—") +
+          " · Shopify " + (ly.shopify != null ? money(ly.shopify) : "—") + "</div></div>" +
+      "</div>" +
+      (hasCurrent ? "" : '<p class="note">No year-over-year comparison until the current month is confirmed.</p>') +
+      '<div class="source">As of: ' + esc(r.as_of || "—") + "<br>Source: " + esc(r.source || "—") + "</div>" +
+    "</section>";
+  }
+
+  // ---------- Cash in bank ----------
+  function renderCash(c) {
+    var hasValue = c.value !== null && c.value !== undefined && c.status !== "no_data";
+    return '<section class="card nodata-card">' +
+      '<div class="card-head"><h2>Cash in the bank</h2>' + (hasValue ? pill("green", "Live") : pill("grey", "No Data")) + "</div>" +
+      '<p class="period">As of: ' + esc(c.as_of || "—") + "</p>" +
+      (hasValue
+        ? '<div class="big">' + money(c.value) + "</div>"
+        : '<div class="big nodata">No Data</div>') +
+      '<p class="note">' + esc(c.note || "") + "</p>" +
+    "</section>";
+  }
+
+  // ---------- Weeks of stock cover ----------
+  function renderStock(s, staleNote) {
+    var flag = s.flag_under_weeks;
+    var dateMatch = /\d{4}-\d{2}-\d{2}/.exec(s.as_of || "");
+    var snapshotDate = dateMatch ? dateMatch[0] : null;
+    var isStale = /stale/i.test(s.as_of || "") || !!snapshotDate;
+
+    // Products with a special-case note (e.g. Kickstarter-only) are listed after the regular SKUs.
+    var regular = s.products.filter(function (p) { return !p.note; })
+      .sort(function (a, b) { return a.weeks_cover - b.weeks_cover; });
+    var special = s.products.filter(function (p) { return p.note; });
+
+    var under = regular.filter(function (p) { return p.weeks_cover < flag; }).length;
+
+    function statusFor(p) {
+      if (p.note) return pill("grey", "Not tracked");
+      if (p.weeks_cover < flag) return pill("red", "Under " + flag + " wks");
+      // Only show green alongside the snapshot date, on the same row.
+      return isStale
+        ? pill("green", "OK as of " + (snapshotDate || "snapshot"))
+        : pill("green", "OK");
+    }
+
+    function row(p, extraClass) {
+      return '<tr class="' + (extraClass || "") + '">' +
+        "<td>" + esc(p.name) + '<div class="sku">' + esc(p.sku) + (p.note ? " — " + esc(p.note) : "") + "</div></td>" +
+        '<td class="num">' + num(p.on_hand, 0) + "</td>" +
+        '<td class="num">' + num(p.weekly_rate, 1) + "</td>" +
+        '<td class="num"><strong>' + (p.note ? "—" : num(p.weeks_cover, 1)) + "</strong></td>" +
+        "<td>" + statusFor(p) + "</td></tr>";
+    }
+
+    var rows = regular.map(function (p) { return row(p); }).join("") +
+      special.map(function (p, i) { return row(p, i === 0 ? "separate" : ""); }).join("");
+
+    var banner = isStale
+      ? '<div class="banner"><strong>Stale snapshot — 3PL stock as of ' + esc(snapshotDate || s.as_of) + ", not live</strong>" +
+          esc(staleNote || "") + "</div>"
+      : "";
+
+    return '<section class="card wide">' +
+      '<div class="card-head"><h2>Weeks of stock cover</h2>' +
+        (isStale ? pill("amber", "Stale · " + (snapshotDate || "snapshot")) : "") + "</div>" +
+      '<p class="period">Sorted lowest cover first · flag under ' + esc(flag) + " weeks · " +
+        under + " of " + regular.length + " SKUs under threshold in this snapshot</p>" +
+      banner +
+      '<div class="table-wrap"><table>' +
+        '<thead><tr><th>Product</th><th class="num">On hand</th><th class="num">Units / week</th>' +
+        '<th class="num">Weeks cover</th><th>Status</th></tr></thead>' +
+        "<tbody>" + rows + "</tbody></table></div>" +
+      '<div class="source">As of: ' + esc(s.as_of || "—") + "<br>Source: " + esc(s.source || "—") + "</div>" +
+    "</section>";
+  }
+
+  // ---------- Profit after ads ----------
+  function renderProfit(pa) {
+    var items = pa.products.slice().sort(function (a, b) {
+      return b.net_contribution_after_ads - a.net_contribution_after_ads;
+    });
+    var vals = items.map(function (p) { return p.net_contribution_after_ads; });
+    var max = Math.max(0, Math.max.apply(null, vals));
+    var min = Math.min(0, Math.min.apply(null, vals));
+    var span = (max - min) || 1;
+    var zeroPct = (-min / span) * 100;
+    var negCount = vals.filter(function (v) { return v < 0; }).length;
+    var total = vals.reduce(function (a, b) { return a + b; }, 0);
+
+    var rows = items.map(function (p) {
+      var v = p.net_contribution_after_ads;
+      var cls = v < 0 ? "neg" : "pos";
+      var w = (Math.abs(v) / span) * 100;
+      var left = v < 0 ? zeroPct - w : zeroPct;
+      return '<div class="bar-row">' +
+        "<div>" + esc(p.name) + '<div class="sku">' + esc(p.sku) + "</div></div>" +
+        '<div class="bar-track" style="--zero:' + zeroPct.toFixed(2) + '%">' +
+          '<div class="bar ' + cls + '" style="left:' + left.toFixed(2) + "%;width:" + w.toFixed(2) + '%"></div></div>' +
+        '<div class="bar-val ' + cls + '">' + money(v) + "</div></div>";
+    }).join("");
+
+    return '<section class="card wide">' +
+      '<div class="card-head"><h2>Profit after ads, by product</h2>' + pill("grey", "FY2025 annual — not monthly") + "</div>" +
+      '<p class="period">Net contribution after ad spend, full year FY2025 · ' +
+        (negCount ? pill("red", negCount + " loss-making") + " " : "") +
+        "Total " + money(total) + "</p>" +
+      '<div class="bars">' + rows + "</div>" +
+      '<div class="source">As of: ' + esc(pa.as_of || "—") + "<br>Source: " + esc(pa.source || "—") + "</div>" +
+    "</section>";
+  }
+
+  function renderNotes(notes) {
+    if (!notes || !notes.length) return "";
+    return '<section class="card wide"><div class="card-head"><h2>Data notes</h2></div>' +
+      '<ul class="notes-list">' + notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul></section>";
+  }
+
+  function render(d) {
+    var notes = d.data_notes || [];
+    var staleNote = notes.filter(function (n) { return /stock on hand/i.test(n); })[0];
+    app.innerHTML =
+      renderRevenue(d.revenue_vs_last_year) +
+      renderCash(d.cash_in_bank) +
+      renderStock(d.weeks_of_stock_cover, staleNote) +
+      renderProfit(d.profit_after_ads) +
+      renderNotes(notes);
+  }
+
+  function showLoadError(err) {
+    app.innerHTML =
+      '<section class="card" id="load-error">' +
+        '<div class="card-head"><h2>Data not loaded</h2>' + pill("red", "Error") + "</div>" +
+        '<p class="note">Could not read <code>' + esc(DATA_URL) + "</code> (" + esc(err.message || err) + "). " +
+        "Browsers block this when the page is opened straight from disk — serve the repo folder " +
+        "(e.g. <code>python3 -m http.server</code> from the repo root, then open <code>/output/</code>), " +
+        "or pick the JSON file below.</p>" +
+        '<input type="file" id="picker" accept="application/json,.json">' +
+      "</section>";
+    document.getElementById("picker").addEventListener("change", function (e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      f.text().then(function (t) { render(JSON.parse(t)); })
+        .catch(function (e2) { showLoadError(e2); });
+    });
+  }
+
+  fetch(DATA_URL, { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(render)
+    .catch(showLoadError);
+})();
+</script>
+</body>
+</html>
