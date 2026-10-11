@@ -7,7 +7,7 @@
   ],
 
   "revenue_vs_last_year": {
-    "as_of": "pending — current month not yet sourced",
+    "as_of": "pending — last closed month not yet sourced",
     "current_month_value": null,
     "current_month_label": "TBD — awaiting confirmed Amazon + Shopify export for last closed month",
     "last_year_same_month": {
