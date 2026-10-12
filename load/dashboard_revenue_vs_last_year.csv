@@ -1,0 +1,2 @@
+source_row,as_of,current_month_value,current_month_label,last_year_same_month_month,last_year_same_month_amazon,last_year_same_month_shopify,last_year_same_month_total,source,scope
+1,pending — last closed month not yet sourced,,TBD — awaiting confirmed Amazon + Shopify export for last closed month,2025-02-01,67904,19331,87235,"D02-02 Tannerhill FY2025 Financial Summary, Revenue by Month tab","Amazon + Shopify only, Kickstarter excluded"
