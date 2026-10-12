@@ -1,0 +1,768 @@
+Week,Product title,Product variant SKU,Net items sold,Gross sales,Discounts,Returns,Net sales
+2025-01-01,Trailhead Portable Grill,trailhead-portable-grill,2,378.00,-30.42,0.00,347.58
+2025-01-01,"Cast Iron Skillet 10""",cast-iron-skillet-10,6,294.00,-8.24,0.00,285.76
+2025-01-01,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2025-01-01,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,3,267.00,-17.24,0.00,249.76
+2025-01-01,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,-58.18,170.82
+2025-01-01,Insulated Coffee Press,insulated-coffee-press,4,176.00,-16.93,0.00,159.07
+2025-01-01,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-01-01,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,1,119.00,0.00,0.00,119.00
+2025-01-01,Fire Poker & Tool Set,fire-poker-tool-set,3,117.00,-7.49,0.00,109.51
+2025-01-01,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2025-01-01,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,4,96.00,-4.06,0.00,91.94
+2025-01-06,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-24.02,0.00,531.98
+2025-01-06,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,-19.72,0.00,456.28
+2025-01-06,"Cast Iron Skillet 10""",cast-iron-skillet-10,8,392.00,-24.75,0.00,367.25
+2025-01-06,Trailhead Portable Grill,trailhead-portable-grill,2,378.00,0.00,0.00,378.00
+2025-01-06,Insulated Coffee Press,insulated-coffee-press,8,352.00,-8.46,-27.81,315.73
+2025-01-06,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,-46.05,242.95
+2025-01-06,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,3,267.00,0.00,0.00,267.00
+2025-01-06,Windshield Panel Set,windshield-panel-set,4,236.00,-20.51,-13.48,202.01
+2025-01-06,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2025-01-06,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,7,168.00,-4.07,-13.36,150.57
+2025-01-06,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,0.00,0.00,156.00
+2025-01-06,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2025-01-13,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,-60.84,0.00,1451.16
+2025-01-13,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-44.27,0.00,642.73
+2025-01-13,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-19.71,-38.87,536.42
+2025-01-13,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-01-13,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-34.49,0.00,410.51
+2025-01-13,"Cast Iron Skillet 10""",cast-iron-skillet-10,6,294.00,-8.25,-43.36,242.39
+2025-01-13,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,-31.57,246.43
+2025-01-13,Insulated Coffee Press,insulated-coffee-press,5,220.00,0.00,0.00,220.00
+2025-01-13,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,-7.49,-19.69,167.82
+2025-01-13,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2025-01-13,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,7,168.00,-8.13,0.00,159.87
+2025-01-20,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-60.84,-119.94,1142.22
+2025-01-20,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,-44.26,0.00,871.74
+2025-01-20,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,-45.32,310.68
+2025-01-20,"Cast Iron Skillet 10""",cast-iron-skillet-10,7,343.00,-8.25,0.00,334.75
+2025-01-20,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,-70.07,0.00,218.93
+2025-01-20,Insulated Coffee Press,insulated-coffee-press,5,220.00,0.00,0.00,220.00
+2025-01-20,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,-14.99,0.00,141.01
+2025-01-20,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,1,119.00,-19.71,0.00,99.29
+2025-01-20,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-01-20,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,3,72.00,-4.07,0.00,67.93
+2025-01-27,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-53.12,0.00,1647.88
+2025-01-27,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,7,623.00,-36.33,0.00,586.67
+2025-01-27,Folding Prep Table,folding-prep-table,5,545.00,-25.94,-17.04,502.02
+2025-01-27,"Cast Iron Skillet 10""",cast-iron-skillet-10,9,441.00,-16.50,0.00,424.50
+2025-01-27,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2025-01-27,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,-24.02,0.00,253.98
+2025-01-27,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2025-01-27,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2025-01-27,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,0.00,0.00,195.00
+2025-01-27,Insulated Coffee Press,insulated-coffee-press,4,176.00,-22.07,0.00,153.93
+2025-01-27,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,1,24.00,0.00,0.00,24.00
+2025-02-03,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,0.00,0.00,867.00
+2025-02-03,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,0.00,0.00,687.00
+2025-02-03,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,-23.11,0.00,564.89
+2025-02-03,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,-13.55,0.00,462.45
+2025-02-03,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-16.55,0.00,400.45
+2025-02-03,Trailhead Portable Grill,trailhead-portable-grill,2,378.00,0.00,0.00,378.00
+2025-02-03,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,3,267.00,0.00,0.00,267.00
+2025-02-03,Insulated Coffee Press,insulated-coffee-press,5,220.00,-5.13,0.00,214.87
+2025-02-03,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-2.81,0.00,141.19
+2025-02-03,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-02-03,Fire Poker & Tool Set,fire-poker-tool-set,3,117.00,-4.91,0.00,112.09
+2025-02-10,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-45.40,-89.51,1188.09
+2025-02-10,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-24.48,0.00,1120.52
+2025-02-10,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,-32.96,-43.32,501.72
+2025-02-10,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-9.54,0.00,524.46
+2025-02-10,"Cast Iron Skillet 10""",cast-iron-skillet-10,9,441.00,-11.55,0.00,429.45
+2025-02-10,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-16.55,-21.75,378.70
+2025-02-10,Folding Prep Table,folding-prep-table,3,327.00,0.00,0.00,327.00
+2025-02-10,Insulated Coffee Press,insulated-coffee-press,7,308.00,-5.14,0.00,302.86
+2025-02-10,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-27.11,0.00,210.89
+2025-02-10,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,-4.90,-12.89,177.21
+2025-02-10,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-02-10,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,4,96.00,0.00,0.00,96.00
+2025-02-17,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,-22.70,0.00,1489.30
+2025-02-17,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-32.95,0.00,834.05
+2025-02-17,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-24.48,0.00,662.52
+2025-02-17,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,0.00,-18.16,569.84
+2025-02-17,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-19.08,-31.36,483.56
+2025-02-17,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,0.00,-26.72,449.28
+2025-02-17,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-02-17,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-9.81,0.00,263.19
+2025-02-17,Insulated Coffee Press,insulated-coffee-press,5,220.00,-10.27,0.00,209.73
+2025-02-17,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,-9.32,108.68
+2025-02-17,Folding Prep Table,folding-prep-table,1,109.00,0.00,-13.91,95.09
+2025-02-17,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,4,96.00,-5.61,-9.22,81.17
+2025-02-24,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-45.40,0.00,1655.60
+2025-02-24,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-39.02,-46.10,600.88
+2025-02-24,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-02-24,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,0.00,0.00,476.00
+2025-02-24,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2025-02-24,Windshield Panel Set,windshield-panel-set,5,295.00,-14.17,0.00,280.83
+2025-02-24,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-02-24,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,-24.48,-48.26,156.26
+2025-02-24,Insulated Coffee Press,insulated-coffee-press,5,220.00,0.00,-16.88,203.12
+2025-02-24,Folding Prep Table,folding-prep-table,2,218.00,-21.17,0.00,196.83
+2025-02-24,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-9.41,0.00,206.59
+2025-02-24,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,0.00,0.00,195.00
+2025-03-03,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-28.11,0.00,1672.89
+2025-03-03,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-33.70,0.00,1340.30
+2025-03-03,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-43.87,0.00,823.13
+2025-03-03,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,0.00,0.00,714.00
+2025-03-03,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,7,623.00,-14.48,0.00,608.52
+2025-03-03,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-22.25,0.00,533.75
+2025-03-03,"Cast Iron Skillet 10""",cast-iron-skillet-10,10,490.00,-14.46,0.00,475.54
+2025-03-03,Insulated Coffee Press,insulated-coffee-press,8,352.00,-6.83,0.00,345.17
+2025-03-03,Folding Prep Table,folding-prep-table,3,327.00,-19.05,-37.56,270.39
+2025-03-03,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-5.85,0.00,267.15
+2025-03-03,Windshield Panel Set,windshield-panel-set,4,236.00,-10.01,0.00,225.99
+2025-03-03,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,7,168.00,-7.62,0.00,160.38
+2025-03-10,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-168.67,0.00,1532.33
+2025-03-10,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-33.69,-132.86,978.45
+2025-03-10,"Cast Iron Skillet 10""",cast-iron-skillet-10,21,1029.00,-14.46,-60.17,954.37
+2025-03-10,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,9,801.00,-28.94,0.00,772.06
+2025-03-10,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,-115.32,462.68
+2025-03-10,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-22.25,0.00,533.75
+2025-03-10,Folding Prep Table,folding-prep-table,5,545.00,-38.11,0.00,506.89
+2025-03-10,Fire Poker & Tool Set,fire-poker-tool-set,13,507.00,-29.21,-18.68,459.11
+2025-03-10,Insulated Coffee Press,insulated-coffee-press,9,396.00,-20.50,0.00,375.50
+2025-03-10,Windshield Panel Set,windshield-panel-set,6,354.00,-10.01,-26.30,317.69
+2025-03-10,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-7.63,-11.45,244.92
+2025-03-10,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-18.61,0.00,219.39
+2025-03-17,Trailhead Portable Grill,trailhead-portable-grill,19,3591.00,-56.22,0.00,3534.78
+2025-03-17,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-67.39,0.00,1306.61
+2025-03-17,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,11,1309.00,-37.23,-73.40,1198.37
+2025-03-17,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-43.86,0.00,1112.14
+2025-03-17,"Cast Iron Skillet 10""",cast-iron-skillet-10,22,1078.00,-43.37,0.00,1034.63
+2025-03-17,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,12,1068.00,-57.88,0.00,1010.12
+2025-03-17,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,5,695.00,0.00,-58.48,636.52
+2025-03-17,Insulated Coffee Press,insulated-coffee-press,11,484.00,0.00,-22.46,461.54
+2025-03-17,Folding Prep Table,folding-prep-table,4,436.00,0.00,0.00,436.00
+2025-03-17,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,12,288.00,-3.81,-13.60,270.59
+2025-03-17,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,-5.84,0.00,150.16
+2025-03-17,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-03-24,Trailhead Portable Grill,trailhead-portable-grill,15,2835.00,-112.44,-110.43,2612.13
+2025-03-24,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,8,1832.00,-67.38,0.00,1764.62
+2025-03-24,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,-87.74,0.00,1646.26
+2025-03-24,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,13,1157.00,-28.96,-85.61,1042.43
+2025-03-24,"Cast Iron Skillet 10""",cast-iron-skillet-10,20,980.00,-36.14,0.00,943.86
+2025-03-24,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,8,952.00,-55.84,0.00,896.16
+2025-03-24,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,5,695.00,-44.49,0.00,650.51
+2025-03-24,Insulated Coffee Press,insulated-coffee-press,15,660.00,-34.17,-22.45,603.38
+2025-03-24,Fire Poker & Tool Set,fire-poker-tool-set,13,507.00,-11.68,-15.88,479.44
+2025-03-24,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,14,336.00,-11.44,0.00,324.56
+2025-03-24,Folding Prep Table,folding-prep-table,3,327.00,0.00,0.00,327.00
+2025-03-24,Windshield Panel Set,windshield-panel-set,4,236.00,-20.01,0.00,215.99
+2025-03-31,Trailhead Portable Grill,trailhead-portable-grill,10,1890.00,0.00,-129.72,1760.28
+2025-03-31,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-63.00,0.00,1311.00
+2025-03-31,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-22.39,0.00,908.61
+2025-03-31,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,0.00,0.00,867.00
+2025-03-31,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-17.73,0.00,696.27
+2025-03-31,Folding Prep Table,folding-prep-table,5,545.00,-18.74,0.00,526.26
+2025-03-31,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,0.00,0.00,534.00
+2025-03-31,Windshield Panel Set,windshield-panel-set,9,531.00,-8.98,0.00,522.02
+2025-03-31,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-19.12,-37.67,360.21
+2025-03-31,Insulated Coffee Press,insulated-coffee-press,6,264.00,-20.23,0.00,243.77
+2025-03-31,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-6.70,0.00,227.30
+2025-03-31,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,5,120.00,-7.48,0.00,112.52
+2025-04-07,Trailhead Portable Grill,trailhead-portable-grill,13,2457.00,-59.79,0.00,2397.21
+2025-04-07,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-94.50,-124.13,1155.37
+2025-04-07,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-99.38,0.00,1056.62
+2025-04-07,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-53.09,-29.88,848.03
+2025-04-07,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,7,833.00,-53.20,0.00,779.80
+2025-04-07,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,9,801.00,-43.28,0.00,757.72
+2025-04-07,Folding Prep Table,folding-prep-table,5,545.00,-18.74,0.00,526.26
+2025-04-07,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-38.24,0.00,378.76
+2025-04-07,Windshield Panel Set,windshield-panel-set,7,413.00,-17.98,0.00,395.02
+2025-04-07,Insulated Coffee Press,insulated-coffee-press,8,352.00,-20.11,-30.81,301.08
+2025-04-07,Fire Poker & Tool Set,fire-poker-tool-set,8,312.00,-13.41,-26.42,272.17
+2025-04-07,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-14.66,-9.95,239.39
+2025-04-14,Trailhead Portable Grill,trailhead-portable-grill,11,2079.00,-89.69,-98.17,1891.14
+2025-04-14,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,-99.38,0.00,1345.62
+2025-04-14,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,0.00,0.00,1374.00
+2025-04-14,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-22.75,0.00,908.25
+2025-04-14,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,9,801.00,-43.29,-66.33,691.38
+2025-04-14,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-35.47,0.00,678.53
+2025-04-14,Folding Prep Table,folding-prep-table,5,545.00,0.00,0.00,545.00
+2025-04-14,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,0.00,0.00,417.00
+2025-04-14,Windshield Panel Set,windshield-panel-set,7,413.00,-17.97,-41.31,353.72
+2025-04-14,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-6.71,0.00,266.29
+2025-04-14,Insulated Coffee Press,insulated-coffee-press,6,264.00,-6.70,0.00,257.30
+2025-04-14,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,10,240.00,-3.67,0.00,236.33
+2025-04-21,Trailhead Portable Grill,trailhead-portable-grill,12,2268.00,-119.59,-98.18,2050.23
+2025-04-21,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,0.00,-130.54,1314.46
+2025-04-21,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-31.50,0.00,1342.50
+2025-04-21,"Cast Iron Skillet 10""",cast-iron-skillet-10,18,882.00,-22.74,-59.76,799.50
+2025-04-21,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,0.00,-69.88,644.12
+2025-04-21,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-14.43,0.00,697.57
+2025-04-21,Windshield Panel Set,windshield-panel-set,8,472.00,-17.97,0.00,454.03
+2025-04-21,Folding Prep Table,folding-prep-table,4,436.00,-18.75,-49.24,368.01
+2025-04-21,Insulated Coffee Press,insulated-coffee-press,7,308.00,0.00,0.00,308.00
+2025-04-21,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-04-21,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-13.41,0.00,259.59
+2025-04-21,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-3.67,-11.73,248.60
+2025-04-28,Trailhead Portable Grill,trailhead-portable-grill,10,1890.00,-92.72,0.00,1797.28
+2025-04-28,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,0.00,0.00,1734.00
+2025-04-28,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-64.84,-127.81,1181.35
+2025-04-28,"Cast Iron Skillet 10""",cast-iron-skillet-10,16,784.00,-47.18,-28.54,708.28
+2025-04-28,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-30.68,0.00,681.32
+2025-04-28,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-21.10,0.00,573.90
+2025-04-28,Folding Prep Table,folding-prep-table,5,545.00,-38.87,-39.68,466.45
+2025-04-28,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,0.00,0.00,417.00
+2025-04-28,Windshield Panel Set,windshield-panel-set,7,413.00,-9.80,0.00,403.20
+2025-04-28,Insulated Coffee Press,insulated-coffee-press,8,352.00,-6.70,0.00,345.30
+2025-04-28,Fire Poker & Tool Set,fire-poker-tool-set,8,312.00,-19.88,0.00,292.12
+2025-04-28,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-11.52,0.00,204.48
+2025-05-05,Trailhead Portable Grill,trailhead-portable-grill,14,2646.00,-94.23,-103.19,2448.58
+2025-05-05,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,0.00,0.00,1156.00
+2025-05-05,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,0.00,0.00,916.00
+2025-05-05,"Cast Iron Skillet 10""",cast-iron-skillet-10,15,735.00,-32.57,-28.53,673.90
+2025-05-05,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-15.34,-60.47,369.19
+2025-05-05,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,3,357.00,-21.09,0.00,335.91
+2025-05-05,Windshield Panel Set,windshield-panel-set,6,354.00,-9.80,0.00,344.20
+2025-05-05,Folding Prep Table,folding-prep-table,3,327.00,-20.12,0.00,306.88
+2025-05-05,Insulated Coffee Press,insulated-coffee-press,6,264.00,0.00,0.00,264.00
+2025-05-05,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,0.00,0.00,234.00
+2025-05-05,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-8.36,-19.22,164.42
+2025-05-05,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-05-12,Trailhead Grill Pro,trailhead-grill-pro,10,2890.00,-88.94,-175.32,2625.74
+2025-05-12,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,11,1529.00,-48.76,0.00,1480.24
+2025-05-12,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-32.42,0.00,1112.58
+2025-05-12,"Cast Iron Skillet 10""",cast-iron-skillet-10,21,1029.00,-40.72,0.00,988.28
+2025-05-12,Trailhead Portable Grill,trailhead-portable-grill,5,945.00,0.00,0.00,945.00
+2025-05-12,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-21.10,0.00,692.90
+2025-05-12,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-15.33,0.00,429.67
+2025-05-12,Folding Prep Table,folding-prep-table,4,436.00,0.00,0.00,436.00
+2025-05-12,Windshield Panel Set,windshield-panel-set,7,413.00,0.00,0.00,413.00
+2025-05-12,Insulated Coffee Press,insulated-coffee-press,4,176.00,-20.31,0.00,155.69
+2025-05-12,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,5,120.00,0.00,0.00,120.00
+2025-05-12,Fire Poker & Tool Set,fire-poker-tool-set,1,39.00,0.00,0.00,39.00
+2025-05-19,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,-44.47,0.00,1400.53
+2025-05-19,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-64.84,0.00,1080.16
+2025-05-19,Trailhead Portable Grill,trailhead-portable-grill,5,945.00,-31.41,0.00,913.59
+2025-05-19,"Cast Iron Skillet 10""",cast-iron-skillet-10,16,784.00,-24.42,0.00,759.58
+2025-05-19,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-21.09,-69.30,623.61
+2025-05-19,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-30.68,0.00,503.32
+2025-05-19,Folding Prep Table,folding-prep-table,3,327.00,-20.13,0.00,306.87
+2025-05-19,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,-64.09,213.91
+2025-05-19,Windshield Panel Set,windshield-panel-set,4,236.00,-29.42,-38.66,167.92
+2025-05-19,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-13.25,-21.77,198.98
+2025-05-19,Insulated Coffee Press,insulated-coffee-press,5,220.00,-6.77,0.00,213.23
+2025-05-19,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-12.53,0.00,179.47
+2025-05-26,Trailhead Portable Grill,trailhead-portable-grill,16,3024.00,-125.64,-103.19,2795.17
+2025-05-26,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-133.42,0.00,1022.58
+2025-05-26,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-32.42,0.00,1112.58
+2025-05-26,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-14.90,-28.54,642.56
+2025-05-26,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-21.10,0.00,573.90
+2025-05-26,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,0.00,0.00,534.00
+2025-05-26,Windshield Panel Set,windshield-panel-set,8,472.00,-19.05,-36.49,416.46
+2025-05-26,Folding Prep Table,folding-prep-table,4,436.00,0.00,0.00,436.00
+2025-05-26,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-48.78,0.00,368.22
+2025-05-26,Insulated Coffee Press,insulated-coffee-press,8,352.00,-13.54,-26.69,311.77
+2025-05-26,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,10,240.00,-4.18,0.00,235.82
+2025-05-26,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,0.00,0.00,195.00
+2025-06-02,Trailhead Portable Grill,trailhead-portable-grill,12,2268.00,-95.20,-104.38,2068.42
+2025-06-02,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,-42.70,0.00,1691.30
+2025-06-02,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,0.00,0.00,1145.00
+2025-06-02,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-40.59,0.00,890.41
+2025-06-02,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,7,833.00,-17.32,0.00,815.68
+2025-06-02,Folding Prep Table,folding-prep-table,6,654.00,-49.41,0.00,604.59
+2025-06-02,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,7,623.00,0.00,0.00,623.00
+2025-06-02,Windshield Panel Set,windshield-panel-set,7,413.00,-18.50,0.00,394.50
+2025-06-02,Insulated Coffee Press,insulated-coffee-press,8,352.00,-6.10,0.00,345.90
+2025-06-02,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-6.11,0.00,266.89
+2025-06-02,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-6.78,0.00,185.22
+2025-06-02,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-06-09,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,0.00,0.00,1445.00
+2025-06-09,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-70.76,0.00,1074.24
+2025-06-09,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,10,890.00,-40.35,-70.78,778.87
+2025-06-09,"Cast Iron Skillet 10""",cast-iron-skillet-10,15,735.00,-13.54,-29.41,692.05
+2025-06-09,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-17.31,0.00,696.69
+2025-06-09,Folding Prep Table,folding-prep-table,6,654.00,-32.95,0.00,621.05
+2025-06-09,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-21.01,0.00,395.99
+2025-06-09,Windshield Panel Set,windshield-panel-set,7,413.00,-9.25,0.00,403.75
+2025-06-09,Insulated Coffee Press,insulated-coffee-press,9,396.00,-12.19,0.00,383.81
+2025-06-09,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,10,240.00,-3.39,-22.27,214.34
+2025-06-09,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-6.11,0.00,227.89
+2025-06-16,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,-128.12,0.00,1605.88
+2025-06-16,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-70.76,0.00,1303.24
+2025-06-16,"Cast Iron Skillet 10""",cast-iron-skillet-10,16,784.00,-20.30,-25.34,738.36
+2025-06-16,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-34.64,-68.35,611.01
+2025-06-16,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-26.90,0.00,685.10
+2025-06-16,Folding Prep Table,folding-prep-table,5,545.00,-16.48,0.00,528.52
+2025-06-16,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-21.00,-27.63,368.37
+2025-06-16,Windshield Panel Set,windshield-panel-set,7,413.00,-18.49,0.00,394.51
+2025-06-16,Insulated Coffee Press,insulated-coffee-press,7,308.00,-30.47,-32.07,245.46
+2025-06-16,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,12,288.00,-16.91,0.00,271.09
+2025-06-16,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-18.34,-24.12,230.54
+2025-06-23,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-63.48,0.00,1259.52
+2025-06-23,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-35.37,0.00,1109.63
+2025-06-23,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-40.59,-25.35,865.06
+2025-06-23,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,10,890.00,-40.35,0.00,849.65
+2025-06-23,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-42.71,-140.45,683.84
+2025-06-23,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-34.64,0.00,679.36
+2025-06-23,Folding Prep Table,folding-prep-table,5,545.00,0.00,-65.01,479.99
+2025-06-23,Insulated Coffee Press,insulated-coffee-press,8,352.00,0.00,0.00,352.00
+2025-06-23,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-06-23,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-6.11,0.00,266.89
+2025-06-23,Windshield Panel Set,windshield-panel-set,4,236.00,0.00,0.00,236.00
+2025-06-23,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-6.77,0.00,209.23
+2025-06-30,Trailhead Portable Grill,trailhead-portable-grill,18,3402.00,-82.06,0.00,3319.94
+2025-06-30,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,10,2290.00,-89.45,-116.35,2084.20
+2025-06-30,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,0.00,0.00,1734.00
+2025-06-30,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,10,1190.00,-50.40,0.00,1139.60
+2025-06-30,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,12,1068.00,-25.14,-45.44,997.42
+2025-06-30,"Cast Iron Skillet 10""",cast-iron-skillet-10,19,931.00,-20.92,0.00,910.08
+2025-06-30,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,6,834.00,-38.52,0.00,795.48
+2025-06-30,Folding Prep Table,folding-prep-table,6,654.00,0.00,0.00,654.00
+2025-06-30,Insulated Coffee Press,insulated-coffee-press,14,616.00,-24.35,0.00,591.65
+2025-06-30,Fire Poker & Tool Set,fire-poker-tool-set,9,351.00,-5.13,0.00,345.87
+2025-06-30,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,14,336.00,-11.07,-12.23,312.70
+2025-06-30,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2025-07-07,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,11,2519.00,-89.45,0.00,2429.55
+2025-07-07,Trailhead Portable Grill,trailhead-portable-grill,13,2457.00,-27.36,-116.85,2312.79
+2025-07-07,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,17,1513.00,-62.86,0.00,1450.14
+2025-07-07,"Cast Iron Skillet 10""",cast-iron-skillet-10,25,1225.00,-48.83,-24.07,1152.10
+2025-07-07,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,10,1190.00,-16.79,-77.27,1095.94
+2025-07-07,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,0.00,0.00,1156.00
+2025-07-07,Folding Prep Table,folding-prep-table,6,654.00,-30.80,-40.48,582.72
+2025-07-07,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,0.00,0.00,556.00
+2025-07-07,Insulated Coffee Press,insulated-coffee-press,10,440.00,-24.36,-24.00,391.64
+2025-07-07,Fire Poker & Tool Set,fire-poker-tool-set,10,390.00,-25.64,0.00,364.36
+2025-07-07,Windshield Panel Set,windshield-panel-set,5,295.00,0.00,0.00,295.00
+2025-07-07,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-11.08,0.00,252.92
+2025-07-14,Trailhead Portable Grill,trailhead-portable-grill,14,2646.00,-136.78,-116.85,2392.37
+2025-07-14,"Cast Iron Skillet 10""",cast-iron-skillet-10,21,1029.00,-13.96,-24.06,990.98
+2025-07-14,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,7,973.00,-19.25,-63.28,890.47
+2025-07-14,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-78.06,0.00,788.94
+2025-07-14,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-25.14,0.00,686.86
+2025-07-14,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,0.00,0.00,687.00
+2025-07-14,Insulated Coffee Press,insulated-coffee-press,14,616.00,-12.17,0.00,603.83
+2025-07-14,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-50.40,0.00,544.60
+2025-07-14,Windshield Panel Set,windshield-panel-set,7,413.00,-17.19,-28.24,367.57
+2025-07-14,Fire Poker & Tool Set,fire-poker-tool-set,10,390.00,-10.25,0.00,379.75
+2025-07-14,Folding Prep Table,folding-prep-table,3,327.00,0.00,0.00,327.00
+2025-07-14,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,13,312.00,-11.08,0.00,300.92
+2025-07-21,Trailhead Portable Grill,trailhead-portable-grill,15,2835.00,0.00,0.00,2835.00
+2025-07-21,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,-39.03,-128.24,1566.73
+2025-07-21,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-29.82,-137.16,1207.02
+2025-07-21,"Cast Iron Skillet 10""",cast-iron-skillet-10,23,1127.00,-20.92,-48.12,1057.96
+2025-07-21,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,12,1068.00,-12.57,-45.43,1010.00
+2025-07-21,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,0.00,0.00,595.00
+2025-07-21,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-19.26,0.00,536.74
+2025-07-21,Insulated Coffee Press,insulated-coffee-press,12,528.00,-6.09,-24.01,497.90
+2025-07-21,Folding Prep Table,folding-prep-table,4,436.00,-30.79,0.00,405.21
+2025-07-21,Fire Poker & Tool Set,fire-poker-tool-set,11,429.00,-5.13,-18.54,405.33
+2025-07-21,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,13,312.00,-7.38,0.00,304.62
+2025-07-21,Windshield Panel Set,windshield-panel-set,4,236.00,-17.18,0.00,218.82
+2025-07-28,Trailhead Portable Grill,trailhead-portable-grill,14,2646.00,-194.52,-83.39,2368.09
+2025-07-28,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-33.01,0.00,1340.99
+2025-07-28,"Cast Iron Skillet 10""",cast-iron-skillet-10,28,1372.00,-65.43,-25.85,1280.72
+2025-07-28,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-78.06,0.00,1077.94
+2025-07-28,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,11,979.00,-39.85,0.00,939.15
+2025-07-28,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,6,834.00,-39.67,0.00,794.33
+2025-07-28,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,0.00,0.00,714.00
+2025-07-28,Insulated Coffee Press,insulated-coffee-press,14,616.00,-12.71,-23.98,579.31
+2025-07-28,Fire Poker & Tool Set,fire-poker-tool-set,15,585.00,-21.38,-18.53,545.09
+2025-07-28,Windshield Panel Set,windshield-panel-set,9,531.00,-26.84,-29.96,474.20
+2025-07-28,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,14,336.00,-15.78,-14.46,305.76
+2025-07-28,Folding Prep Table,folding-prep-table,2,218.00,-16.05,-42.18,159.77
+2025-08-04,Trailhead Portable Grill,trailhead-portable-grill,18,3402.00,-113.46,0.00,3288.54
+2025-08-04,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,10,2290.00,-33.01,-151.85,2105.14
+2025-08-04,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,22,1958.00,-68.20,-49.31,1840.49
+2025-08-04,Trailhead Grill Pro,trailhead-grill-pro,6,1734.00,-51.15,0.00,1682.85
+2025-08-04,"Cast Iron Skillet 10""",cast-iron-skillet-10,22,1078.00,-39.34,-25.85,1012.81
+2025-08-04,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,9,1071.00,-36.12,0.00,1034.88
+2025-08-04,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,6,834.00,0.00,0.00,834.00
+2025-08-04,Folding Prep Table,folding-prep-table,5,545.00,-16.05,0.00,528.95
+2025-08-04,Insulated Coffee Press,insulated-coffee-press,12,528.00,-26.49,0.00,501.51
+2025-08-04,Fire Poker & Tool Set,fire-poker-tool-set,10,390.00,-11.14,0.00,378.86
+2025-08-04,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,16,384.00,-7.89,-28.51,347.60
+2025-08-04,Windshield Panel Set,windshield-panel-set,6,354.00,-9.12,0.00,344.88
+2025-08-11,Trailhead Portable Grill,trailhead-portable-grill,13,2457.00,-56.74,0.00,2400.26
+2025-08-11,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,-51.15,0.00,1393.85
+2025-08-11,"Cast Iron Skillet 10""",cast-iron-skillet-10,22,1078.00,-31.47,-51.69,994.84
+2025-08-11,Insulated Coffee Press,insulated-coffee-press,17,748.00,-33.10,-28.24,686.66
+2025-08-11,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-18.06,0.00,695.94
+2025-08-11,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,0.00,-49.30,662.70
+2025-08-11,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-66.02,0.00,620.98
+2025-08-11,Fire Poker & Tool Set,fire-poker-tool-set,13,507.00,-16.69,-40.22,450.09
+2025-08-11,Windshield Panel Set,windshield-panel-set,8,472.00,-9.12,0.00,462.88
+2025-08-11,Folding Prep Table,folding-prep-table,4,436.00,-16.04,0.00,419.96
+2025-08-11,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,0.00,0.00,417.00
+2025-08-11,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,16,384.00,-3.94,0.00,380.06
+2025-08-18,Trailhead Portable Grill,trailhead-portable-grill,11,2079.00,-28.37,-196.23,1854.40
+2025-08-18,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,7,1603.00,-33.01,0.00,1569.99
+2025-08-18,"Cast Iron Skillet 10""",cast-iron-skillet-10,24,1176.00,-23.60,0.00,1152.40
+2025-08-18,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-51.15,0.00,815.85
+2025-08-18,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,7,833.00,0.00,-83.08,749.92
+2025-08-18,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-27.28,0.00,684.72
+2025-08-18,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-20.41,-67.07,468.52
+2025-08-18,Insulated Coffee Press,insulated-coffee-press,10,440.00,-6.62,0.00,433.38
+2025-08-18,Fire Poker & Tool Set,fire-poker-tool-set,11,429.00,-16.69,0.00,412.31
+2025-08-18,Folding Prep Table,folding-prep-table,3,327.00,-16.05,0.00,310.95
+2025-08-18,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-7.88,0.00,184.12
+2025-08-18,Windshield Panel Set,windshield-panel-set,3,177.00,-9.12,0.00,167.88
+2025-08-25,Trailhead Portable Grill,trailhead-portable-grill,17,3213.00,-141.83,0.00,3071.17
+2025-08-25,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,-51.15,-134.45,1259.40
+2025-08-25,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,-66.02,0.00,1078.98
+2025-08-25,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,8,952.00,-72.24,0.00,879.76
+2025-08-25,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,5,695.00,-61.23,0.00,633.77
+2025-08-25,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-39.32,0.00,646.68
+2025-08-25,Folding Prep Table,folding-prep-table,4,436.00,0.00,0.00,436.00
+2025-08-25,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,-27.28,0.00,328.72
+2025-08-25,Insulated Coffee Press,insulated-coffee-press,7,308.00,-6.62,0.00,301.38
+2025-08-25,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-5.56,0.00,267.44
+2025-08-25,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-7.89,0.00,136.11
+2025-08-25,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-09-01,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,-65.71,0.00,1446.29
+2025-09-01,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-82.63,0.00,1291.37
+2025-09-01,"Cast Iron Skillet 10""",cast-iron-skillet-10,11,539.00,-9.78,-28.93,500.29
+2025-09-01,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-28.05,-36.87,352.08
+2025-09-01,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,3,357.00,-23.04,0.00,333.96
+2025-09-01,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2025-09-01,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2025-09-01,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-26.59,0.00,246.41
+2025-09-01,Insulated Coffee Press,insulated-coffee-press,6,264.00,-8.70,-28.57,226.73
+2025-09-01,Folding Prep Table,folding-prep-table,2,218.00,0.00,0.00,218.00
+2025-09-01,Windshield Panel Set,windshield-panel-set,3,177.00,-23.93,-15.73,137.34
+2025-09-01,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,4,96.00,0.00,0.00,96.00
+2025-09-08,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,-65.71,0.00,1446.29
+2025-09-08,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-23.04,-45.42,645.54
+2025-09-08,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,-20.11,-52.85,283.04
+2025-09-08,"Cast Iron Skillet 10""",cast-iron-skillet-10,7,343.00,-39.13,-28.92,274.95
+2025-09-08,Folding Prep Table,folding-prep-table,3,327.00,-17.58,-23.11,286.31
+2025-09-08,Insulated Coffee Press,insulated-coffee-press,7,308.00,-8.70,0.00,299.30
+2025-09-08,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,-54.14,0.00,234.86
+2025-09-08,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2025-09-08,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-14.23,0.00,201.77
+2025-09-08,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,0.00,0.00,156.00
+2025-09-08,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-09-08,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2025-09-15,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-54.13,-71.15,1030.72
+2025-09-15,Trailhead Portable Grill,trailhead-portable-grill,5,945.00,-32.86,-151.14,761.00
+2025-09-15,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,-19.57,0.00,568.43
+2025-09-15,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-40.21,0.00,493.79
+2025-09-15,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2025-09-15,Folding Prep Table,folding-prep-table,2,218.00,-17.58,0.00,200.42
+2025-09-15,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2025-09-15,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,-6.65,0.00,149.35
+2025-09-15,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-4.75,-15.59,123.66
+2025-09-15,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-09-15,Insulated Coffee Press,insulated-coffee-press,3,132.00,-8.69,0.00,123.31
+2025-09-15,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,1,119.00,0.00,0.00,119.00
+2025-09-22,Trailhead Portable Grill,trailhead-portable-grill,5,945.00,-65.71,0.00,879.29
+2025-09-22,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,-41.31,-81.45,793.24
+2025-09-22,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-20.11,0.00,424.89
+2025-09-22,"Cast Iron Skillet 10""",cast-iron-skillet-10,9,441.00,-19.56,0.00,421.44
+2025-09-22,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2025-09-22,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,-28.05,0.00,249.95
+2025-09-22,Insulated Coffee Press,insulated-coffee-press,4,176.00,-8.69,0.00,167.31
+2025-09-22,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,0.00,-21.85,134.15
+2025-09-22,Windshield Panel Set,windshield-panel-set,1,59.00,0.00,0.00,59.00
+2025-09-22,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,2,48.00,-4.75,0.00,43.25
+2025-09-29,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-24.53,0.00,1298.47
+2025-09-29,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-23.03,-33.90,538.07
+2025-09-29,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-09-29,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,-31.35,0.00,426.65
+2025-09-29,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-12.57,0.00,432.43
+2025-09-29,"Cast Iron Skillet 10""",cast-iron-skillet-10,9,441.00,-6.57,0.00,434.43
+2025-09-29,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-09-29,Insulated Coffee Press,insulated-coffee-press,5,220.00,-15.11,0.00,204.89
+2025-09-29,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-7.28,-11.96,172.76
+2025-09-29,Windshield Panel Set,windshield-panel-set,2,118.00,-19.02,0.00,98.98
+2025-10-06,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-24.52,-112.83,1563.65
+2025-10-06,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,0.00,-61.81,1083.19
+2025-10-06,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-10-06,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,3,357.00,0.00,0.00,357.00
+2025-10-06,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,3,267.00,-12.57,0.00,254.43
+2025-10-06,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-3.65,0.00,260.35
+2025-10-06,"Cast Iron Skillet 10""",cast-iron-skillet-10,5,245.00,0.00,-21.59,223.41
+2025-10-06,Windshield Panel Set,windshield-panel-set,4,236.00,0.00,-12.50,223.50
+2025-10-06,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-9.98,-16.40,207.62
+2025-10-06,Folding Prep Table,folding-prep-table,2,218.00,-26.47,0.00,191.53
+2025-10-06,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-10-06,Insulated Coffee Press,insulated-coffee-press,2,88.00,0.00,0.00,88.00
+2025-10-13,Trailhead Portable Grill,trailhead-portable-grill,10,1890.00,-49.06,0.00,1840.94
+2025-10-13,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,5,695.00,-40.41,0.00,654.59
+2025-10-13,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,-26.28,0.00,561.72
+2025-10-13,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,-40.47,0.00,537.53
+2025-10-13,Fire Poker & Tool Set,fire-poker-tool-set,12,468.00,-9.98,0.00,458.02
+2025-10-13,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,0.00,0.00,458.00
+2025-10-13,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,0.00,-41.30,403.70
+2025-10-13,Folding Prep Table,folding-prep-table,4,436.00,0.00,0.00,436.00
+2025-10-13,Insulated Coffee Press,insulated-coffee-press,7,308.00,0.00,0.00,308.00
+2025-10-13,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-34.39,0.00,203.61
+2025-10-13,Windshield Panel Set,windshield-panel-set,1,59.00,0.00,0.00,59.00
+2025-10-13,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,1,24.00,0.00,0.00,24.00
+2025-10-20,Trailhead Portable Grill,trailhead-portable-grill,4,756.00,-73.59,0.00,682.41
+2025-10-20,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-31.35,0.00,655.65
+2025-10-20,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-19.71,-21.58,644.71
+2025-10-20,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,7,623.00,-25.13,0.00,597.87
+2025-10-20,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,0.00,0.00,595.00
+2025-10-20,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-10-20,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,0.00,-26.56,390.44
+2025-10-20,Insulated Coffee Press,insulated-coffee-press,5,220.00,-12.83,-21.07,186.10
+2025-10-20,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2025-10-20,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,5,120.00,-7.28,0.00,112.72
+2025-10-20,Fire Poker & Tool Set,fire-poker-tool-set,2,78.00,0.00,0.00,78.00
+2025-10-27,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,-31.35,0.00,884.65
+2025-10-27,Trailhead Portable Grill,trailhead-portable-grill,4,756.00,-29.60,0.00,726.40
+2025-10-27,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-34.59,0.00,560.41
+2025-10-27,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,-13.14,0.00,574.86
+2025-10-27,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,-40.46,-53.18,484.36
+2025-10-27,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-12.57,0.00,521.43
+2025-10-27,Insulated Coffee Press,insulated-coffee-press,9,396.00,-12.82,0.00,383.18
+2025-10-27,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-10-27,Folding Prep Table,folding-prep-table,2,218.00,0.00,-17.39,200.61
+2025-10-27,Fire Poker & Tool Set,fire-poker-tool-set,2,78.00,-5.00,0.00,73.00
+2025-10-27,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,3,72.00,0.00,0.00,72.00
+2025-10-27,Windshield Panel Set,windshield-panel-set,1,59.00,0.00,0.00,59.00
+2025-11-03,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,7,1603.00,-63.80,-83.87,1455.33
+2025-11-03,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,10,890.00,-55.93,-55.14,778.93
+2025-11-03,Trailhead Portable Grill,trailhead-portable-grill,4,756.00,-29.59,0.00,726.41
+2025-11-03,"Cast Iron Skillet 10""",cast-iron-skillet-10,15,735.00,-14.72,0.00,720.28
+2025-11-03,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,5,695.00,-38.44,-37.90,618.66
+2025-11-03,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-11-03,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,3,357.00,0.00,-45.73,311.27
+2025-11-03,Insulated Coffee Press,insulated-coffee-press,7,308.00,-7.37,0.00,300.63
+2025-11-03,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-6.74,0.00,227.26
+2025-11-03,Folding Prep Table,folding-prep-table,2,218.00,0.00,-23.10,194.90
+2025-11-03,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,5,120.00,-4.02,-15.86,100.12
+2025-11-03,Windshield Panel Set,windshield-panel-set,2,118.00,-16.42,0.00,101.58
+2025-11-10,Trailhead Portable Grill,trailhead-portable-grill,10,1890.00,-88.78,-155.60,1645.62
+2025-11-10,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,0.00,0.00,687.00
+2025-11-10,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2025-11-10,"Cast Iron Skillet 10""",cast-iron-skillet-10,10,490.00,-22.06,-19.34,448.60
+2025-11-10,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,0.00,0.00,445.00
+2025-11-10,Insulated Coffee Press,insulated-coffee-press,7,308.00,-14.73,0.00,293.27
+2025-11-10,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,-19.22,0.00,258.78
+2025-11-10,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-17.39,0.00,220.61
+2025-11-10,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-20.24,-22.16,191.60
+2025-11-10,Folding Prep Table,folding-prep-table,2,218.00,-17.58,0.00,200.42
+2025-11-10,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-8.05,0.00,207.95
+2025-11-10,Windshield Panel Set,windshield-panel-set,3,177.00,-8.22,0.00,168.78
+2025-11-17,Trailhead Portable Grill,trailhead-portable-grill,11,2079.00,-29.60,0.00,2049.40
+2025-11-17,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-58.16,0.00,808.84
+2025-11-17,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-17.40,0.00,696.60
+2025-11-17,"Cast Iron Skillet 10""",cast-iron-skillet-10,11,539.00,-36.78,0.00,502.22
+2025-11-17,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-13.99,0.00,520.01
+2025-11-17,Insulated Coffee Press,insulated-coffee-press,8,352.00,-7.37,0.00,344.63
+2025-11-17,Folding Prep Table,folding-prep-table,3,327.00,-17.57,0.00,309.43
+2025-11-17,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-11-17,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,-31.91,0.00,197.09
+2025-11-17,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,-6.74,0.00,188.26
+2025-11-17,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,7,168.00,-12.06,0.00,155.94
+2025-11-17,Windshield Panel Set,windshield-panel-set,1,59.00,0.00,0.00,59.00
+2025-11-24,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-59.19,0.00,1641.81
+2025-11-24,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-58.16,-76.44,1021.40
+2025-11-24,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-31.91,0.00,655.09
+2025-11-24,"Cast Iron Skillet 10""",cast-iron-skillet-10,11,539.00,-14.71,-38.67,485.62
+2025-11-24,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,-17.39,0.00,458.61
+2025-11-24,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-13.98,0.00,431.02
+2025-11-24,Windshield Panel Set,windshield-panel-set,6,354.00,0.00,-16.19,337.81
+2025-11-24,Fire Poker & Tool Set,fire-poker-tool-set,8,312.00,0.00,0.00,312.00
+2025-11-24,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2025-11-24,Insulated Coffee Press,insulated-coffee-press,6,264.00,-14.73,-29.05,220.22
+2025-11-24,Folding Prep Table,folding-prep-table,2,218.00,0.00,0.00,218.00
+2025-11-24,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,7,168.00,0.00,0.00,168.00
+2025-12-01,Trailhead Portable Grill,trailhead-portable-grill,11,2079.00,-57.42,0.00,2021.58
+2025-12-01,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,9,801.00,-13.29,-61.15,726.56
+2025-12-01,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,-19.13,0.00,694.87
+2025-12-01,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-35.44,0.00,651.56
+2025-12-01,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-7.57,0.00,678.43
+2025-12-01,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,0.00,0.00,417.00
+2025-12-01,Insulated Coffee Press,insulated-coffee-press,8,352.00,-6.06,0.00,345.94
+2025-12-01,Fire Poker & Tool Set,fire-poker-tool-set,9,351.00,-6.31,-24.86,319.83
+2025-12-01,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,10,240.00,-7.78,0.00,232.22
+2025-12-01,Folding Prep Table,folding-prep-table,2,218.00,-20.14,0.00,197.86
+2025-12-01,Windshield Panel Set,windshield-panel-set,3,177.00,-9.60,0.00,167.40
+2025-12-08,Trailhead Portable Grill,trailhead-portable-grill,10,1890.00,-57.42,-169.82,1662.76
+2025-12-08,Trailhead Grill Pro,trailhead-grill-pro,5,1445.00,-43.02,-84.81,1317.17
+2025-12-08,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-70.90,-93.17,1209.93
+2025-12-08,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,8,712.00,-26.59,0.00,685.41
+2025-12-08,"Cast Iron Skillet 10""",cast-iron-skillet-10,14,686.00,-15.14,0.00,670.86
+2025-12-08,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,0.00,-50.28,544.72
+2025-12-08,Insulated Coffee Press,insulated-coffee-press,10,440.00,-30.28,0.00,409.72
+2025-12-08,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,3,417.00,-20.97,0.00,396.03
+2025-12-08,Folding Prep Table,folding-prep-table,2,218.00,0.00,0.00,218.00
+2025-12-08,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,0.00,0.00,192.00
+2025-12-08,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,-6.30,0.00,149.70
+2025-12-08,Windshield Panel Set,windshield-panel-set,2,118.00,-9.61,0.00,108.39
+2025-12-15,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,-57.42,0.00,1454.58
+2025-12-15,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,0.00,0.00,1374.00
+2025-12-15,Trailhead Grill Pro,trailhead-grill-pro,4,1156.00,-43.02,0.00,1112.98
+2025-12-15,"Cast Iron Skillet 10""",cast-iron-skillet-10,17,833.00,-37.85,-35.05,760.10
+2025-12-15,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-38.26,0.00,556.74
+2025-12-15,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,0.00,-41.34,514.66
+2025-12-15,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,5,445.00,-13.29,0.00,431.71
+2025-12-15,Insulated Coffee Press,insulated-coffee-press,9,396.00,-6.06,0.00,389.94
+2025-12-15,Folding Prep Table,folding-prep-table,3,327.00,-20.14,-26.47,280.39
+2025-12-15,Windshield Panel Set,windshield-panel-set,5,295.00,-9.60,-18.93,266.47
+2025-12-15,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-6.31,0.00,227.69
+2025-12-15,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,4,96.00,-7.78,0.00,88.22
+2025-12-22,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-86.14,0.00,1614.86
+2025-12-22,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,-35.44,0.00,880.56
+2025-12-22,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,-43.02,0.00,534.98
+2025-12-22,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-41.93,0.00,514.07
+2025-12-22,"Cast Iron Skillet 10""",cast-iron-skillet-10,9,441.00,-15.14,0.00,425.86
+2025-12-22,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2025-12-22,Folding Prep Table,folding-prep-table,3,327.00,0.00,0.00,327.00
+2025-12-22,Fire Poker & Tool Set,fire-poker-tool-set,7,273.00,-12.62,0.00,260.38
+2025-12-22,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,11,264.00,-11.67,0.00,252.33
+2025-12-22,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2025-12-22,Windshield Panel Set,windshield-panel-set,4,236.00,0.00,0.00,236.00
+2025-12-22,Insulated Coffee Press,insulated-coffee-press,4,176.00,-6.06,-31.85,138.09
+2025-12-29,Trailhead Portable Grill,trailhead-portable-grill,8,1512.00,0.00,0.00,1512.00
+2025-12-29,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,4,916.00,0.00,0.00,916.00
+2025-12-29,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,0.00,0.00,867.00
+2025-12-29,"Cast Iron Skillet 10""",cast-iron-skillet-10,17,833.00,-22.72,-29.63,780.65
+2025-12-29,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,9,801.00,-53.22,0.00,747.78
+2025-12-29,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-19.13,0.00,218.87
+2025-12-29,Fire Poker & Tool Set,fire-poker-tool-set,5,195.00,-6.30,0.00,188.70
+2025-12-29,Insulated Coffee Press,insulated-coffee-press,4,176.00,0.00,0.00,176.00
+2025-12-29,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2025-12-29,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,5,120.00,-2.40,-17.90,99.70
+2025-12-29,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,-59.00,59.00
+2025-12-29,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2026-01-05,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,0.00,-189.00,1134.00
+2026-01-05,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,5,1145.00,0.00,0.00,1145.00
+2026-01-05,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2026-01-05,"Cast Iron Skillet 10""",cast-iron-skillet-10,10,490.00,-22.05,0.00,467.95
+2026-01-05,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2026-01-05,Windshield Panel Set,windshield-panel-set,5,295.00,-8.85,0.00,286.15
+2026-01-05,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2026-01-05,Insulated Coffee Press,insulated-coffee-press,6,264.00,0.00,0.00,264.00
+2026-01-05,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2026-01-05,Fire Poker & Tool Set,fire-poker-tool-set,6,234.00,-15.60,0.00,218.40
+2026-01-05,Folding Prep Table,folding-prep-table,2,218.00,0.00,0.00,218.00
+2026-01-05,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-8.40,-24.00,159.60
+2026-01-12,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-18.90,0.00,1304.10
+2026-01-12,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,-43.35,0.00,823.65
+2026-01-12,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,0.00,0.00,714.00
+2026-01-12,"Cast Iron Skillet 10""",cast-iron-skillet-10,8,392.00,-4.90,0.00,387.10
+2026-01-12,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2026-01-12,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2026-01-12,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2026-01-12,Windshield Panel Set,windshield-panel-set,3,177.00,-5.90,0.00,171.10
+2026-01-12,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-8.40,0.00,135.60
+2026-01-12,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2026-01-12,Fire Poker & Tool Set,fire-poker-tool-set,2,78.00,0.00,0.00,78.00
+2026-01-19,Trailhead Portable Grill,trailhead-portable-grill,6,1134.00,-75.60,0.00,1058.40
+2026-01-19,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,5,595.00,-47.60,0.00,547.40
+2026-01-19,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,0.00,-229.00,229.00
+2026-01-19,"Cast Iron Skillet 10""",cast-iron-skillet-10,8,392.00,-7.35,0.00,384.65
+2026-01-19,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2026-01-19,Insulated Coffee Press,insulated-coffee-press,5,220.00,-8.80,0.00,211.20
+2026-01-19,Folding Prep Table,folding-prep-table,2,218.00,0.00,0.00,218.00
+2026-01-19,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,9,216.00,-9.60,-21.60,184.80
+2026-01-19,Windshield Panel Set,windshield-panel-set,3,177.00,-8.85,0.00,168.15
+2026-01-19,Fire Poker & Tool Set,fire-poker-tool-set,1,39.00,0.00,0.00,39.00
+2026-01-26,Trailhead Portable Grill,trailhead-portable-grill,5,945.00,0.00,0.00,945.00
+2026-01-26,"Cast Iron Skillet 10""",cast-iron-skillet-10,13,637.00,-31.85,0.00,605.15
+2026-01-26,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-26.70,0.00,507.30
+2026-01-26,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,3,357.00,-35.70,0.00,321.30
+2026-01-26,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2026-01-26,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2026-01-26,Insulated Coffee Press,insulated-coffee-press,5,220.00,-8.80,0.00,211.20
+2026-01-26,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-6.00,0.00,138.00
+2026-01-26,Windshield Panel Set,windshield-panel-set,2,118.00,0.00,0.00,118.00
+2026-01-26,Fire Poker & Tool Set,fire-poker-tool-set,1,39.00,0.00,0.00,39.00
+2026-02-02,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,-18.90,0.00,1304.10
+2026-02-02,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,10,890.00,-40.05,-75.65,774.30
+2026-02-02,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,0.00,0.00,867.00
+2026-02-02,"Cast Iron Skillet 10""",cast-iron-skillet-10,15,735.00,-7.35,-49.00,678.65
+2026-02-02,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,0.00,0.00,458.00
+2026-02-02,Folding Prep Table,folding-prep-table,3,327.00,0.00,-109.00,218.00
+2026-02-02,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,-20.85,0.00,257.15
+2026-02-02,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-3.60,-24.00,164.40
+2026-02-02,Windshield Panel Set,windshield-panel-set,3,177.00,-5.90,0.00,171.10
+2026-02-02,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,-15.60,0.00,140.40
+2026-02-02,Insulated Coffee Press,insulated-coffee-press,3,132.00,0.00,0.00,132.00
+2026-02-09,Trailhead Portable Grill,trailhead-portable-grill,7,1323.00,0.00,0.00,1323.00
+2026-02-09,"Cast Iron Skillet 10""",cast-iron-skillet-10,16,784.00,-24.50,0.00,759.50
+2026-02-09,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,3,687.00,-22.90,0.00,664.10
+2026-02-09,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,0.00,-89.00,445.00
+2026-02-09,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2026-02-09,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2026-02-09,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2026-02-09,Insulated Coffee Press,insulated-coffee-press,5,220.00,-8.80,0.00,211.20
+2026-02-09,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,8,192.00,-3.60,0.00,188.40
+2026-02-09,Fire Poker & Tool Set,fire-poker-tool-set,4,156.00,0.00,0.00,156.00
+2026-02-09,Windshield Panel Set,windshield-panel-set,1,59.00,-5.90,0.00,53.10
+2026-02-16,Trailhead Portable Grill,trailhead-portable-grill,9,1701.00,-18.90,-189.00,1493.10
+2026-02-16,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,6,714.00,0.00,0.00,714.00
+2026-02-16,"Cast Iron Skillet 10""",cast-iron-skillet-10,12,588.00,-14.70,0.00,573.30
+2026-02-16,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,-43.35,0.00,534.65
+2026-02-16,Fire Poker & Tool Set,fire-poker-tool-set,10,390.00,-11.70,-39.00,339.30
+2026-02-16,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,4,356.00,0.00,0.00,356.00
+2026-02-16,Folding Prep Table,folding-prep-table,3,327.00,-32.70,0.00,294.30
+2026-02-16,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,1,229.00,0.00,0.00,229.00
+2026-02-16,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2026-02-16,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-6.00,0.00,138.00
+2026-02-16,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2026-02-16,Insulated Coffee Press,insulated-coffee-press,1,44.00,0.00,0.00,44.00
+2026-02-23,Trailhead Portable Grill,trailhead-portable-grill,11,2079.00,-103.95,0.00,1975.05
+2026-02-23,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-34.35,0.00,1339.65
+2026-02-23,"Cast Iron Skillet 10""",cast-iron-skillet-10,13,637.00,-19.60,0.00,617.40
+2026-02-23,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,0.00,578.00
+2026-02-23,Fire Poker & Tool Set,fire-poker-tool-set,8,312.00,-9.75,0.00,302.25
+2026-02-23,Windshield Panel Set,windshield-panel-set,5,295.00,0.00,0.00,295.00
+2026-02-23,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,2,278.00,0.00,0.00,278.00
+2026-02-23,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,3,267.00,-17.80,0.00,249.20
+2026-02-23,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2026-02-23,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,6,144.00,-8.40,0.00,135.60
+2026-02-23,Insulated Coffee Press,insulated-coffee-press,3,132.00,-6.60,0.00,125.40
+2026-02-23,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2026-03-02,Trailhead Portable Grill,trailhead-portable-grill,13,2457.00,-18.90,-170.10,2268.00
+2026-03-02,"Cast Iron Skillet 10""",cast-iron-skillet-10,29,1421.00,-83.30,-49.00,1288.70
+2026-03-02,Insulated Coffee Press,insulated-coffee-press,13,572.00,-26.40,-37.40,508.20
+2026-03-02,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,4,556.00,-13.90,0.00,542.10
+2026-03-02,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,6,534.00,-17.80,0.00,516.20
+2026-03-02,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,0.00,0.00,458.00
+2026-03-02,Fire Poker & Tool Set,fire-poker-tool-set,11,429.00,-11.70,0.00,417.30
+2026-03-02,Windshield Panel Set,windshield-panel-set,6,354.00,0.00,0.00,354.00
+2026-03-02,Trailhead Grill Pro,trailhead-grill-pro,1,289.00,0.00,0.00,289.00
+2026-03-02,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,12,288.00,-7.20,0.00,280.80
+2026-03-02,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,-23.80,0.00,214.20
+2026-03-02,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2026-03-09,Trailhead Portable Grill,trailhead-portable-grill,13,2457.00,-56.70,0.00,2400.30
+2026-03-09,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,6,1374.00,-34.35,0.00,1339.65
+2026-03-09,"Cast Iron Skillet 10""",cast-iron-skillet-10,27,1323.00,-44.10,-98.00,1180.90
+2026-03-09,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,14,1246.00,-35.60,0.00,1210.40
+2026-03-09,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,7,973.00,-55.60,0.00,917.40
+2026-03-09,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,7,833.00,0.00,0.00,833.00
+2026-03-09,Trailhead Grill Pro,trailhead-grill-pro,2,578.00,0.00,-289.00,289.00
+2026-03-09,Insulated Coffee Press,insulated-coffee-press,11,484.00,-11.00,0.00,473.00
+2026-03-09,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,18,432.00,-19.20,-48.00,364.80
+2026-03-09,Fire Poker & Tool Set,fire-poker-tool-set,11,429.00,-5.85,0.00,423.15
+2026-03-09,Folding Prep Table,folding-prep-table,2,218.00,-10.90,0.00,207.10
+2026-03-09,Windshield Panel Set,windshield-panel-set,3,177.00,0.00,0.00,177.00
+2026-03-16,Trailhead Portable Grill,trailhead-portable-grill,16,3024.00,-170.10,0.00,2853.90
+2026-03-16,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,7,1603.00,-114.50,0.00,1488.50
+2026-03-16,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,18,1602.00,-26.70,0.00,1575.30
+2026-03-16,"Cast Iron Skillet 10""",cast-iron-skillet-10,23,1127.00,-46.55,0.00,1080.45
+2026-03-16,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,8,1112.00,-48.65,0.00,1063.35
+2026-03-16,Trailhead Grill Pro,trailhead-grill-pro,3,867.00,0.00,0.00,867.00
+2026-03-16,Fire Poker & Tool Set,fire-poker-tool-set,14,546.00,-15.60,0.00,530.40
+2026-03-16,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,21,504.00,-13.20,0.00,490.80
+2026-03-16,Insulated Coffee Press,insulated-coffee-press,11,484.00,-24.20,0.00,459.80
+2026-03-16,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,2,238.00,0.00,0.00,238.00
+2026-03-16,Windshield Panel Set,windshield-panel-set,4,236.00,0.00,0.00,236.00
+2026-03-16,Folding Prep Table,folding-prep-table,1,109.00,0.00,0.00,109.00
+2026-03-23,Trailhead Portable Grill,trailhead-portable-grill,12,2268.00,-75.60,0.00,2192.40
+2026-03-23,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,7,1603.00,-68.70,0.00,1534.30
+2026-03-23,"Cast Iron Skillet 10""",cast-iron-skillet-10,22,1078.00,-46.55,-39.20,992.25
+2026-03-23,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,7,973.00,-48.65,0.00,924.35
+2026-03-23,Fire Poker & Tool Set,fire-poker-tool-set,16,624.00,-19.50,0.00,604.50
+2026-03-23,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,7,623.00,-17.80,0.00,605.20
+2026-03-23,Insulated Coffee Press,insulated-coffee-press,11,484.00,-15.40,0.00,468.60
+2026-03-23,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,4,476.00,-29.75,0.00,446.25
+2026-03-23,Windshield Panel Set,windshield-panel-set,6,354.00,-14.75,0.00,339.25
+2026-03-23,Folding Prep Table,folding-prep-table,3,327.00,-10.90,0.00,316.10
+2026-03-23,Grill Grate Cleaner Kit,grill-grate-cleaner-kit,10,240.00,-7.20,0.00,232.80
+2026-03-30,"Camp Kitchen Kit, Deluxe",camp-kitchen-kit-deluxe,2,458.00,-22.90,0.00,435.10
+2026-03-30,Insulated Coffee Press,insulated-coffee-press,9,396.00,-19.80,0.00,376.20
+2026-03-30,"Cast Iron Skillet 10""",cast-iron-skillet-10,8,392.00,0.00,0.00,392.00
+2026-03-30,Trailhead Portable Grill,trailhead-portable-grill,2,378.00,0.00,0.00,378.00
+2026-03-30,Cast Iron Dutch Oven 6qt,cast-iron-dutch-oven-6qt,2,178.00,-31.15,0.00,146.85
+2026-03-30,Nesting Cookware Set 8pc,nesting-cookware-set-8pc,1,139.00,0.00,0.00,139.00
+2026-03-30,"Camp Kitchen Kit, Basic",camp-kitchen-kit-basic,1,119.00,0.00,0.00,119.00
+2026-03-30,Windshield Panel Set,windshield-panel-set,1,59.00,0.00,0.00,59.00
+2026-03-30,Fire Poker & Tool Set,fire-poker-tool-set,1,39.00,0.00,0.00,39.00
