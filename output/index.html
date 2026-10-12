@@ -7,49 +7,60 @@
 <link rel="icon" href="data:,">
 <style>
   :root {
-    --bg: #f2f4f3;
+    /* Redesign palette (dashboard-redesign-reference.html) */
+    --ink: #1F3044; --mut: #64748B; --bd: #E4E9F2; --bg: #F8F8FF;
+    --green: #10B981; --amber: #F59E0B; --red: #E11D48; --grey: #94A3B8; --navy: #1F3044;
+
     --card: #ffffff;
-    --ink: #1d2422;
-    --muted: #5f6b67;
+    --muted: #64748B;
     --faint: #8a9591;
-    --line: #e1e6e4;
-    --grid: #edf0ef;
-    --header: #1f2a27;
+    --line: #E4E9F2;
+    --grid: #EEF1F6;
+    --header: #1F3044;
     --header-ink: #f4f7f6;
 
-    /* Bar fills: teal-green / red pair, separated in lightness so they stay distinguishable
-       for red-green colour-blind readers (checked with the dataviz palette validator). */
-    --gain: #0f7b6c;
-    --loss: #e04b3a;
+    /* Bar and band fills use the reference's Red/Amber/Green, which pass the dataviz
+       colour-blindness check; every indicator also carries a text label. */
+    --gain: var(--green);
+    --loss: var(--red);
     --neutral-bar: #8f9a96;
 
-    --green-bg: #d9efe9; --green-ink: #0b5e52;
-    --amber-bg: #fdefd0; --amber-ink: #8a5a00; --amber-line: #e8b44c;
-    --red-bg:   #fbdedb; --red-ink:   #a3261b;
-    --grey-bg:  #e6e9e8; --grey-ink:  #4f5956;
+    --green-bg: #D1FAE5; --green-ink: #065F46;
+    --amber-bg: #FEF3C7; --amber-ink: #92400E; --amber-line: var(--amber);
+    --red-bg:   #FFE4E6; --red-ink:   #9F1239;
+    --grey-bg:  #F1F5F9; --grey-ink:  #475569;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font: 15px/1.5 Inter, system-ui, sans-serif;
   }
-  header {
-    background: var(--header);
-    color: var(--header-ink);
-    padding: 18px 24px;
-    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px;
-  }
-  header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .2px; }
-  header .sub { font-size: 13px; opacity: .75; }
+  header { background: var(--navy); color: #fff; padding: 18px 28px; }
+  header h1 { margin: 0; font: 700 22px/1.2 system-ui, sans-serif; }
+  header .sub { font-size: 13px; color: #A9B8CC; margin-top: 4px; }
 
-  main {
-    max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px;
-    display: grid; gap: 20px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* ---------- Shell: sidebar tabs + panels ---------- */
+  .shell { display: flex; min-height: calc(100vh - 90px); }
+  nav { width: 200px; background: #fff; border-right: 1px solid var(--bd); padding: 18px 0; flex-shrink: 0; }
+  nav button { display: block; width: 100%; text-align: left; padding: 11px 22px; border: none; background: none; font: 600 13px/1.3 system-ui, sans-serif; color: var(--mut); cursor: pointer; border-left: 3px solid transparent; }
+  nav button.active { color: var(--navy); border-left-color: var(--navy); background: #F8FAFF; }
+  nav button:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
+  main { flex: 1; padding: 26px 30px; overflow-x: auto; min-width: 0; }
+  .tabpanel { display: none; }
+  .tabpanel.active { display: block; }
+  .dgrid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 16px; }
+  @media (max-width: 900px) { .dgrid { grid-template-columns: minmax(0, 1fr); } }
+  /* Phones: the sidebar becomes a scrollable tab row above the panels. */
+  @media (max-width: 700px) {
+    .shell { flex-direction: column; }
+    nav { width: auto; display: flex; overflow-x: auto; padding: 0; border-right: none; border-bottom: 1px solid var(--bd); }
+    nav button { width: auto; white-space: nowrap; padding: 12px 14px; border-left: none; border-bottom: 3px solid transparent; }
+    nav button.active { border-bottom-color: var(--navy); }
+    main { padding: 18px 16px; }
+    header { padding: 16px; }
   }
-  @media (max-width: 820px) { main { grid-template-columns: minmax(0, 1fr); } }
 
   .card {
     background: var(--card);
@@ -89,24 +100,6 @@
   .banner strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
   .nowrap { white-space: nowrap; }
   .banner.scope { border-left-color: #9aa5a1; background: var(--grey-bg); color: var(--grey-ink); }
-
-  /* ---------- Summary strip ---------- */
-  .summary { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  @media (max-width: 820px) { .summary { grid-template-columns: minmax(0, 1fr); } }
-  .stat {
-    display: block; color: inherit; text-decoration: none;
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
-    border-top: 4px solid var(--grey-bg);
-  }
-  .stat:hover, .stat:focus-visible { border-color: #c9d1ce; outline: none; }
-  .stat.amber { border-top-color: var(--amber-line); }
-  .stat.red   { border-top-color: var(--loss); }
-  .stat-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .stat-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
-  .stat-value { font-size: 26px; font-weight: 650; line-height: 1.15; margin: 6px 0 2px; font-variant-numeric: tabular-nums; }
-  .stat-value small { font-size: 14px; font-weight: 600; color: var(--muted); }
-  .stat-sub { font-size: 12.5px; color: var(--muted); }
 
   /* ---------- Revenue column chart ---------- */
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: end; height: 190px; border-bottom: 1px solid #b9c2bf; padding: 0 12px; }
@@ -178,16 +171,91 @@
 
   .card.nodata-card { background: #f7f8f8; border-style: dashed; }
 
-  /* ---------- Data notes ---------- */
-  .notes { display: grid; gap: 0; }
-  .note-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid var(--grid); font-size: 13px; }
-  .note-row:last-child { border-bottom: 0; }
-  .note-icon { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--grey-bg); color: var(--grey-ink); }
-  .note-icon.amber { background: var(--amber-bg); color: var(--amber-ink); }
-  .note-icon svg { width: 16px; height: 16px; }
-  .note-row strong { font-weight: 600; }
-  .note-row details { margin-top: 2px; color: var(--muted); font-size: 12.5px; }
-  .note-row summary { cursor: pointer; color: var(--muted); font-size: 12px; width: max-content; }
+  /* ---------- Redesign widgets (from dashboard-redesign-reference.html). Classes that clashed with
+     the existing cards are renamed: .row -> .rrow, .pill -> .rpill, .bars -> .mbars, .note-row -> .dnote ---------- */
+  .rrow { display: grid; gap: 14px; margin-bottom: 16px; }
+  .r3 { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .r2 { grid-template-columns: 3fr 2fr; }
+  @media (max-width: 900px) { .r3, .r2 { grid-template-columns: minmax(0, 1fr); } }
+  .col-panel { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+  .col-panel h3 { font: 700 12px/1.2 system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--navy); margin: 0 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--bd); }
+  .mini-card { border-bottom: 1px solid var(--bd); padding: 12px 0; position: relative; }
+  .mini-card:last-child { border-bottom: none; padding-bottom: 4px; }
+  .lbl { font: 700 10.5px/1.3 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); }
+  .star { color: #F59E0B; font-weight: 800; margin-left: 4px; }
+  .val { font: 700 22px/1.15 system-ui, sans-serif; margin: 6px 0 3px; }
+  .det { font-size: 12.5px; color: var(--mut); }
+  .rpill { display: inline-block; padding: 2px 9px; border-radius: 999px; font: 700 9.5px/1.4 system-ui, sans-serif; letter-spacing: .04em; margin-left: 6px; vertical-align: middle; }
+  .rpill.green { background: var(--green); color: #fff; } .rpill.amber { background: var(--amber); color: var(--ink); }
+  .rpill.red { background: var(--red); color: #fff; } .rpill.grey { background: var(--grey); color: #fff; }
+  .rpill.noband { background: #E2E8F0; color: var(--mut); }
+  .so-what { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--bd); font-size: 12px; color: #3B4F68; display: flex; gap: 6px; }
+  .so-what b { color: var(--ink); flex-shrink: 0; }
+  .reco-card { background: #F8FAFF; border: 1px dashed #B9C5DC; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--mut); margin-top: 6px; }
+  .warn-card { background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #9A3412; margin-top: 6px; }
+  .legend-box { display: flex; gap: 22px; flex-wrap: wrap; background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; font-size: 12.5px; }
+  .legend-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .legend-group .gtitle { font-weight: 700; color: var(--mut); text-transform: uppercase; font-size: 10.5px; letter-spacing: .05em; margin-right: 2px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+  .leg-item { display: flex; align-items: center; white-space: nowrap; }
+  h2.section { font: 700 13px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); margin: 0 0 12px; }
+  h3.group-head { font: 700 14px/1.2 system-ui, sans-serif; color: var(--navy); margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); }
+  h3.group-head:first-child { margin-top: 0; }
+  .chart-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; min-width: 0; }
+  .mbars { display: flex; align-items: flex-end; gap: 5px; height: 120px; margin-top: 10px; }
+  .mbars .bar-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-width: 0; }
+  .mbars .fill { border-radius: 3px 3px 0 0; position: relative; }
+  .mbars .fill.amazon { background: #4C7CF0; } .mbars .fill.shopify { background: #10B981; }
+  .mbars .fill.open { background: repeating-linear-gradient(45deg, #C7D4EE, #C7D4EE 4px, #DCE5F5 4px, #DCE5F5 8px) !important; }
+  .mbars .month-lbl { font-size: 9px; color: var(--mut); text-align: center; margin-top: 3px; white-space: nowrap; }
+  .mbars .val-lbl { font-size: 8.5px; color: var(--mut); text-align: center; margin-bottom: 2px; white-space: nowrap; }
+  @media (max-width: 600px) {
+    .mbars { gap: 2px; } .mbars .val-lbl { font-size: 7px; } .mbars .month-lbl { font-size: 8px; overflow: visible; }
+    /* Phones: label every third month and the last one; each bar's tooltip still names its month. */
+    .mbars .bar-col:not(:nth-child(3n+1)):not(:last-child) .month-lbl { visibility: hidden; }
+  }
+  .yoy-compare { display: flex; gap: 18px; align-items: flex-end; height: 90px; margin: 12px 0; }
+  .yoy-bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .yoy-bar .bar-fill { width: 60%; border-radius: 4px 4px 0 0; }
+  .yoy-bar .bar-fill.real { background: #4C7CF0; } .yoy-bar .bar-fill.pending { background: #E2E8F0; border: 1px dashed #94A3B8; }
+  .yoy-bar .bv { font-size: 12px; font-weight: 700; margin-top: 6px; } .yoy-bar .bl { font-size: 11px; color: var(--mut); margin-top: 2px; }
+  .dnote { background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; font-size: 13.5px; }
+  .dnote .n-label { font-weight: 700; color: var(--navy); display: block; margin-bottom: 4px; }
+  table.rows-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.rows-tbl th { text-align: left; color: var(--mut); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 6px 10px; border-bottom: 2px solid var(--bd); }
+  table.rows-tbl td { padding: 7px 10px; border-bottom: 1px solid var(--bd); overflow-wrap: anywhere; }
+  table.rows-tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ok { color: var(--green); font-weight: 700; }
+  .fail { color: var(--red); font-weight: 700; }
+  .grpname td { font-weight: 700; color: var(--mut); font-size: 11px; text-transform: uppercase; padding: 14px 10px 4px; }
+  .refresh-banner { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 10px 16px; font-size: 13px; color: #166534; margin-bottom: 14px; display: flex; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .chan-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 900px) { .chan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .chan-grid { grid-template-columns: minmax(0, 1fr); } }
+  .chan-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 16px; min-width: 0; }
+  .chan-card.dim { opacity: .6; }
+  .chan-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .chan-badge { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .chan-name { font: 700 11px/1.3 system-ui, sans-serif; color: var(--mut); text-transform: uppercase; letter-spacing: .03em; }
+  .chan-val { font: 700 20px/1.2 system-ui, sans-serif; color: var(--ink); }
+  .chan-cap { font-size: 10.5px; color: var(--mut); }
+  .chan-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .chan-pill { background: #EEF2FF; color: #3730A3; border-radius: 7px; padding: 6px 8px; text-align: center; }
+  .chan-pill.grey { background: #F1F5F9; color: var(--mut); }
+  .chan-pill .cp-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .03em; font-weight: 700; opacity: .75; }
+  .chan-pill .cp-val { font-size: 13px; font-weight: 700; margin-top: 2px; }
+  .stat-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 900px) { .stat-strip { grid-template-columns: minmax(0, 1fr); } }
+  .stat-card { border-radius: 12px; padding: 16px 18px; color: #fff; position: relative; overflow: hidden; min-height: 92px; }
+  .stat-card .s-icon { position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; opacity: .85; }
+  .stat-card .s-lbl { font: 700 11px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .9; }
+  .stat-card .s-val { font: 700 25px/1.2 system-ui, sans-serif; margin: 8px 0 2px; }
+  .stat-card .s-cap { font-size: 11.5px; opacity: .9; padding-right: 30px; }
+  .stat-card .s-tag { display: inline-block; margin-top: 6px; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.55); font-size: 10.5px; font-weight: 700; }
+  /* Deliberately NOT red/amber/green — those are reserved for RAG status, not decoration */
+  .stat-card.c-revenue { background: linear-gradient(135deg, #4F46E5, #3730A3); }
+  .stat-card.c-inventory { background: linear-gradient(135deg, #0891B2, #155E75); }
+  .stat-card.c-marketing { background: linear-gradient(135deg, #7C3AED, #5B21B6); }
 
   /* ---------- Tooltip ---------- */
   #tip {
@@ -197,24 +265,39 @@
     max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,.18); white-space: pre-line;
   }
 
-  footer { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; font-size: 12.5px; color: var(--muted); }
+  footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--bd); font-size: 12.5px; color: var(--muted); }
   footer .pending { color: var(--amber-ink); font-weight: 600; }
   footer time { font-variant-numeric: tabular-nums; }
 
-  #load-error { grid-column: 1 / -1; }
+  #load-error { grid-column: 1 / -1; margin-bottom: 16px; }
+  #details > .card { margin-bottom: 16px; }
   #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
 </head>
 <body>
 <header>
   <h1>Tannerhill Co. — Owner Dashboard</h1>
-  <span class="sub">Source: Supabase</span>
+  <div class="sub">Source: Supabase</div>
 </header>
 
-<main id="app">
-  <section class="card" id="load-status"><p class="note">Loading data…</p></section>
-</main>
-<footer id="run-footer" hidden></footer>
+<div class="shell">
+  <nav role="tablist" aria-label="Dashboard sections">
+    <button class="tab-btn active" role="tab" id="tab-summary" aria-controls="summary" aria-selected="true" data-tab="summary">Executive Summary</button>
+    <button class="tab-btn" role="tab" id="tab-details" aria-controls="details" aria-selected="false" tabindex="-1" data-tab="details">Details</button>
+    <button class="tab-btn" role="tab" id="tab-notes" aria-controls="notes" aria-selected="false" tabindex="-1" data-tab="notes">Data Notes</button>
+    <button class="tab-btn" role="tab" id="tab-rows" aria-controls="rows" aria-selected="false" tabindex="-1" data-tab="rows">Rows read from Supabase</button>
+  </nav>
+
+  <main id="app">
+    <div class="tabpanel active" id="summary" role="tabpanel" aria-labelledby="tab-summary">
+      <section class="card" id="load-status"><p class="note">Loading data…</p></section>
+    </div>
+    <div class="tabpanel" id="details" role="tabpanel" aria-labelledby="tab-details"></div>
+    <div class="tabpanel" id="notes" role="tabpanel" aria-labelledby="tab-notes"></div>
+    <div class="tabpanel" id="rows" role="tabpanel" aria-labelledby="tab-rows"></div>
+    <footer id="run-footer" hidden></footer>
+  </main>
+</div>
 <div id="tip" role="tooltip"></div>
 
 <script src="config.js"></script>
@@ -291,37 +374,385 @@
   }
   function hasCurrentRevenue(r) { return r.current_month_value !== null && r.current_month_value !== undefined; }
 
-  // ---------- Summary strip ----------
-  function renderSummary(d) {
-    var sf = stockFacts(d.weeks_of_stock_cover);
-    var low = sf.regular[0];
-    var stamp = sf.isStale ? pill("amber", "Stale · " + (sf.snapshotDate || "snapshot")) : "";
-    var lowCard = low
-      ? '<a class="stat ' + (low.weeks_cover < sf.flag ? "red" : "amber") + '" href="#stock">' +
-          '<div class="stat-top"><span class="stat-label">Lowest stock cover</span>' + stamp + "</div>" +
-          '<div class="stat-value">' + num(low.weeks_cover, 1) + " <small>wks</small></div>" +
-          '<div class="stat-sub">' + esc(low.name) + " · flag under " + esc(sf.flag) + " wks" +
-            (sf.isStale ? " · 3PL snapshot, not live" : "") + "</div></a>"
-      : "";
+  // ---------- D10 readers (first use of d10 tables in figures: d10_02 and d10_08 only) ----------
+  // Column names exactly as in supabase/schema.sql (quoted identifiers, commas and parentheses included).
+  var REV_COLS = {
+    month: "Month",
+    amazon: "Amazon (net of refunds)",
+    shopify: "Shopify (net of discounts and returns)",
+    kickstarter: "Kickstarter (recognized when rewards ship)",
+    books: "Books"
+  };
+  var BW_COLS = { month: "Month", spend: "Spend", impressions: "Impressions", ctr: "CTR" };
 
-    var pa = d.profit_after_ads.products;
-    var losses = pa.filter(function (p) { return p.net_contribution_after_ads < 0; });
-    var lossCard = '<a class="stat ' + (losses.length ? "red" : "") + '" href="#profit">' +
-      '<div class="stat-top"><span class="stat-label">Loss-making SKUs</span>' + pill("grey", "FY2025 annual") + "</div>" +
-      '<div class="stat-value">' + losses.length + " <small>of " + pa.length + "</small></div>" +
-      '<div class="stat-sub">' + (losses.length
-        ? "Negative profit after ads: " + losses.map(function (p) { return esc(p.name); }).join(", ")
-        : "No product negative after ads") + "</div></a>";
+  function numOrNull(v) {
+    if (v === null || v === undefined || v === "") return null;
+    var n = Number(v);
+    return isFinite(n) ? n : null;
+  }
+  function money2(n) {
+    return (n < 0 ? "−" : "") + "$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function signedPct(x) { return (x >= 0 ? "+" : "−") + Math.abs(x * 100).toFixed(1) + "%"; }
+  function prevYm(ym) {
+    var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1;
+    if (m === 0) { y -= 1; m = 12; }
+    return y + "-" + (m < 10 ? "0" : "") + m;
+  }
+  function barMonth(ym) {   // "2025-01" -> "Jan 25"
+    var p = /^(\d{4})-(\d{2})$/.exec(ym || "");
+    if (!p) return ym || "";
+    return new Date(Date.UTC(+p[1], +p[2] - 1, 1)).toLocaleString("en-US", { month: "short", timeZone: "UTC" }) + " " + p[1].slice(2);
+  }
+  function tableRows(results, name) {
+    var t = results[name];
+    if (!t) return { error: name + " was not read" };
+    if (!t.ok) return { error: name + " did not load: " + t.error };
+    if (!t.rows.length) return { error: name + " has no rows" };
+    return { rows: t.rows };
+  }
 
+  // d10_02: one entry per month, oldest first. A month counts as closed only when Books is exactly "Closed".
+  function revenueMonths(results) {
+    var t = tableRows(results, "d10_02_revenue_by_month");
+    if (t.error) return t;
+    var months = t.rows.map(function (r) {
+      var amazon = numOrNull(r[REV_COLS.amazon]), shopify = numOrNull(r[REV_COLS.shopify]);
+      return {
+        ym: String(r[REV_COLS.month] || "").slice(0, 7),
+        amazon: amazon,
+        shopify: shopify,
+        total: amazon === null || shopify === null ? null : amazon + shopify,   // Amazon + Shopify, Kickstarter excluded
+        kickstarter: numOrNull(r[REV_COLS.kickstarter]),
+        books: r[REV_COLS.books],
+        closed: String(r[REV_COLS.books] || "").trim() === "Closed"
+      };
+    }).sort(function (a, b) { return a.ym < b.ym ? -1 : a.ym > b.ym ? 1 : 0; });
+    return { months: months };
+  }
+
+  // Month-over-month for the latest closed month vs the calendar month before it.
+  // Never computed against a month that is not closed.
+  function monthOverMonth(months, key) {
+    var closed = months.filter(function (m) { return m.closed && m[key] !== null; });
+    var latest = closed[closed.length - 1];
+    var out = { latest: latest || null, prev: null, growth: null, note: null, openAfter: [] };
+    if (!latest) { out.note = "Not available — no closed month yet"; return out; }
+    out.openAfter = months.filter(function (m) { return !m.closed && m.ym > latest.ym; })
+      .map(function (m) { return shortMonth(m.ym); });
+    var pym = prevYm(latest.ym);
+    var prev = months.filter(function (m) { return m.ym === pym; })[0];
+    if (!prev) { out.note = "Not available — " + shortMonth(pym) + " is not in the data"; return out; }
+    if (!prev.closed) { out.note = "Not available — " + shortMonth(pym) + " not yet closed"; return out; }
+    if (prev[key] === null || prev[key] === 0) { out.note = "Not available — no " + shortMonth(pym) + " figure"; return out; }
+    out.prev = prev;
+    out.growth = (latest[key] - prev[key]) / prev[key];
+    return out;
+  }
+
+  function fy2025(months, key) {
+    var rows = months.filter(function (m) { return m.ym.slice(0, 4) === "2025"; });
+    if (!rows.length || rows.some(function (m) { return m[key] === null; })) return { value: null, count: rows.length };
+    return { value: rows.reduce(function (a, m) { return a + m[key]; }, 0), count: rows.length };
+  }
+
+  function bidworksStats(results) {
+    var t = tableRows(results, "d10_08_bidworks_monthly_report");
+    if (t.error) return t;
+    var rows = t.rows.slice().sort(function (a, b) { return String(a[BW_COLS.month]) < String(b[BW_COLS.month]) ? -1 : 1; });
+    function col(k) { return rows.map(function (r) { return numOrNull(r[k]); }); }
+    var spend = col(BW_COLS.spend), impr = col(BW_COLS.impressions), ctr = col(BW_COLS.ctr);
+    function complete(a) { return a.every(function (v) { return v !== null; }); }
+    function mean(a) { return a.reduce(function (x, y) { return x + y; }, 0) / a.length; }
+    return {
+      count: rows.length,
+      first: String(rows[0][BW_COLS.month]).slice(0, 7),
+      last: String(rows[rows.length - 1][BW_COLS.month]).slice(0, 7),
+      spendTotal: complete(spend) ? spend.reduce(function (x, y) { return x + y; }, 0) : null,
+      spendFlat: complete(spend) && spend.every(function (v) { return v === spend[0]; }) ? spend[0] : null,
+      spendAvg: complete(spend) ? mean(spend) : null,
+      avgImpressions: complete(impr) ? mean(impr) : null,
+      avgCtr: complete(ctr) ? mean(ctr) : null          // simple mean of the monthly CTR column
+    };
+  }
+
+  // ---------- Shared pieces of the redesign ----------
+  function legendBox() {
+    return '<div class="legend-box">' +
+      '<div class="legend-group"><span class="gtitle">Metric health</span>' +
+        '<span class="leg-item"><span class="dot" style="background:var(--red)"></span>Red = Danger</span>' +
+        '<span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Amber = At Risk</span>' +
+        '<span class="leg-item"><span class="dot" style="background:var(--green)"></span>Green = Healthy</span>' +
+        '<span class="leg-item"><span class="star">&#9733;</span>Lena\'s requested KPI</span></div>' +
+      '<div class="legend-group"><span class="gtitle">Data health</span>' +
+        '<span class="leg-item"><span class="dot" style="background:var(--grey)"></span>No Data = never sourced</span>' +
+        '<span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Stale = sourced once, dated, not live</span></div>' +
+    "</div>";
+  }
+  function rpill(cls, text) { return '<span class="rpill ' + cls + '">' + esc(text) + "</span>"; }
+  var STAR = '<span class="star" title="Lena\'s requested KPI">&#9733;</span>';
+  function unavailable(msg) { return '<div class="val" style="color:var(--grey);font-size:17px;">Not available</div><div class="det">' + esc(msg) + "</div>"; }
+
+  // Generic icons copied unchanged from the reference file (not brand artwork).
+  var CHANNEL_ICONS = {
+    shopify: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
+    amazon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="M3 8l9-5 9 5"/></svg>',
+    bidworks: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>',
+    handle: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5A8.5 8.5 0 1 1 20.9 9.3"/><path d="M21 4L12 13l-3-3"/></svg>'
+  };
+  var STAT_ICONS = {
+    revenue: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    inventory: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    marketing: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>'
+  };
+
+  // Stock facts for the redesign: active vs paused (Kickstarter-only note) and three-tier counts.
+  function stockHealth(s) {
+    var sf = stockFacts(s);
+    var paused = s.products.filter(function (p) { return /kickstarter-only/i.test(p.note || ""); });
+    var active = s.products.filter(function (p) { return paused.indexOf(p) === -1; })
+      .sort(function (a, b) { return a.weeks_cover - b.weeks_cover; });
+    var tiers = { green: 0, amber: 0, red: 0 };
+    active.forEach(function (p) { tiers[stockBand(p.weeks_cover)] += 1; });
+    return { sf: sf, paused: paused, active: active, tiers: tiers, total: s.products.length,
+             lowest: active.length ? active[0] : null };
+  }
+  function staleTag(sf) { return sf.isStale ? "Stale · " + (sf.snapshotDate || "snapshot") : ""; }
+
+  // Grill Pro reorder flag: qualitative, from Lena's verbal account in the data notes. No table holds a
+  // count or a weeks figure for it, so the flag count stays "1" and its band breakdown stays "TBD".
+  var REORDER_FLAG_COUNT = 1;
+  function reorderWarning(s, prefix) {
+    var gp = s.products.filter(function (p) { return p.sku === "TH-GRL-02"; })[0];
+    var sf = stockFacts(s);
+    return '<div class="warn-card"' + (prefix ? ' style="margin-top:12px;"' : "") + "><b>" + (prefix || "Yes — Grill Pro.") + "</b> " +
+      "Per Lena's verbal account (see Data Notes), not this page's stale snapshot: ~1 month of cover, no reorder placed. " +
+      (gp ? "The snapshot shows " + num(gp.weeks_cover, 1) + " wks, " + TIER_NAMES[stockBand(gp.weeks_cover)] +
+            " — that figure is stale" + (sf.snapshotDate ? " (" + esc(sf.snapshotDate) + ")" : "") + " and does not reflect this. " : "") +
+      "Needs action regardless of what this dashboard currently displays.</div>";
+  }
+
+  // ---------- Executive Summary ----------
+  function renderExecSummary(d, results) {
     var r = d.revenue_vs_last_year, ly = r.last_year_same_month || {};
     var cur = hasCurrentRevenue(r);
-    var revCard = '<a class="stat ' + (cur ? "" : "amber") + '" href="#revenue">' +
-      '<div class="stat-top"><span class="stat-label">Revenue · last closed month</span>' + (cur ? pill("green", "Current") : pill("amber", "Pending")) + "</div>" +
-      '<div class="stat-value">' + (cur ? money(r.current_month_value) : "Pending") + "</div>" +
-      '<div class="stat-sub">vs ' + (ly.total != null ? money(ly.total) : "—") + " in " + esc(shortMonth(ly.month)) +
-        (cur ? "" : " · awaiting confirmed export") + "</div></a>";
+    var rev = revenueMonths(results);
+    var mom = rev.months ? monthOverMonth(rev.months, "total") : null;
+    var sh = stockHealth(d.weeks_of_stock_cover);
+    var pa = d.profit_after_ads.products;
+    var profitTotal = pa.reduce(function (a, p) { return a + p.net_contribution_after_ads; }, 0);   // all 13 rows, negatives included
+    var losses = pa.filter(function (p) { return p.net_contribution_after_ads < 0; })
+      .sort(function (a, b) { return a.net_contribution_after_ads - b.net_contribution_after_ads; });
+    var lossTotal = losses.reduce(function (a, p) { return a + p.net_contribution_after_ads; }, 0);
+    var bw = bidworksStats(results);
+    var tag = staleTag(sh.sf);
 
-    return '<div class="summary wide">' + lowCard + lossCard + revCard + "</div>";
+    // Hero strip
+    var revHero = mom && mom.latest
+      ? '<div class="s-val">' + money(mom.latest.total) + '</div><div class="s-cap">Latest closed month (unofficial) &middot; ' +
+          esc(shortMonth(mom.latest.ym)) + ", not yet signed off</div>"
+      : '<div class="s-val">Not available</div><div class="s-cap">' + esc(rev.error || "No closed month in d10_02") + "</div>";
+    var strip = '<div class="stat-strip">' +
+      '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Overall Revenue</div>' + revHero + "</div>" +
+      '<div class="stat-card c-inventory">' + STAT_ICONS.inventory + '<div class="s-lbl">Inventory &amp; Fulfillment</div>' +
+        '<div class="s-val">' + sh.tiers.green + '<span style="font-size:15px;"> of ' + sh.total + "</span></div>" +
+        '<div class="s-cap">SKUs healthy' + (sh.lowest ? " &middot; lowest " + num(sh.lowest.weeks_cover, 1) + " wks" : "") +
+          " &middot; " + REORDER_FLAG_COUNT + " reorder flag</div>" +
+        (tag ? '<span class="s-tag">' + esc(tag) + "</span>" : "") + "</div>" +
+      '<div class="stat-card c-marketing">' + STAT_ICONS.marketing + '<div class="s-lbl">Marketing &amp; Ads</div>' +
+        '<div class="s-val">' + money(profitTotal) + "</div>" +
+        '<div class="s-cap">Net profit after ads, FY2025 &middot; ' + losses.length + " SKU" + (losses.length === 1 ? "" : "s") + " losing money</div></div>" +
+    "</div>";
+
+    // Column 1: Overall Revenue
+    var lyH = 60, curH = cur && ly.total ? Math.min(100, Math.round(60 * r.current_month_value / ly.total)) : 60;
+    var yoy = '<div class="yoy-compare">' +
+      '<div class="yoy-bar"><div class="bar-fill real" style="height:' + (ly.total != null ? lyH : 0) + '%"></div><div class="bv">' +
+        (ly.total != null ? money(ly.total) : "—") + '</div><div class="bl">' + esc(shortMonth(ly.month)) + "</div></div>" +
+      (cur
+        ? '<div class="yoy-bar"><div class="bar-fill real" style="height:' + curH + '%"></div><div class="bv">' + money(r.current_month_value) + '</div><div class="bl">Last closed month</div></div>'
+        : '<div class="yoy-bar"><div class="bar-fill pending" style="height:' + lyH + '%"></div><div class="bv" style="color:var(--mut)">Pending</div><div class="bl">Last closed month</div></div>') +
+    "</div>";
+    var momHtml;
+    if (!mom) {
+      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) + "</div>";
+    } else {
+      var momLine = mom.growth !== null
+        ? "month-over-month, using the latest closed data already loaded (" + esc(shortMonth(mom.prev.ym)) + "&rarr;" + esc(shortMonth(mom.latest.ym)) + ") — " +
+          money(mom.prev.total) + " &rarr; " + money(mom.latest.total) + ', <b style="color:' + (mom.growth >= 0 ? "var(--green)" : "var(--red)") + '">' + signedPct(mom.growth) + "</b>."
+        : "month-over-month: " + esc(mom.note) + ".";
+      var openLine = mom.openAfter.map(function (m) {
+        return "<br>" + esc(shortMonth(mom.latest.ym)) + "&rarr;" + esc(m) + ": Not available — " + esc(m) + " not yet closed.";
+      }).join("");
+      momHtml = '<div class="reco-card"><b>Not one of Lena\'s 4:</b> ' + momLine +
+        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine + "</div>";
+    }
+    var c = d.cash_in_bank, cashHas = c.value !== null && c.value !== undefined && c.status !== "no_data";
+    var col1 = '<div class="col-panel"><h3>Overall Revenue</h3>' +
+      '<div class="mini-card"><div class="lbl">Revenue vs. last year' + STAR + "</div>" + yoy +
+        '<div class="det">' + esc(r.scope || "") + "</div>" +
+        (cur ? "" : '<div class="so-what"><b>Means:</b> nothing to compare to yet — last closed month isn\'t officially sourced.</div>') +
+        momHtml + "</div>" +
+      '<div class="mini-card"><div class="lbl">Revenue, last closed month' + STAR + "</div>" +
+        (cur ? '<div class="val" style="font-size:19px;">' + money(r.current_month_value) + "</div>"
+             : '<div class="val" style="color:var(--mut);font-size:19px;">Pending</div><div class="det">This is the figure Lena\'s metric needs — not sourced yet.</div>') +
+        (mom && mom.latest && !cur
+          ? '<div class="det" style="margin-top:4px;"><b>Already sitting in the database (not yet connected to this card):</b> ' +
+              esc(shortMonth(mom.latest.ym)) + " &mdash; " + money2(mom.latest.total) + "</div>"
+          : "") + "</div>" +
+      '<div class="mini-card"><div class="lbl">Cash in the bank' + STAR + (cashHas ? "" : rpill("grey", "No Data")) + "</div>" +
+        (cashHas ? '<div class="val" style="font-size:19px;">' + money(c.value) + "</div>"
+                 : '<div class="val" style="color:var(--grey);font-size:19px;">No Data</div><div class="det">No bank feed exists in any source file</div>' +
+                   '<div class="so-what"><b>Means:</b> shown grey on purpose, not omitted — the gap stays visible.</div>') +
+      "</div></div>";
+
+    // Column 2: Inventory & Fulfillment
+    var stalePill = tag ? rpill("amber", tag) : "";
+    var col2 = '<div class="col-panel"><h3>Inventory &amp; Fulfillment (Stock Health)' + stalePill + "</h3>" +
+      '<div class="mini-card"><div class="lbl">Active vs. Paused SKUs</div>' +
+        '<div style="display:grid;grid-template-columns:104px 1fr;gap:6px 10px;font-size:12.5px;margin-top:8px;">' +
+          '<div style="font-weight:700;">Active: ' + sh.active.length + "</div><div>Healthy " + sh.tiers.green + " &middot; At Risk " + sh.tiers.amber +
+            " &middot; Danger " + sh.tiers.red + (sh.lowest ? " &middot; lowest " + num(sh.lowest.weeks_cover, 1) + " wks" : "") + "</div>" +
+          '<div style="font-weight:700;">Paused Flag: ' + sh.paused.length + "</div><div>" +
+            (sh.paused.length ? sh.paused.map(function (p) { return esc(p.name); }).join(", ") + " — Kickstarter-only" : "None") + "</div>" +
+          '<div style="font-weight:700;">Reorder Flag: ' + REORDER_FLAG_COUNT + "</div><div>Healthy TBD &middot; At Risk TBD &middot; Danger TBD (Grill Pro — qualitative account, no exact weeks figure yet)</div>" +
+        "</div>" +
+        '<div class="det" style="margin-top:8px;">See Details tab for the full SKU list and descriptions.</div></div>' +
+      '<div class="mini-card"><div class="lbl">Stock cover, lowest first' + STAR + "</div>" +
+        '<div class="val" style="font-size:19px;">' + sh.tiers.green + ' <span class="rpill green" style="margin-left:4px;">Healthy</span></div>' +
+        '<div class="det">' + sh.tiers.amber + ' <span style="color:var(--amber);font-weight:700;">At Risk</span> · ' + sh.tiers.red +
+          ' <span style="color:var(--red);font-weight:700;">Danger</span>' + (sh.lowest ? " · lowest is " + num(sh.lowest.weeks_cover, 1) + " wks" : "") + "</div>" +
+        '<div class="det" style="margin-top:4px;">Bands: Healthy ' + BAND_RULES.stockHealthyMinWeeks + "+ wks &middot; At Risk " + BAND_RULES.stockAtRiskMinWeeks +
+          "&ndash;" + BAND_RULES.stockHealthyMinWeeks + " wks &middot; Danger under " + BAND_RULES.stockAtRiskMinWeeks + " wks</div>" +
+        (sh.sf.isStale ? '<div class="det" style="margin-top:4px;">3PL snapshot ' + esc(sh.sf.snapshotDate || "") + " — stale, not live.</div>" : "") +
+      "</div>" +
+      '<div class="mini-card"><div class="lbl">Reorder flag</div>' + reorderWarning(d.weeks_of_stock_cover) + "</div></div>";
+
+    // Column 3: Marketing & Ads
+    var bwHtml = bw.error ? unavailable(bw.error)
+      : '<div class="val" style="font-size:19px;">' + (bw.spendFlat !== null ? money(bw.spendFlat) : bw.spendAvg !== null ? "avg " + money(bw.spendAvg) : "—") +
+          '<span style="font-size:12px;font-weight:500;color:var(--mut)">/mo' + (bw.spendFlat !== null ? " flat" : "") + "</span></div>" +
+        '<div class="det">' + (bw.spendTotal !== null ? money(bw.spendTotal) + " total, " : "") + esc(shortMonth(bw.first)) + "&ndash;" + esc(shortMonth(bw.last)) +
+          " (" + bw.count + " months) &middot; spend-by-product only sent annually</div>";
+    var col3 = '<div class="col-panel"><h3>Marketing &amp; Ads (ROI)</h3>' +
+      '<div class="mini-card"><div class="lbl">Losing money on ads' + STAR + (losses.length ? rpill("red", "Danger") : rpill("green", "Healthy")) + "</div>" +
+        '<div class="val">' + money(-lossTotal) + '<span style="font-size:13px;font-weight:500;color:var(--mut)"> / yr</span></div>' +
+        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div></div>" +
+      '<div class="mini-card"><div class="lbl">Agency spend &mdash; BidWorks' + rpill("noband", "No band") + "</div>" + bwHtml + "</div>" +
+      '<div class="mini-card"><div class="lbl">Agency spend &mdash; Handle Social' + rpill("grey", "No Data") + "</div>" +
+        '<div class="val" style="color:var(--grey);font-size:17px;">No Data</div>' +
+        '<div class="det">No spend/performance file exists. Scope undecided &mdash; Lena set an end-of-April deadline for written scope or termination.</div></div>' +
+      '<div class="mini-card"><div class="lbl">Profit after ads, by product' + STAR + "</div>" +
+        '<div class="val" style="font-size:19px;">' + money(profitTotal) + ' <span style="font-size:12px;font-weight:500;color:var(--mut)">net, FY2025</span></div>' +
+        '<div class="det">' + pa.filter(function (p) { return p.net_contribution_after_ads > 0; }).length + " profitable &middot; " + losses.length +
+          " losing money (above) &middot; full breakdown in Details</div></div></div>";
+
+    return legendBox() + strip + '<div class="rrow r3">' + col1 + col2 + col3 + "</div>";
+  }
+
+  // ---------- Details: new widgets ----------
+  function monthBars(months, key, cls) {
+    var vals = months.map(function (m) { return m[key]; }).filter(function (v) { return v !== null; });
+    var max = vals.length ? Math.max.apply(null, vals) : 0;
+    return '<div class="mbars">' + months.map(function (m) {
+      var v = m[key];
+      var tip = [monthName(m.ym), v === null ? "No figure" : money2(v), m.closed ? "Books: Closed" : "Books: " + (m.books || "—") + " — not final"];
+      if (v === null || !(max > 0)) {
+        return '<div class="bar-col"><div class="val-lbl">—</div><div class="month-lbl">' + esc(barMonth(m.ym)) + "</div></div>";
+      }
+      return '<div class="bar-col"><div class="val-lbl">$' + Math.round(v / 1000) + "k</div>" +
+        '<div class="fill ' + (m.closed ? cls : "open") + '" style="height:' + Math.round(v / max * 100) + '%"' + tipAttr(tip) + "></div>" +
+        '<div class="month-lbl">' + esc(barMonth(m.ym)) + "</div></div>";
+    }).join("") + "</div>";
+  }
+  function revenueChartCard(rev, key, title, cls, extra) {
+    if (rev.error) return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" + unavailable(rev.error) + "</div>";
+    var ms = rev.months;
+    return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" +
+      '<div class="det" style="margin-bottom:2px;">' + esc(monthName(ms[0].ym)) + " – " + esc(monthName(ms[ms.length - 1].ym)) +
+        " &middot; hatched bar = month not yet closed</div>" + monthBars(ms, key, cls) + (extra || "") + "</div>";
+  }
+  function channelCard(rev, key, name, color, icon) {
+    var top = function (val, cap) {
+      return '<div class="chan-top"><div class="chan-badge" style="background:' + color + ';">' + icon + "</div><div>" +
+        '<div class="chan-name">' + esc(name) + '</div><div class="chan-val">' + val + '</div><div class="chan-cap">' + cap + "</div></div></div>";
+    };
+    if (rev.error) {
+      return '<div class="chan-card">' + top('<span style="color:var(--grey)">Not available</span>', esc(rev.error)) + "</div>";
+    }
+    var fy = fy2025(rev.months, key), mom = monthOverMonth(rev.months, key);
+    return '<div class="chan-card">' +
+      top(fy.value !== null ? money(fy.value) : '<span style="color:var(--grey)">Not available</span>',
+          "Revenue, FY2025" + (fy.value !== null && fy.count !== 12 ? " (" + fy.count + " of 12 months)" : "")) +
+      '<div class="chan-pills">' +
+        '<div class="chan-pill"' + (mom.latest ? ' title="' + esc(shortMonth(mom.latest.ym)) + ', latest closed month"' : "") + '><div class="cp-lbl">Latest Mo.</div><div class="cp-val">' +
+          (mom.latest ? money(mom.latest[key]) : "—") + "</div></div>" +
+        '<div class="chan-pill"' + (mom.note ? ' title="' + esc(mom.note) + '"' : mom.prev ? ' title="' + esc(shortMonth(mom.prev.ym) + " → " + shortMonth(mom.latest.ym)) + '"' : "") +
+          '><div class="cp-lbl">MoM Growth</div><div class="cp-val">' + (mom.growth !== null ? signedPct(mom.growth) : "N/A") + "</div></div>" +
+      "</div></div>";
+  }
+  function bidworksCard(bw) {
+    var top = '<div class="chan-top"><div class="chan-badge" style="background:#2563EB;">' + CHANNEL_ICONS.bidworks + "</div><div>" +
+      '<div class="chan-name">BidWorks</div>';
+    if (bw.error) return '<div class="chan-card">' + top + '<div class="chan-val" style="color:var(--grey);">Not available</div><div class="chan-cap">' + esc(bw.error) + "</div></div></div></div>";
+    return '<div class="chan-card">' + top +
+        '<div class="chan-val">' + (bw.avgImpressions !== null ? (bw.avgImpressions / 1e6).toFixed(2) + "M" : "—") + "</div>" +
+        '<div class="chan-cap">Avg. impressions/mo</div></div></div>' +
+      '<div class="chan-pills">' +
+        '<div class="chan-pill"><div class="cp-lbl">Spend/mo</div><div class="cp-val">' +
+          (bw.spendFlat !== null ? money(bw.spendFlat) : bw.spendAvg !== null ? "avg " + money(bw.spendAvg) : "—") + "</div></div>" +
+        '<div class="chan-pill" title="Average of the ' + bw.count + ' monthly CTR figures"><div class="cp-lbl">Avg CTR</div><div class="cp-val">' +
+          (bw.avgCtr !== null ? bw.avgCtr.toFixed(2) + "%" : "—") + "</div></div>" +
+      "</div></div>";
+  }
+  function handleSocialCard() {
+    return '<div class="chan-card dim"><div class="chan-top"><div class="chan-badge" style="background:#94A3B8;">' + CHANNEL_ICONS.handle + "</div><div>" +
+        '<div class="chan-name">Handle Social</div><div class="chan-val" style="color:var(--grey);">No Data</div>' +
+        '<div class="chan-cap">No source file — scope undecided</div></div></div>' +
+      '<div class="chan-pills"><div class="chan-pill grey"><div class="cp-lbl">Spend/mo</div><div class="cp-val">—</div></div>' +
+        '<div class="chan-pill grey"><div class="cp-lbl">Reach</div><div class="cp-val">—</div></div></div></div>';
+  }
+
+  function renderDetails(d, results, staleNote) {
+    var rev = revenueMonths(results), bw = bidworksStats(results);
+    var ks = rev.months ? rev.months.filter(function (m) { return m.kickstarter > 0; }) : [];
+    var ksNote = ks.length
+      ? '<div class="so-what"><b>What this means:</b> ' + ks.map(function (m) {
+          return esc(monthName(m.ym)) + "'s " + money(m.kickstarter) + " of Kickstarter revenue";
+        }).join(" and ") + " is not in these bars — the channel charts show Amazon and Shopify only, so Kickstarter is excluded by design.</div>"
+      : "";
+    return legendBox() +
+      '<h3 class="group-head">Overall Revenue</h3>' +
+      '<div class="dgrid">' + renderRevenue(d.revenue_vs_last_year) + renderCash(d.cash_in_bank) + "</div>" +
+      '<h3 class="group-head">Inventory &amp; Fulfillment</h3>' +
+      renderStock(d.weeks_of_stock_cover, staleNote) +
+      reorderWarning(d.weeks_of_stock_cover, "Reorder flag — Grill Pro:") +
+      '<h3 class="group-head">Marketing &amp; Ads</h3>' +
+      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
+      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
+      '<div class="chart-card"><h2 class="section">Channels &amp; Agencies</h2>' +
+        '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
+        '<div class="chan-grid">' +
+          channelCard(rev, "shopify", "Shopify", "#96BF48", CHANNEL_ICONS.shopify) +
+          channelCard(rev, "amazon", "Amazon", "#FF9900", CHANNEL_ICONS.amazon) +
+          bidworksCard(bw) + handleSocialCard() +
+        "</div></div>" +
+      renderProfit(d.profit_after_ads, d.weeks_of_stock_cover);
+  }
+
+  // ---------- Data Notes tab (reads dashboard_data_notes) ----------
+  function noteLabel(n) {
+    if (/stock on hand|snapshot/i.test(n)) return "Stock snapshot is not live";
+    if (/revenue/i.test(n)) return "Revenue current-month figure is pending";
+    if (/profit|bidworks/i.test(n)) return "Profit after ads is annual, not monthly";
+    if (/restricted|excluded/i.test(n)) return "Supplier name intentionally excluded";
+    return "Note";
+  }
+  function renderNotesTab(notes) {
+    return '<h2 class="section">Data Notes — what to keep in mind about these numbers</h2>' +
+      notes.map(function (n) {
+        return '<div class="dnote"><span class="n-label">' + esc(noteLabel(n)) + "</span>" + esc(n) + "</div>";
+      }).join("");
   }
 
   // ---------- Revenue vs last year ----------
@@ -330,7 +761,10 @@
   // They only colour the values already on the page; they change no figure.
   var BAND_RULES = {
     revenueAmberBelow: 0.10,   // revenue: Green >= last year; Amber up to 10% below; Red more than 10% below
-    stockGreenMinWeeks: 6      // stock: Green 6+ weeks of cover; Red under 6 (no Amber)
+    // Stock: three tiers. CHANGED from PR #7's two-band rule (Green 6+ / Red under 6);
+    // pending Lena's / the coach's sign-off, not yet final.
+    stockHealthyMinWeeks: 9,   // Healthy (Green): 9+ weeks of cover
+    stockAtRiskMinWeeks: 6     // At Risk (Amber): 6 to under 9 weeks; Danger (Red): under 6
   };                           // profit after ads: Green positive; Red negative (no Amber)
   var BAND_NAMES = { green: "Green", amber: "Amber", red: "Red" };
   function revenueBand(current, lastYear) {
@@ -339,7 +773,17 @@
     if (current >= lastYear * (1 - BAND_RULES.revenueAmberBelow)) return "amber";
     return "red";
   }
-  function stockBand(weeks) { return weeks >= BAND_RULES.stockGreenMinWeeks ? "green" : "red"; }
+  var TIER_NAMES = { green: "Healthy", amber: "At Risk", red: "Danger" };
+  function stockBand(weeks) {
+    if (weeks >= BAND_RULES.stockHealthyMinWeeks) return "green";
+    if (weeks >= BAND_RULES.stockAtRiskMinWeeks) return "amber";
+    return "red";
+  }
+  function stockBandText(band) {
+    return band === "green" ? BAND_RULES.stockHealthyMinWeeks + "+ weeks of cover (Healthy)"
+      : band === "amber" ? BAND_RULES.stockAtRiskMinWeeks + " to " + BAND_RULES.stockHealthyMinWeeks + " weeks of cover (At Risk)"
+      : "under " + BAND_RULES.stockAtRiskMinWeeks + " weeks of cover (Danger)";
+  }
   function profitBand(v) { return v > 0 ? "green" : (v < 0 ? "red" : null); }
   function bandDot(band, why) {
     var label = band ? "Band: " + BAND_NAMES[band] + (why ? " — " + why : "") : "Not banded" + (why ? " — " + why : "");
@@ -432,7 +876,7 @@
           '<div class="bar ' + (isUnder ? "loss" : "gain") + (capped ? " capped" : "") +
             '" style="left:0;width:' + pct(p.weeks_cover).toFixed(2) + '%"' + tipAttr(tip) + "></div></div>" +
         '<div class="hval">' + bandDot(stockBand(p.weeks_cover),
-            (stockBand(p.weeks_cover) === "green" ? "6+ weeks of cover" : "under 6 weeks of cover") +
+            stockBandText(stockBand(p.weeks_cover)) +
             (sf.isStale ? ", as of " + asOf + " snapshot" : "")) +
           num(p.weeks_cover, 1) + (capped ? " ›" : "") + "</div></div>";
     }
@@ -467,8 +911,9 @@
         '<span><i class="dash"></i>' + esc(flag) + "-week flag</span>" +
         "<span>Axis in weeks · › bar runs past " + axisMax + "</span></div>" +
       '<div class="legend band-key"><span>Band:</span>' +
-        '<span><span class="band green"></span>Green, ' + BAND_RULES.stockGreenMinWeeks + "+ weeks</span>" +
-        '<span><span class="band red"></span>Red, under ' + BAND_RULES.stockGreenMinWeeks + " weeks</span>" +
+        '<span><span class="band green"></span>Healthy, ' + BAND_RULES.stockHealthyMinWeeks + "+ weeks</span>" +
+        '<span><span class="band amber"></span>At Risk, ' + BAND_RULES.stockAtRiskMinWeeks + "–" + BAND_RULES.stockHealthyMinWeeks + " weeks</span>" +
+        '<span><span class="band red"></span>Danger, under ' + BAND_RULES.stockAtRiskMinWeeks + " weeks</span>" +
         '<span><span class="band none"></span>Not banded</span></div>' +
       '<div class="hbars">' + sf.regular.map(row).join("") + sf.special.map(specialRow).join("") + "</div>" +
       axis +
@@ -539,40 +984,6 @@
     "</section>";
   }
 
-  // ---------- Data notes ----------
-  var ICONS = {
-    stock: '<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/>',
-    revenue: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    profit: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-    lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'
-  };
-  function noteKind(n) {
-    if (/stock on hand|snapshot/i.test(n)) return { icon: "stock", topic: "Stock", tone: "amber" };
-    if (/revenue/i.test(n)) return { icon: "revenue", topic: "Revenue", tone: "amber" };
-    if (/profit|bidworks/i.test(n)) return { icon: "profit", topic: "Profit after ads", tone: "" };
-    if (/restricted|excluded/i.test(n)) return { icon: "lock", topic: "Excluded data", tone: "" };
-    return { icon: "info", topic: "Note", tone: "" };
-  }
-  function splitNote(n) {
-    // Lead sentence on the row; the rest folds into "More".
-    var m = /^(.+?[.!?])\s+(.+)$/.exec(n);
-    return m ? { lead: m[1], rest: m[2] } : { lead: n, rest: "" };
-  }
-  function renderNotes(notes) {
-    if (!notes || !notes.length) return "";
-    return '<section class="card wide"><div class="card-head"><h2>Data notes</h2></div><div class="notes">' +
-      notes.map(function (n) {
-        var k = noteKind(n), parts = splitNote(n);
-        return '<div class="note-row"><span class="note-icon ' + k.tone + '" aria-hidden="true">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-            ICONS[k.icon] + "</svg></span>" +
-          "<div><strong>" + esc(k.topic) + ":</strong> " + esc(parts.lead) +
-            (parts.rest ? "<details><summary>More</summary>" + esc(parts.rest) + "</details>" : "") +
-          "</div></div>";
-      }).join("") + "</div></section>";
-  }
-
   // ---------- Tooltip ----------
   var tip = document.getElementById("tip");
   function showTip(el, x, y) {
@@ -618,18 +1029,41 @@
     footer.hidden = false;
   }
 
-  function render(d) {
-    renderFooter(d, new Date());
+  function setPanel(id, html) { document.getElementById(id).innerHTML = html; }
+
+  function render(d, results) {
+    renderFooter(d, lastLoaded);
     var notes = d.data_notes || [];
     var staleNote = notes.filter(function (n) { return /stock on hand/i.test(n); })[0];
-    app.innerHTML =
-      renderSummary(d) +
-      renderRevenue(d.revenue_vs_last_year) +
-      renderCash(d.cash_in_bank) +
-      renderStock(d.weeks_of_stock_cover, staleNote) +
-      renderProfit(d.profit_after_ads, d.weeks_of_stock_cover) +
-      renderNotes(notes);
+    setPanel("summary", renderExecSummary(d, results));
+    setPanel("details", renderDetails(d, results, staleNote));
+    setPanel("notes", renderNotesTab(notes));
   }
+
+  // ---------- Tabs ----------
+  var tabButtons = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+  function showTab(btn, focus) {
+    tabButtons.forEach(function (b) {
+      var on = b === btn;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+      b.tabIndex = on ? 0 : -1;
+      document.getElementById(b.dataset.tab).classList.toggle("active", on);
+    });
+    hideTip();
+    if (focus) btn.focus();
+  }
+  tabButtons.forEach(function (btn, i) {
+    btn.addEventListener("click", function () { showTab(btn); });
+    btn.addEventListener("keydown", function (e) {
+      var k = e.key, n = tabButtons.length, j = null;
+      if (k === "ArrowDown" || k === "ArrowRight") j = (i + 1) % n;
+      else if (k === "ArrowUp" || k === "ArrowLeft") j = (i - 1 + n) % n;
+      else if (k === "Home") j = 0;
+      else if (k === "End") j = n - 1;
+      if (j !== null) { e.preventDefault(); showTab(tabButtons[j], true); }
+    });
+  });
 
   // ---------- Reading from Supabase ----------
   function errorText(err) {
@@ -742,29 +1176,44 @@
     };
   }
 
+  // d10 tables that feed figures on this page (first used in the redesign); the rest are counted only.
+  var D10_USED = {
+    d10_02_revenue_by_month: "revenue by month, channel cards, month-over-month, Overall Revenue",
+    d10_08_bidworks_monthly_report: "BidWorks card"
+  };
+  var lastLoaded = null;
+
   function renderLoadReport(results) {
-    function rows(names) {
-      return names.map(function (n) {
-        var r = results[n];
-        return '<div class="note-row"><span class="note-icon ' + (r.ok ? "" : "amber") + '" aria-hidden="true">' +
-            (r.ok ? "✓" : "!") + '</span><div style="overflow-wrap:anywhere"><strong>' + esc(n) + ":</strong> " +
-            (r.ok ? num(r.rows.length, 0) + (r.rows.length === 1 ? " row read" : " rows read")
-                  : pill("red", "Failed") + " " + esc(r.error)) +
-          "</div></div>";
+    var total = 0, read = 0, names = DASHBOARD_TABLES.concat(D10_TABLES);
+    function rows(list) {
+      return list.map(function (n) {
+        var r = results[n] || { ok: false, error: "Not read" };
+        if (r.ok) { total += r.rows.length; read += 1; }
+        return "<tr><td>" + esc(n) + (D10_USED[n] ? '<div class="det">Used in: ' + esc(D10_USED[n]) + "</div>" : "") + "</td>" +
+          '<td class="num">' + (r.ok ? num(r.rows.length, 0) : "—") + "</td>" +
+          (r.ok ? '<td class="ok">✓</td>' : '<td class="fail">Failed: ' + esc(r.error) + "</td>") + "</tr>";
       }).join("");
     }
-    return '<section class="card wide" id="load-report"><div class="card-head"><h2>Rows read from Supabase</h2></div>' +
-      '<p class="period">Dashboard tables: these feed every figure on this page.</p><div class="notes">' + rows(DASHBOARD_TABLES) + "</div>" +
-      '<p class="period" style="margin-top:14px">D10 tables: loaded and counted only — not used in any figure.</p>' +
-      '<div class="notes">' + rows(D10_TABLES) + "</div></section>";
+    var stamp = lastLoaded ? lastLoaded.toLocaleString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+    var body = rows(DASHBOARD_TABLES), d10 = rows(D10_TABLES);
+    return '<h2 class="section">Rows read from Supabase</h2>' +
+      '<div class="refresh-banner"><span>Last refreshed: <b>' + esc(stamp) + "</b></span><span>Build mode: manual (no scheduled job yet)</span></div>" +
+      '<div class="det" style="margin-bottom:12px;">Dashboard tables feed the four original metrics. Of the D10 tables, ' +
+        "d10_02 and d10_08 now feed figures on this page; the others are loaded and counted only.</div>" +
+      '<table class="rows-tbl" id="load-report"><tr><th>Table</th><th>Rows read</th><th>Status</th></tr>' +
+        '<tr class="grpname"><td colspan="3">Dashboard tables</td></tr>' + body +
+        '<tr class="grpname"><td colspan="3">D10 source tables (d10_02 and d10_08 used in figures; others counted only)</td></tr>' + d10 +
+      "</table>" +
+      '<div class="det" style="margin-top:12px;"><b>' + num(total, 0) + " rows across " + read + " tables</b>" +
+        (read < names.length ? " · " + (names.length - read) + " of " + names.length + " tables failed" : "") + "</div>";
   }
 
   function showLoadError(title, lines) {
-    app.innerHTML =
-      '<section class="card" id="load-error">' +
+    var card = '<section class="card" id="load-error">' +
         '<div class="card-head"><h2>' + esc(title) + "</h2>" + pill("red", "Error") + "</div>" +
         lines.map(function (l) { return '<p class="note">' + l + "</p>"; }).join("") +
       "</section>";
+    ["summary", "details", "notes", "rows"].forEach(function (id) { setPanel(id, card); });
   }
 
   function looksLikeSecretKey(key) {
@@ -792,6 +1241,7 @@
     var client = window.supabase.createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
     var names = DASHBOARD_TABLES.concat(D10_TABLES);
     Promise.all(names.map(function (n) { return readTable(client, n); })).then(function (list) {
+      lastLoaded = new Date();
       var results = {};
       list.forEach(function (r) { results[r.name] = r; });
       var failed = DASHBOARD_TABLES.filter(function (n) { return !results[n].ok; });
@@ -805,14 +1255,14 @@
         }
       }
       if (d) {
-        try { render(d); }
+        try { render(d, results); }
         catch (e) { d = null; failed = []; showLoadError("Dashboard not shown", ["Drawing failed: " + esc(e.message || e)]); }
       }
       if (!d && failed.length) {
         showLoadError("Dashboard not shown", ["These tables did not load, so no figures are shown in their place:"]
           .concat(failed.map(function (n) { return "<strong>" + esc(n) + "</strong>: " + esc(results[n].error); })));
       }
-      app.insertAdjacentHTML("beforeend", renderLoadReport(results));
+      setPanel("rows", renderLoadReport(results));
     }).catch(function (e) {
       showLoadError("Data not loaded", [esc(e.message || e)]);
     });
