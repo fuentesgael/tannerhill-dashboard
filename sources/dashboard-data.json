@@ -3,7 +3,7 @@
     "Stock on hand is a 3PL snapshot dated 2026-02-16 — NOT live. It disagrees with Lena's verbal account (Trailhead Portable Grill ~40 units until Wednesday's shipment; Grill Pro ~1 month cover, no reorder placed), and this file does not override her account. The staleness is shown, not hidden — see 'as_of' on this section.",
     "Revenue current-month figure is pending confirmation of a clean Amazon + Shopify export for the just-closed month — not yet available from any source file.",
     "Profit after ads is FY2025 annual, the only breakdown BidWorks' spend data supports — not a true monthly figure. Refreshed whenever a new annual cut arrives, not monthly, until BidWorks (or internal tracking) provides spend by SKU monthly.",
-    "Supplier name (Yuhang Metalworks) intentionally excluded — not needed for any metric here, and Restricted per the Day 1 classification log."
+    "Supplier name intentionally excluded — not needed for any metric here, and Restricted per the Day 1 classification log."
   ],
 
   "revenue_vs_last_year": {
