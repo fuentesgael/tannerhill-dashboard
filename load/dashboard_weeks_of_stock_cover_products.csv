@@ -1,0 +1,14 @@
+source_row,sku,name,on_hand,weekly_rate,weeks_cover,note
+1,TH-GRL-01,Trailhead Portable Grill,440,28.5,15.4,
+2,TH-GRL-02,Trailhead Grill Pro,111,6.9,16.1,
+3,TH-CID-06,Cast Iron Dutch Oven 6qt,351,21.4,16.4,
+4,TH-CIS-10,Cast Iron Skillet 10in,881,45.8,19.2,
+5,TH-KIT-DX,"Camp Kitchen Kit, Deluxe",225,10.6,21.2,
+6,TH-KIT-BS,"Camp Kitchen Kit, Basic",177,12.2,14.5,
+7,TH-CKW-08,Nesting Cookware Set 8pc,129,8.7,14.8,
+8,TH-ACC-WS,Windshield Panel Set,1063,8.3,128.1,
+9,TH-ACC-PT,Folding Prep Table,375,5.8,64.7,
+10,TH-ACC-CP,Insulated Coffee Press,301,22.6,13.3,
+11,TH-ACC-TL,Fire Poker & Tool Set,250,19.6,12.8,
+12,TH-ACC-CL,Grill Grate Cleaner Kit,297,25.3,11.7,
+13,TH-GRD-01,Griddle Plate,0,0.0,0,"Kickstarter-only product, no regular-channel demand since fulfillment — treat separately, not a reorder-urgency case"

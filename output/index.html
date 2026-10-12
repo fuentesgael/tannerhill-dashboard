@@ -208,11 +208,27 @@
 <footer id="run-footer" hidden></footer>
 <div id="tip" role="tooltip"></div>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous"></script>
 <script>
 (function () {
   "use strict";
 
-  var DATA_URL = "../sources/dashboard-data.json";
+  // Supabase tables. The dashboard_* tables hold exactly what dashboard-data.json held and feed
+  // every figure; the d10_* tables are read only to report their row counts.
+  var DASHBOARD_TABLES = [
+    "dashboard_data_notes", "dashboard_revenue_vs_last_year", "dashboard_weeks_of_stock_cover",
+    "dashboard_weeks_of_stock_cover_products", "dashboard_profit_after_ads",
+    "dashboard_profit_after_ads_products", "dashboard_cash_in_bank"
+  ];
+  var D10_TABLES = [
+    "d10_01_order_ledger", "d10_02_revenue_by_month", "d10_03_amazon_business_report",
+    "d10_04_amazon_refunds_by_order_date", "d10_05_shopify_sales_by_product_weekly",
+    "d10_06a_sales_history_amazon_units_ordered", "d10_06b_sales_history_amazon_units_refunded",
+    "d10_06c_sales_history_shopify_net_quantity", "d10_07_3pl_daily_stock",
+    "d10_08_bidworks_monthly_report", "d10_09_bidworks_invoices"
+  ];
+  var PAGE_SIZE = 1000;   // Supabase returns at most 1,000 rows per request
   var app = document.getElementById("app");
 
   function esc(s) {
@@ -565,28 +581,194 @@
       renderNotes(notes);
   }
 
-  function showLoadError(err) {
-    app.innerHTML =
-      '<section class="card" id="load-error">' +
-        '<div class="card-head"><h2>Data not loaded</h2>' + pill("red", "Error") + "</div>" +
-        '<p class="note">Could not read <code>' + esc(DATA_URL) + "</code> (" + esc(err.message || err) + "). " +
-        "Browsers block this when the page is opened straight from disk — serve the repo folder " +
-        "(e.g. <code>python3 -m http.server</code> from the repo root, then open <code>/output/</code>), " +
-        "or pick the JSON file below.</p>" +
-        '<input type="file" id="picker" accept="application/json,.json">' +
-      "</section>";
-    document.getElementById("picker").addEventListener("change", function (e) {
-      var f = e.target.files[0];
-      if (!f) return;
-      f.text().then(function (t) { render(JSON.parse(t)); })
-        .catch(function (e2) { showLoadError(e2); });
+  // ---------- Reading from Supabase ----------
+  function errorText(err) {
+    if (!err) return "Unknown error";
+    var parts = [err.message || String(err)];
+    if (err.code) parts.push("code " + err.code);
+    if (err.details) parts.push(err.details);
+    if (err.hint) parts.push(err.hint);
+    return parts.join(" · ");
+  }
+
+  // Reads every row of one table, PAGE_SIZE rows per request, until the table's own row count is reached.
+  function readTable(client, name) {
+    var rows = [], total = null;
+    function page(from) {
+      return client.from(name).select("*", { count: "exact" })
+        .order("source_row", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1)
+        .then(function (res) {
+          if (res.error) throw res.error;
+          var data = res.data || [];
+          if (typeof res.count === "number") total = res.count;
+          rows = rows.concat(data);
+          if (total === null) {
+            if (data.length < PAGE_SIZE) return;
+          } else if (rows.length >= total) {
+            return;
+          } else if (data.length === 0) {
+            throw new Error("Reading stopped at " + rows.length + " of " + total + " rows");
+          }
+          // Advance by what actually came back, in case the server caps pages below PAGE_SIZE.
+          return page(from + data.length);
+        });
+    }
+    return page(0).then(function () {
+      if (total !== null && rows.length !== total) {
+        throw new Error("Read " + rows.length + " rows but the table reports " + total);
+      }
+      return { name: name, ok: true, rows: rows };
+    }).catch(function (err) {
+      return { name: name, ok: false, error: errorText(err) };
     });
   }
 
-  fetch(DATA_URL, { cache: "no-store" })
-    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then(render)
-    .catch(showLoadError);
+  // Rebuilds the exact object dashboard-data.json used to provide, so render() is unchanged.
+  function buildDashboard(t) {
+    function fail(name, msg) { var e = new Error(msg); e.table = name; throw e; }
+    function one(name) {
+      var r = t[name].rows;
+      if (r.length !== 1) fail(name, "Expected 1 row, got " + r.length);
+      return r[0];
+    }
+    function some(name) {
+      var r = t[name].rows;
+      if (!r.length) fail(name, "No rows");
+      return r;
+    }
+    // A missing value stays null (shown as Pending / No Data / "—"), never 0.
+    function num(name, v) {
+      if (v === null || v === undefined || v === "") return null;
+      var n = Number(v);
+      if (!isFinite(n)) fail(name, "Not a number: " + v);
+      return n;
+    }
+    var rv = one("dashboard_revenue_vs_last_year");
+    var sc = one("dashboard_weeks_of_stock_cover");
+    var pa = one("dashboard_profit_after_ads");
+    var ca = one("dashboard_cash_in_bank");
+    return {
+      data_notes: some("dashboard_data_notes").map(function (r) { return r.note; }),
+      revenue_vs_last_year: {
+        as_of: rv.as_of,
+        current_month_value: num("dashboard_revenue_vs_last_year", rv.current_month_value),
+        current_month_label: rv.current_month_label,
+        last_year_same_month: {
+          month: rv.last_year_same_month_month ? String(rv.last_year_same_month_month).slice(0, 7) : null,
+          amazon: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_amazon),
+          shopify: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_shopify),
+          total: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_total)
+        },
+        source: rv.source,
+        scope: rv.scope
+      },
+      weeks_of_stock_cover: {
+        as_of: sc.as_of,
+        flag_under_weeks: num("dashboard_weeks_of_stock_cover", sc.flag_under_weeks),
+        products: some("dashboard_weeks_of_stock_cover_products").map(function (r) {
+          var t2 = "dashboard_weeks_of_stock_cover_products";
+          var p = { sku: r.sku, name: r.name, on_hand: num(t2, r.on_hand),
+                    weekly_rate: num(t2, r.weekly_rate), weeks_cover: num(t2, r.weeks_cover) };
+          if (r.note !== null && r.note !== undefined) p.note = r.note;
+          return p;
+        }),
+        source: sc.source
+      },
+      profit_after_ads: {
+        as_of: pa.as_of,
+        products: some("dashboard_profit_after_ads_products").map(function (r) {
+          return { sku: r.sku, name: r.name,
+                   net_contribution_after_ads: num("dashboard_profit_after_ads_products", r.net_contribution_after_ads) };
+        }),
+        source: pa.source
+      },
+      cash_in_bank: {
+        as_of: ca.as_of,
+        value: num("dashboard_cash_in_bank", ca.value),
+        status: ca.status,
+        note: ca.note
+      }
+    };
+  }
+
+  function renderLoadReport(results) {
+    function rows(names) {
+      return names.map(function (n) {
+        var r = results[n];
+        return '<div class="note-row"><span class="note-icon ' + (r.ok ? "" : "amber") + '" aria-hidden="true">' +
+            (r.ok ? "✓" : "!") + '</span><div style="overflow-wrap:anywhere"><strong>' + esc(n) + ":</strong> " +
+            (r.ok ? num(r.rows.length, 0) + (r.rows.length === 1 ? " row read" : " rows read")
+                  : pill("red", "Failed") + " " + esc(r.error)) +
+          "</div></div>";
+      }).join("");
+    }
+    return '<section class="card wide" id="load-report"><div class="card-head"><h2>Rows read from Supabase</h2></div>' +
+      '<p class="period">Dashboard tables: these feed every figure on this page.</p><div class="notes">' + rows(DASHBOARD_TABLES) + "</div>" +
+      '<p class="period" style="margin-top:14px">D10 tables: loaded and counted only — not used in any figure.</p>' +
+      '<div class="notes">' + rows(D10_TABLES) + "</div></section>";
+  }
+
+  function showLoadError(title, lines) {
+    app.innerHTML =
+      '<section class="card" id="load-error">' +
+        '<div class="card-head"><h2>' + esc(title) + "</h2>" + pill("red", "Error") + "</div>" +
+        lines.map(function (l) { return '<p class="note">' + l + "</p>"; }).join("") +
+      "</section>";
+  }
+
+  function looksLikeSecretKey(key) {
+    if (/^sb_secret_/.test(key)) return true;
+    var parts = key.split(".");
+    if (parts.length !== 3) return false;
+    try { return JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))).role === "service_role"; }
+    catch (e) { return false; }
+  }
+
+  function start() {
+    var cfg = window.TANNERHILL_CONFIG || {};
+    var url = cfg.supabaseUrl || "", key = cfg.supabasePublishableKey || "";
+    if (!window.supabase || typeof window.supabase.createClient !== "function") {
+      return showLoadError("Data not loaded", ["The Supabase library did not load from cdn.jsdelivr.net."]);
+    }
+    if (!url || !key || /YOUR-PROJECT-REF|REPLACE_ME/.test(url + key)) {
+      return showLoadError("Data not loaded", ["<code>config.js</code> still has placeholder values. " +
+        "Set the Project URL and the publishable key from Supabase → Project Settings → API Keys."]);
+    }
+    if (looksLikeSecretKey(key)) {
+      return showLoadError("Data not loaded", ["<code>config.js</code> contains a secret key. " +
+        "Remove it now and rotate it in Supabase: this page is public, so only the publishable key may go here."]);
+    }
+    var client = window.supabase.createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+    var names = DASHBOARD_TABLES.concat(D10_TABLES);
+    Promise.all(names.map(function (n) { return readTable(client, n); })).then(function (list) {
+      var results = {};
+      list.forEach(function (r) { results[r.name] = r; });
+      var failed = DASHBOARD_TABLES.filter(function (n) { return !results[n].ok; });
+      var d = null;
+      if (!failed.length) {
+        try { d = buildDashboard(results); }
+        catch (e) {
+          var bad = e.table || "dashboard tables";
+          results[bad] = { name: bad, ok: false, error: e.message || String(e) };
+          failed = [bad];
+        }
+      }
+      if (d) {
+        try { render(d); }
+        catch (e) { d = null; failed = []; showLoadError("Dashboard not shown", ["Drawing failed: " + esc(e.message || e)]); }
+      }
+      if (!d && failed.length) {
+        showLoadError("Dashboard not shown", ["These tables did not load, so no figures are shown in their place:"]
+          .concat(failed.map(function (n) { return "<strong>" + esc(n) + "</strong>: " + esc(results[n].error); })));
+      }
+      app.insertAdjacentHTML("beforeend", renderLoadReport(results));
+    }).catch(function (e) {
+      showLoadError("Data not loaded", [esc(e.message || e)]);
+    });
+  }
+
+  start();
 })();
 </script>
 </body>
