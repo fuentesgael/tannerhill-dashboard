@@ -156,6 +156,15 @@
   .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 0 0 10px; }
   .legend i { display: inline-block; width: 12px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
   .legend i.dash { width: 0; height: 12px; border-left: 2px dashed var(--loss); border-radius: 0; margin-right: 8px; vertical-align: -2px; }
+  /* Band indicators: a dot beside each value, plus a key per card */
+  .band { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: #b9c2bf; }
+  .band.green { background: var(--gain); }
+  .band.amber { background: var(--amber-line); }
+  .band.red   { background: var(--loss); }
+  .legend.band-key { margin-top: -4px; }
+  .legend.band-key .band { margin-right: 6px; }
+  .band-line { font-size: 12.5px; color: var(--muted); margin: 12px 0 0; }
+  .band-line strong { color: var(--ink); font-weight: 600; }
 
   /* Phones: name stacks above the bar so the bar and value keep the full width. */
   @media (max-width: 600px) {
@@ -316,6 +325,27 @@
   }
 
   // ---------- Revenue vs last year ----------
+  // ---------- Band indicators ----------
+  // Fixed display rules from the Band Calculations tab of the Agency Scorecards workbook.
+  // They only colour the values already on the page; they change no figure.
+  var BAND_RULES = {
+    revenueAmberBelow: 0.10,   // revenue: Green >= last year; Amber up to 10% below; Red more than 10% below
+    stockGreenMinWeeks: 6      // stock: Green 6+ weeks of cover; Red under 6 (no Amber)
+  };                           // profit after ads: Green positive; Red negative (no Amber)
+  var BAND_NAMES = { green: "Green", amber: "Amber", red: "Red" };
+  function revenueBand(current, lastYear) {
+    if (current == null || lastYear == null || !(lastYear > 0)) return null;
+    if (current >= lastYear) return "green";
+    if (current >= lastYear * (1 - BAND_RULES.revenueAmberBelow)) return "amber";
+    return "red";
+  }
+  function stockBand(weeks) { return weeks >= BAND_RULES.stockGreenMinWeeks ? "green" : "red"; }
+  function profitBand(v) { return v > 0 ? "green" : (v < 0 ? "red" : null); }
+  function bandDot(band, why) {
+    var label = band ? "Band: " + BAND_NAMES[band] + (why ? " — " + why : "") : "Not banded" + (why ? " — " + why : "");
+    return '<span class="band ' + (band || "none") + '" role="img" aria-label="' + esc(label) + '" title="' + esc(label) + '"></span>';
+  }
+
   function renderRevenue(r) {
     var ly = r.last_year_same_month || {};
     var cur = hasCurrentRevenue(r);
@@ -347,6 +377,15 @@
         "<div><strong>" + esc(monthName(ly.month)) + "</strong>Amazon " + (ly.amazon != null ? money(ly.amazon) : "—") +
           " · Shopify " + (ly.shopify != null ? money(ly.shopify) : "—") + "</div>" +
       "</div>" +
+      (function () {
+        var band = revenueBand(cur ? r.current_month_value : null, ly.total);
+        var text = band === "green" ? "at or above " + monthName(ly.month)
+          : band === "amber" ? "up to 10% below " + monthName(ly.month)
+          : band === "red" ? "more than 10% below " + monthName(ly.month)
+          : "last closed month pending, nothing to compare yet";
+        return '<p class="band-line">' + bandDot(band, text) + "<strong>Band: " + (band ? BAND_NAMES[band] : "Not banded") +
+          "</strong> · " + esc(text) + "</p>";
+      })() +
       '<div class="source">As of: ' + esc(r.as_of || "—") + "<br>Source: " + esc(r.source || "—") + "</div>" +
     "</section>";
   }
@@ -392,14 +431,17 @@
         '<div class="track">' + grid +
           '<div class="bar ' + (isUnder ? "loss" : "gain") + (capped ? " capped" : "") +
             '" style="left:0;width:' + pct(p.weeks_cover).toFixed(2) + '%"' + tipAttr(tip) + "></div></div>" +
-        '<div class="hval">' + num(p.weeks_cover, 1) + (capped ? " ›" : "") + "</div></div>";
+        '<div class="hval">' + bandDot(stockBand(p.weeks_cover),
+            (stockBand(p.weeks_cover) === "green" ? "6+ weeks of cover" : "under 6 weeks of cover") +
+            (sf.isStale ? ", as of " + asOf + " snapshot" : "")) +
+          num(p.weeks_cover, 1) + (capped ? " ›" : "") + "</div></div>";
     }
     function specialRow(p) {
       return '<div class="hrow">' +
         '<div class="hname">' + esc(p.name) + '<span class="tag grey">Not tracked</span>' +
           '<div class="sku">' + esc(p.sku) + " · " + num(p.on_hand, 0) + " on hand · " + num(p.weekly_rate, 1) + " / wk</div></div>" +
         '<div class="track untracked-track"' + tipAttr([p.name + " (" + p.sku + ")", p.note]) + '><span class="untracked">' + esc(p.note) + "</span></div>" +
-        '<div class="hval">—</div></div>';
+        '<div class="hval">' + bandDot(null, "not tracked, see note") + "—</div></div>";
     }
 
     var axis = '<div class="axis"><div></div><div class="ticks">' + ticks.map(function (t, i) {
@@ -424,6 +466,10 @@
         '<span><i style="background:var(--loss)"></i>Under flag</span>' +
         '<span><i class="dash"></i>' + esc(flag) + "-week flag</span>" +
         "<span>Axis in weeks · › bar runs past " + axisMax + "</span></div>" +
+      '<div class="legend band-key"><span>Band:</span>' +
+        '<span><span class="band green"></span>Green, ' + BAND_RULES.stockGreenMinWeeks + "+ weeks</span>" +
+        '<span><span class="band red"></span>Red, under ' + BAND_RULES.stockGreenMinWeeks + " weeks</span>" +
+        '<span><span class="band none"></span>Not banded</span></div>' +
       '<div class="hbars">' + sf.regular.map(row).join("") + sf.special.map(specialRow).join("") + "</div>" +
       axis +
       '<div class="source">As of: ' + esc(s.as_of || "—") + "<br>Source: " + esc(s.source || "—") + "</div>" +
@@ -462,7 +508,8 @@
         '<div class="hname">' + esc(p.name) + '<div class="sku">' + esc(p.sku) + "</div></div>" +
         '<div class="track"><span class="zeroline" style="left:50%"></span>' +
           '<div class="bar ' + (v < 0 ? "loss" : "gain") + '" style="left:' + left.toFixed(2) + "%;width:" + w.toFixed(2) + '%"' + tipAttr(tip) + "></div></div>" +
-        '<div class="hval">' + money(v) + "</div></div>";
+        '<div class="hval">' + bandDot(profitBand(v), v > 0 ? "positive after ads" : (v < 0 ? "negative after ads" : "break-even")) +
+          money(v) + "</div></div>";
     }).join("");
 
     var axis = '<div class="axis"><div></div><div class="ticks">' +
@@ -483,6 +530,9 @@
         : "") +
       '<div class="legend"><span><i style="background:var(--loss)"></i>Loss (left of $0)</span>' +
         '<span><i style="background:var(--gain)"></i>Gain (right of $0)</span></div>' +
+      '<div class="legend band-key"><span>Band:</span>' +
+        '<span><span class="band green"></span>Green, positive</span>' +
+        '<span><span class="band red"></span>Red, negative</span></div>' +
       '<div class="hbars">' + rows + "</div>" +
       axis +
       '<div class="source">As of: ' + esc(pa.as_of || "—") + "<br>Source: " + esc(pa.source || "—") + "</div>" +
