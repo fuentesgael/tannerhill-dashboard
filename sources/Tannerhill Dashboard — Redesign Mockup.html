@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tannerhill Co. — Dashboard Mockup (Review Only)</title>
+<style>
+  :root {
+    --ink:#1F3044; --mut:#64748B; --bd:#E4E9F2; --bg:#F8F8FF;
+    --green:#10B981; --amber:#F59E0B; --red:#E11D48; --grey:#94A3B8; --navy:#1F3044;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 Inter,system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+  .mockup-banner { background:#FEF3C7; color:#92400E; text-align:center; padding:8px 16px; font-size:13px; font-weight:600; border-bottom:2px solid #F59E0B; }
+  header { background:var(--navy); color:#fff; padding:18px 28px; }
+  header h1 { margin:0; font:700 22px/1.2 system-ui,sans-serif; }
+  header .sub { font-size:13px; color:#A9B8CC; margin-top:4px; }
+  .shell { display:flex; min-height:calc(100vh - 90px); }
+  nav { width:200px; background:#fff; border-right:1px solid var(--bd); padding:18px 0; flex-shrink:0; }
+  nav button { display:block; width:100%; text-align:left; padding:11px 22px; border:none; background:none; font:600 13px/1.3 system-ui,sans-serif; color:var(--mut); cursor:pointer; border-left:3px solid transparent; }
+  nav button.active { color:var(--navy); border-left-color:var(--navy); background:#F8FAFF; }
+  main { flex:1; padding:26px 30px; overflow-x:auto; }
+  .tabpanel { display:none; }
+  .tabpanel.active { display:block; }
+  .row { display:grid; gap:14px; margin-bottom:16px; }
+  .r3 { grid-template-columns:repeat(3,1fr); align-items:start; }
+  .r2 { grid-template-columns:3fr 2fr; }
+  @media (max-width:900px){ .r3,.r2{grid-template-columns:1fr;} }
+  .col-panel { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:16px 18px; }
+  .col-panel h3 { font:700 12px/1.2 system-ui,sans-serif; letter-spacing:.05em; text-transform:uppercase; color:var(--navy); margin:0 0 14px; padding-bottom:10px; border-bottom:2px solid var(--bd); }
+  .mini-card { border-bottom:1px solid var(--bd); padding:12px 0; position:relative; }
+  .mini-card:last-child { border-bottom:none; padding-bottom:4px; }
+  .lbl { font:700 10.5px/1.3 system-ui,sans-serif; letter-spacing:.04em; text-transform:uppercase; color:var(--mut); }
+  .star { color:#F59E0B; font-weight:800; margin-left:4px; }
+  .val { font:700 22px/1.15 system-ui,sans-serif; margin:6px 0 3px; }
+  .det { font-size:12.5px; color:var(--mut); }
+  .pill { display:inline-block; padding:2px 9px; border-radius:999px; font:700 9.5px/1.4 system-ui,sans-serif; letter-spacing:.04em; margin-left:6px; vertical-align:middle; }
+  .pill.green { background:var(--green); color:#fff; } .pill.amber { background:var(--amber); color:var(--ink); }
+  .pill.red { background:var(--red); color:#fff; } .pill.grey { background:var(--grey); color:#fff; }
+  .so-what { margin-top:8px; padding-top:7px; border-top:1px dashed var(--bd); font-size:12px; color:#3B4F68; display:flex; gap:6px; }
+  .so-what b { color:var(--ink); flex-shrink:0; }
+  .reco-card { background:#F8FAFF; border:1px dashed #B9C5DC; border-radius:8px; padding:10px 12px; font-size:12px; color:var(--mut); margin-top:6px; }
+  .warn-card { background:#FFF7ED; border:1px solid #FDBA74; border-radius:8px; padding:10px 12px; font-size:12px; color:#9A3412; margin-top:6px; }
+  .legend-box { display:flex; gap:22px; flex-wrap:wrap; background:#fff; border:1px solid var(--bd); border-radius:10px; padding:12px 18px; margin-bottom:18px; font-size:12.5px; }
+  .legend-group { display:flex; align-items:center; gap:14px; }
+  .legend-group .gtitle { font-weight:700; color:var(--mut); text-transform:uppercase; font-size:10.5px; letter-spacing:.05em; margin-right:2px; }
+  .dot { width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:5px; }
+  .leg-item { display:flex; align-items:center; white-space:nowrap; }
+  h2.section { font:700 13px/1.2 system-ui,sans-serif; letter-spacing:.04em; text-transform:uppercase; color:var(--mut); margin:0 0 12px; }
+  h3.group-head { font:700 14px/1.2 system-ui,sans-serif; color:var(--navy); margin:26px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--navy); }
+  h3.group-head:first-child { margin-top:0; }
+  .chart-card { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:18px 20px; margin-bottom:16px; }
+  .mini-bars { display:flex; align-items:flex-end; gap:4px; height:46px; margin-top:6px; }
+  .mini-bars .bc { flex:1; display:flex; flex-direction:column; justify-content:flex-end; }
+  .mini-bars .f { border-radius:2px 2px 0 0; }
+  .bars { display:flex; align-items:flex-end; gap:5px; height:120px; margin-top:10px; }
+  .bars .bar-col { flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; min-width:0; }
+  .bars .fill { border-radius:3px 3px 0 0; position:relative; }
+  .bars .fill.amazon { background:#4C7CF0; } .bars .fill.shopify { background:#10B981; }
+  .bars .fill.open { background:repeating-linear-gradient(45deg,#C7D4EE,#C7D4EE 4px,#DCE5F5 4px,#DCE5F5 8px) !important; }
+  .bars .month-lbl { font-size:9px; color:var(--mut); text-align:center; margin-top:3px; }
+  .bars .val-lbl { font-size:8.5px; color:var(--mut); text-align:center; margin-bottom:2px; }
+  .yoy-compare { display:flex; gap:18px; align-items:flex-end; height:90px; margin:12px 0; }
+  .yoy-bar { flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; }
+  .yoy-bar .bar-fill { width:60%; border-radius:4px 4px 0 0; }
+  .yoy-bar .bar-fill.real { background:#4C7CF0; } .yoy-bar .bar-fill.pending { background:#E2E8F0; border:1px dashed #94A3B8; }
+  .yoy-bar .bv { font-size:12px; font-weight:700; margin-top:6px; } .yoy-bar .bl { font-size:11px; color:var(--mut); margin-top:2px; }
+  .stock-row, .profit-row { display:grid; grid-template-columns:150px 1fr 70px; gap:10px; align-items:center; margin-bottom:8px; font-size:13px; }
+  .track { background:#F1F5F9; border-radius:4px; height:20px; position:relative; overflow:hidden; }
+  .track .fill2 { height:100%; border-radius:4px; }
+  .mark { position:absolute; top:0; bottom:0; width:2px; background:var(--navy); opacity:.5; }
+  .fig { text-align:right; font-weight:700; font-size:12.5px; }
+  .note-row { background:#fff; border:1px solid var(--bd); border-radius:10px; padding:14px 18px; margin-bottom:10px; font-size:13.5px; }
+  .note-row .n-label { font-weight:700; color:var(--navy); display:block; margin-bottom:4px; }
+  table.rows-tbl { width:100%; border-collapse:collapse; font-size:13px; }
+  table.rows-tbl th { text-align:left; color:var(--mut); font-size:11px; text-transform:uppercase; letter-spacing:.04em; padding:6px 10px; border-bottom:2px solid var(--bd); }
+  table.rows-tbl td { padding:7px 10px; border-bottom:1px solid var(--bd); }
+  .ok { color:var(--green); font-weight:700; }
+  .grpname { font-weight:700; color:var(--mut); font-size:11px; text-transform:uppercase; padding:14px 10px 4px; }
+  .refresh-banner { background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:10px 16px; font-size:13px; color:#166534; margin-bottom:14px; display:flex; justify-content:space-between; }
+  .chan-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media (max-width:900px){ .chan-grid{grid-template-columns:repeat(2,1fr);} }
+  .chan-card { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:16px; }
+  .chan-card.dim { opacity:.6; }
+  .chan-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
+  .chan-badge { width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .chan-name { font:700 11px/1.3 system-ui,sans-serif; color:var(--mut); text-transform:uppercase; letter-spacing:.03em; }
+  .chan-val { font:700 20px/1.2 system-ui,sans-serif; color:var(--ink); }
+  .chan-cap { font-size:10.5px; color:var(--mut); }
+  .chan-pills { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .chan-pill { background:#EEF2FF; color:#3730A3; border-radius:7px; padding:6px 8px; text-align:center; }
+  .chan-pill.grey { background:#F1F5F9; color:var(--mut); }
+  .chan-pill .cp-lbl { font-size:9px; text-transform:uppercase; letter-spacing:.03em; font-weight:700; opacity:.75; }
+  .chan-pill .cp-val { font-size:13px; font-weight:700; margin-top:2px; }
+  .stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+  @media (max-width:900px){ .stat-strip{grid-template-columns:1fr;} }
+  .stat-card { border-radius:12px; padding:16px 18px; color:#fff; position:relative; overflow:hidden; min-height:92px; }
+  .stat-card .s-icon { position:absolute; right:12px; top:12px; width:34px; height:34px; opacity:.85; }
+  .stat-card .s-lbl { font:700 11px/1.2 system-ui,sans-serif; letter-spacing:.04em; text-transform:uppercase; opacity:.9; }
+  .stat-card .s-val { font:700 25px/1.2 system-ui,sans-serif; margin:8px 0 2px; }
+  .stat-card .s-cap { font-size:11.5px; opacity:.9; }
+  /* Deliberately NOT red/amber/green — those are reserved for RAG status, not decoration */
+  .stat-card.c-revenue { background:linear-gradient(135deg,#4F46E5,#3730A3); }
+  .stat-card.c-inventory { background:linear-gradient(135deg,#0891B2,#155E75); }
+  .stat-card.c-marketing { background:linear-gradient(135deg,#7C3AED,#5B21B6); }
+</style>
+</head>
+<body>
+
+<div class="mockup-banner">MOCKUP FOR REVIEW ONLY — static HTML, not connected to Supabase. Revenue, BidWorks and stock figures use your real D10 source files.</div>
+
+<header>
+  <h1>Tannerhill Co. — Owner Dashboard</h1>
+  <div class="sub">Four metrics · signed schema · mockup build</div>
+</header>
+
+<div class="shell">
+  <nav>
+    <button class="tab-btn active" data-tab="summary">Executive Summary</button>
+    <button class="tab-btn" data-tab="details">Details</button>
+    <button class="tab-btn" data-tab="notes">Data Notes</button>
+    <button class="tab-btn" data-tab="rows">Rows read from Supabase</button>
+  </nav>
+
+  <main>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="tabpanel active" id="summary">
+
+      <div class="legend-box">
+        <div class="legend-group">
+          <span class="gtitle">Metric health</span>
+          <span class="leg-item"><span class="dot" style="background:var(--red)"></span>Red = Danger</span>
+          <span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Amber = At Risk</span>
+          <span class="leg-item"><span class="dot" style="background:var(--green)"></span>Green = Healthy</span>
+          <span class="leg-item"><span class="star">&#9733;</span>Lena's requested KPI</span>
+        </div>
+        <div class="legend-group">
+          <span class="gtitle">Data health</span>
+          <span class="leg-item"><span class="dot" style="background:var(--grey)"></span>No Data = never sourced</span>
+          <span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Stale = sourced once, dated, not live</span>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat-card c-revenue">
+          <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="s-lbl">Overall Revenue</div>
+          <div class="s-val">$93,128</div>
+          <div class="s-cap">Latest closed month (unofficial) &middot; Feb 2026, not yet signed off</div>
+        </div>
+        <div class="stat-card c-inventory">
+          <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <div class="s-lbl">Inventory &amp; Fulfillment</div>
+          <div class="s-val">12<span style="font-size:15px;"> of 13</span></div>
+          <div class="s-cap">SKUs healthy &middot; lowest 11.7 wks &middot; 1 reorder flag</div>
+        </div>
+        <div class="stat-card c-marketing">
+          <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>
+          <div class="s-lbl">Marketing &amp; Ads</div>
+          <div class="s-val">$611,000</div>
+          <div class="s-cap">Net profit after ads, FY2025 &middot; 2 SKUs losing money</div>
+        </div>
+      </div>
+
+      <div class="row r3">
+
+        <!-- COL 1: OVERALL REVENUE -->
+        <div class="col-panel">
+          <h3>Overall Revenue</h3>
+
+          <div class="mini-card">
+            <div class="lbl">Revenue vs. last year<span class="star">&#9733;</span></div>
+            <div class="yoy-compare">
+              <div class="yoy-bar"><div class="bar-fill real" style="height:60%"></div><div class="bv">$87,235</div><div class="bl">Feb 2025</div></div>
+              <div class="yoy-bar"><div class="bar-fill pending" style="height:60%"></div><div class="bv" style="color:var(--mut)">Pending</div><div class="bl">This month</div></div>
+            </div>
+            <div class="det">Amazon + Shopify only, Kickstarter excluded</div>
+            <div class="so-what"><b>Means:</b> nothing to compare to yet — last closed month isn't officially sourced.</div>
+            <div class="reco-card"><b>Not one of Lena's 4:</b> month-over-month, using the latest closed data already loaded (Jan&rarr;Feb 2026) — $85,805 &rarr; $93,128, <b style="color:var(--green)">+8.5%</b>. Shown only because the official YoY figure is still pending.</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Revenue, last closed month<span class="star">&#9733;</span></div>
+            <div class="val" style="color:var(--mut);font-size:19px;">Pending</div>
+            <div class="det">This is the figure Lena's metric needs — not sourced yet.</div>
+            <div class="det" style="margin-top:4px;"><b>Already sitting in the database (not yet connected to this card):</b> Feb 2026 &mdash; $93,127.60</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Cash in the bank<span class="star">&#9733;</span><span class="pill grey">No Data</span></div>
+            <div class="val" style="color:var(--grey);font-size:19px;">No Data</div>
+            <div class="det">No bank feed exists in any source file</div>
+            <div class="so-what"><b>Means:</b> shown grey on purpose, not omitted — the gap stays visible.</div>
+          </div>
+        </div>
+
+        <!-- COL 2: INVENTORY & FULFILLMENT -->
+        <div class="col-panel">
+          <h3>Inventory &amp; Fulfillment (Stock Health)</h3>
+
+          <div class="mini-card">
+            <div class="lbl">Active vs. Paused SKUs</div>
+            <div style="display:grid;grid-template-columns:104px 1fr;gap:6px 10px;font-size:12.5px;margin-top:8px;">
+              <div style="font-weight:700;">Active: 12</div><div>Healthy 12 &middot; At Risk 0 &middot; Danger 0 &middot; lowest 11.7 wks</div>
+              <div style="font-weight:700;">Paused Flag: 1</div><div>Griddle Plate — Kickstarter-only</div>
+              <div style="font-weight:700;">Reorder Flag: 1</div><div>Healthy TBD &middot; At Risk TBD &middot; Danger TBD (Grill Pro — qualitative account, no exact weeks figure yet)</div>
+            </div>
+            <div class="det" style="margin-top:8px;">See Details tab for the full SKU list and descriptions.</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Stock cover, lowest first<span class="star">&#9733;</span></div>
+            <div class="val" style="font-size:19px;">12 <span class="pill green" style="margin-left:4px;">Healthy</span></div>
+            <div class="det">0 <span style="color:var(--amber);font-weight:700;">At Risk</span> · 0 <span style="color:var(--red);font-weight:700;">Danger</span> · lowest is 11.7 wks</div>
+            <div class="det" style="margin-top:4px;">Bands: Healthy 9+ wks &middot; At Risk 6&ndash;9 wks &middot; Danger under 6 wks</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Reorder flag</div>
+            <div class="warn-card"><b>Yes — Grill Pro.</b> Per Marco's live count (not this page's stale snapshot): ~1 month of cover (&asymp;4.3 wks), no reorder placed. The snapshot shows 16.1 wks, Green — that figure is stale and does not reflect this. Needs action regardless of what this dashboard currently displays.</div>
+          </div>
+        </div>
+
+        <!-- COL 3: MARKETING & ADS -->
+        <div class="col-panel">
+          <h3>Marketing &amp; Ads (ROI)</h3>
+
+          <div class="mini-card">
+            <div class="lbl">Losing money on ads<span class="star">&#9733;</span><span class="pill red">Danger</span></div>
+            <div class="val">$41,210<span style="font-size:13px;font-weight:500;color:var(--mut)"> / yr</span></div>
+            <div class="det">Windshield Panel Set &minus;$21,685 &middot; Folding Prep Table &minus;$19,525</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Agency spend &mdash; BidWorks<span class="pill" style="background:#E2E8F0;color:var(--mut);">No band</span></div>
+            <div class="val" style="font-size:19px;">$14,000<span style="font-size:12px;font-weight:500;color:var(--mut)">/mo flat</span></div>
+            <div class="det">$210,000 total, Jan 2025&ndash;Mar 2026 (15 months) &middot; spend-by-product only sent annually</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Agency spend &mdash; Handle Social<span class="pill grey">No Data</span></div>
+            <div class="val" style="color:var(--grey);font-size:17px;">No Data</div>
+            <div class="det">No spend/performance file exists. Scope undecided &mdash; Lena set an end-of-April deadline for written scope or termination.</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="lbl">Profit after ads, by product<span class="star">&#9733;</span></div>
+            <div class="val" style="font-size:19px;">$611,000 <span style="font-size:12px;font-weight:500;color:var(--mut)">net, FY2025</span></div>
+            <div class="det">11 profitable &middot; 2 losing money (above) &middot; full breakdown in Details</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="tabpanel" id="details">
+
+      <div class="legend-box">
+        <div class="legend-group">
+          <span class="gtitle">Metric health</span>
+          <span class="leg-item"><span class="dot" style="background:var(--red)"></span>Red = Danger</span>
+          <span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Amber = At Risk</span>
+          <span class="leg-item"><span class="dot" style="background:var(--green)"></span>Green = Healthy</span>
+          <span class="leg-item"><span class="star">&#9733;</span>Lena's requested KPI</span>
+        </div>
+        <div class="legend-group">
+          <span class="gtitle">Data health</span>
+          <span class="leg-item"><span class="dot" style="background:var(--grey)"></span>No Data = never sourced</span>
+          <span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Stale = sourced once, dated, not live</span>
+        </div>
+      </div>
+
+      <h3 class="group-head">Overall Revenue</h3>
+      <div class="row r2">
+        <div class="chart-card">
+          <h2 class="section">Revenue vs. last year<span class="star">&#9733;</span></h2>
+          <div class="det" style="margin-bottom:4px;">Amazon + Shopify only, Kickstarter excluded</div>
+          <div style="font-size:26px;font-weight:700;margin:8px 0;">$87,235 <span style="font-size:13px;font-weight:500;color:var(--mut)">— Feb 2025 (last year)</span></div>
+          <div class="det">This month: <b style="color:var(--amber)">Pending</b> — awaiting confirmed export</div>
+          <div class="so-what"><b>What this means:</b> no band yet — nothing to compare the pending month against.</div>
+        </div>
+        <div class="col-panel">
+          <div class="mini-card">
+            <div class="lbl">Cash in the bank<span class="star">&#9733;</span><span class="pill grey">No Data</span></div>
+            <div class="val" style="color:var(--grey);font-size:22px;">No Data</div>
+            <div class="det">No bank feed exists anywhere in the case files.</div>
+          </div>
+        </div>
+      </div>
+      <div class="note-row"><span class="n-label">Open question for you</span>What else belongs here? Candidates: a full 15-month closed-month trend line (real data, already loaded), an Amazon-vs-Shopify split of the YoY delta, or leaving this section as just the two cards above. Tell me which and I'll add it.</div>
+
+      <h3 class="group-head">Inventory &amp; Fulfillment</h3>
+      <div class="chart-card">
+        <h2 class="section">Weeks of stock cover, lowest first<span class="star">&#9733;</span></h2>
+        <div class="det" style="margin-bottom:10px;">Snapshot: 2026-02-16 (stale, not live) &middot; dark line = 6-week supplier lead time &middot; Griddle Plate not shown (paused)</div>
+        <div id="stockbars"></div>
+        <div class="warn-card" style="margin-top:12px;"><b>Reorder flag — Grill Pro:</b> Marco's live count shows ~1 month of cover (&asymp;4.3 wks), no reorder placed. This snapshot shows 16.1 wks, Green — stale, does not reflect that.</div>
+      </div>
+
+      <h3 class="group-head">Marketing &amp; Ads</h3>
+      <div class="chart-card">
+        <h2 class="section">Revenue by month — Amazon</h2>
+        <div class="det" style="margin-bottom:2px;">January 2025 – March 2026 &middot; hatched bar = month not yet closed</div>
+        <div class="bars" id="rev-amazon-full"></div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section">Revenue by month — Shopify</h2>
+        <div class="det" style="margin-bottom:2px;">January 2025 – March 2026 &middot; hatched bar = month not yet closed</div>
+        <div class="bars" id="rev-shopify-full"></div>
+        <div class="so-what"><b>What this means:</b> September 2025's dip is real — that month's $210,527 in Kickstarter pledges is deliberately excluded, since this view tracks only repeat, non-launch revenue.</div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section">Channels &amp; Agencies</h2>
+        <div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>
+        <div class="chan-grid">
+
+          <div class="chan-card">
+            <div class="chan-top">
+              <div class="chan-badge" style="background:#96BF48;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+              </div>
+              <div>
+                <div class="chan-name">Shopify</div>
+                <div class="chan-val">$375,425</div>
+                <div class="chan-cap">Revenue, FY2025</div>
+              </div>
+            </div>
+            <div class="chan-pills">
+              <div class="chan-pill"><div class="cp-lbl">Latest Mo.</div><div class="cp-val">$20,504</div></div>
+              <div class="chan-pill"><div class="cp-lbl">MoM Growth</div><div class="cp-val">+7.2%</div></div>
+            </div>
+          </div>
+
+          <div class="chan-card">
+            <div class="chan-top">
+              <div class="chan-badge" style="background:#FF9900;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="M3 8l9-5 9 5"/></svg>
+              </div>
+              <div>
+                <div class="chan-name">Amazon</div>
+                <div class="chan-val">$1,314,048</div>
+                <div class="chan-cap">Revenue, FY2025</div>
+              </div>
+            </div>
+            <div class="chan-pills">
+              <div class="chan-pill"><div class="cp-lbl">Latest Mo.</div><div class="cp-val">$72,623</div></div>
+              <div class="chan-pill"><div class="cp-lbl">MoM Growth</div><div class="cp-val">+8.9%</div></div>
+            </div>
+          </div>
+
+          <div class="chan-card">
+            <div class="chan-top">
+              <div class="chan-badge" style="background:#2563EB;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>
+              </div>
+              <div>
+                <div class="chan-name">BidWorks</div>
+                <div class="chan-val">2.34M</div>
+                <div class="chan-cap">Avg. impressions/mo</div>
+              </div>
+            </div>
+            <div class="chan-pills">
+              <div class="chan-pill"><div class="cp-lbl">Spend/mo</div><div class="cp-val">$14,000</div></div>
+              <div class="chan-pill"><div class="cp-lbl">Avg CTR</div><div class="cp-val">1.63%</div></div>
+            </div>
+          </div>
+
+          <div class="chan-card dim">
+            <div class="chan-top">
+              <div class="chan-badge" style="background:#94A3B8;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5A8.5 8.5 0 1 1 20.9 9.3"/><path d="M21 4L12 13l-3-3"/></svg>
+              </div>
+              <div>
+                <div class="chan-name">Handle Social</div>
+                <div class="chan-val" style="color:var(--grey);">No Data</div>
+                <div class="chan-cap">No source file — scope undecided</div>
+              </div>
+            </div>
+            <div class="chan-pills">
+              <div class="chan-pill grey"><div class="cp-lbl">Spend/mo</div><div class="cp-val">—</div></div>
+              <div class="chan-pill grey"><div class="cp-lbl">Reach</div><div class="cp-val">—</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section">Profit after ads, by product<span class="star">&#9733;</span></h2>
+        <div class="det" style="margin-bottom:10px;">FY2025 annual &middot; dollar figure, not a ratio</div>
+        <div id="profitbars"></div>
+        <div class="so-what"><b>What this means:</b> red bars are products where ad spend is costing Tannerhill more than the product earns back.</div>
+      </div>
+
+    </div>
+
+    <!-- DATA NOTES -->
+    <div class="tabpanel" id="notes">
+      <h2 class="section">Data Notes — what to keep in mind about these numbers</h2>
+      <div class="note-row"><span class="n-label">Stock snapshot is not live</span>Stock on hand is a 3PL snapshot dated 2026-02-16. It disagrees with Lena's verbal account (Trailhead Portable Grill ~40 units until Wednesday's shipment; Grill Pro ~1 month cover, no reorder placed) — this file does not override her account. The staleness is shown, not hidden.</div>
+      <div class="note-row"><span class="n-label">Revenue current-month figure is pending</span>Awaiting a clean Amazon + Shopify export for the just-closed month — the official metric hasn't been re-pointed at it yet, even though it now exists in D10-02.</div>
+      <div class="note-row"><span class="n-label">Profit after ads is annual, not monthly</span>This is the only breakdown BidWorks' spend data supports. Refreshed whenever a new annual cut arrives, not monthly.</div>
+      <div class="note-row"><span class="n-label">Supplier name intentionally excluded</span>Not needed for any metric here, and Restricted per the Day 1 data classification log.</div>
+    </div>
+
+    <!-- ROWS -->
+    <div class="tabpanel" id="rows">
+      <h2 class="section">Rows read from Supabase</h2>
+      <div class="refresh-banner"><span>Last refreshed: <b id="refresh-ts"></b></span><span>Build mode: manual (no scheduled job yet)</span></div>
+      <div class="det" style="margin-bottom:12px;">Dashboard tables feed every figure on this page. D10 tables are loaded and counted only — not used in any figure yet.</div>
+      <table class="rows-tbl">
+        <tr><th>Table</th><th>Rows read</th><th>Status</th></tr>
+        <tr class="grpname"><td colspan="3">Dashboard tables</td></tr>
+        <tr><td>dashboard_data_notes</td><td>4</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_revenue_vs_last_year</td><td>1</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_weeks_of_stock_cover</td><td>1</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_weeks_of_stock_cover_products</td><td>13</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_profit_after_ads</td><td>1</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_profit_after_ads_products</td><td>13</td><td class="ok">✓</td></tr>
+        <tr><td>dashboard_cash_in_bank</td><td>1</td><td class="ok">✓</td></tr>
+        <tr class="grpname"><td colspan="3">D10 source tables (loaded, not yet used in figures)</td></tr>
+        <tr><td>d10_01_order_ledger</td><td>25,152</td><td class="ok">✓</td></tr>
+        <tr><td>d10_02_revenue_by_month</td><td>15</td><td class="ok">✓</td></tr>
+        <tr><td>d10_03_amazon_business_report</td><td>180</td><td class="ok">✓</td></tr>
+        <tr><td>d10_04_amazon_refunds_by_order_date</td><td>180</td><td class="ok">✓</td></tr>
+        <tr><td>d10_05_shopify_sales_by_product_weekly</td><td>767</td><td class="ok">✓</td></tr>
+        <tr><td>d10_06a_sales_history_amazon_units_ordered</td><td>455</td><td class="ok">✓</td></tr>
+        <tr><td>d10_06b_sales_history_amazon_units_refunded</td><td>455</td><td class="ok">✓</td></tr>
+        <tr><td>d10_06c_sales_history_shopify_net_quantity</td><td>455</td><td class="ok">✓</td></tr>
+        <tr><td>d10_07_3pl_daily_stock</td><td>1,092</td><td class="ok">✓</td></tr>
+        <tr><td>d10_08_bidworks_monthly_report</td><td>15</td><td class="ok">✓</td></tr>
+        <tr><td>d10_09_bidworks_invoices</td><td>3</td><td class="ok">✓</td></tr>
+      </table>
+      <div class="det" style="margin-top:12px;"><b>28,803 rows across 18 tables</b></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+document.getElementById('refresh-ts').textContent = new Date().toLocaleString('en-US', {weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+
+const months = [
+  {m:'Jan 25', amz:61248, shop:17438, open:false}, {m:'Feb 25', amz:67904, shop:19331, open:false},
+  {m:'Mar 25', amz:142607, shop:40602, open:false}, {m:'Apr 25', amz:129643, shop:36911, open:false},
+  {m:'May 25', amz:127050, shop:36173, open:false}, {m:'Jun 25', amz:114724, shop:33686, open:false},
+  {m:'Jul 25', amz:166368, shop:47645, open:false}, {m:'Aug 25', amz:165943, shop:47246, open:false},
+  {m:'Sep 25', amz:65728, shop:18715, open:false}, {m:'Oct 25', amz:77953, shop:22194, open:false},
+  {m:'Nov 25', amz:89088, shop:25364, open:false}, {m:'Dec 25', amz:105792, shop:30120, open:false},
+  {m:'Jan 26', amz:66675, shop:19130, open:false}, {m:'Feb 26', amz:72623, shop:20504, open:false},
+  {m:'Mar 26', amz:181852, shop:39868, open:true}
+];
+function drawBars(elId, key, maxVal, color) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  months.forEach(r => {
+    const v = r[key];
+    const h = Math.round((v/maxVal)*100);
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    col.innerHTML = `<div class="val-lbl">$${(v/1000).toFixed(0)}k</div><div class="fill ${r.open?'open':color}" style="height:${h}%"></div><div class="month-lbl">${r.m}</div>`;
+    el.appendChild(col);
+  });
+}
+drawBars('rev-amazon-full', 'amz', Math.max(...months.map(r=>r.amz)), 'amazon');
+drawBars('rev-shopify-full', 'shop', Math.max(...months.map(r=>r.shop)), 'shopify');
+
+const stock = [
+  {n:'Grill Grate Cleaner Kit', w:11.7}, {n:'Fire Poker & Tool Set', w:12.8}, {n:'Insulated Coffee Press', w:13.3},
+  {n:'Camp Kitchen Kit, Basic', w:14.5}, {n:'Nesting Cookware Set 8pc', w:14.8}, {n:'Trailhead Portable Grill', w:15.4},
+  {n:'Trailhead Grill Pro', w:16.1}, {n:'Cast Iron Dutch Oven 6qt', w:16.4}, {n:'Cast Iron Skillet 10in', w:19.2},
+  {n:'Camp Kitchen Kit, Deluxe', w:21.2}, {n:'Folding Prep Table', w:64.7}, {n:'Windshield Panel Set', w:128.1}
+];
+const maxW = 30;
+const stockEl = document.getElementById('stockbars');
+stock.forEach(s => {
+  const pct = Math.min(100, (s.w/maxW)*100);
+  const row = document.createElement('div');
+  row.className = 'stock-row';
+  row.innerHTML = `<div>${s.n}</div><div class="track"><div class="fill2" style="width:${pct}%;background:${s.w>=6?'#10B981':'#E11D48'}"></div><div class="mark" style="left:${(6/maxW)*100}%"></div></div><div class="fig">${s.w} wk</div>`;
+  stockEl.appendChild(row);
+});
+
+const profit = [
+  {n:'Windshield Panel Set', v:-21685}, {n:'Folding Prep Table', v:-19525}, {n:'Grill Grate Cleaner Kit', v:15105},
+  {n:'Fire Poker & Tool Set', v:20802}, {n:'Insulated Coffee Press', v:28436}, {n:'Nesting Cookware Set 8pc', v:34328},
+  {n:'Camp Kitchen Kit, Basic', v:40834}, {n:'Cast Iron Dutch Oven 6qt', v:58012}, {n:'Trailhead Grill Pro', v:56106},
+  {n:'Cast Iron Skillet 10in', v:70816}, {n:'Camp Kitchen Kit, Deluxe', v:61794}, {n:'Griddle Plate', v:117895},
+  {n:'Trailhead Portable Grill', v:148082}
+];
+const maxP = Math.max(...profit.map(p=>Math.abs(p.v)));
+const profitEl = document.getElementById('profitbars');
+profit.sort((a,b)=>a.v-b.v).forEach(p => {
+  const pct = (Math.abs(p.v)/maxP)*100;
+  const row = document.createElement('div');
+  row.className = 'profit-row';
+  row.innerHTML = `<div>${p.n}</div><div class="track"><div class="fill2" style="width:${pct}%;background:${p.v>=0?'#10B981':'#E11D48'}"></div></div><div class="fig" style="color:${p.v>=0?'var(--green)':'var(--red)'}">${p.v<0?'-':''}$${Math.abs(p.v).toLocaleString()}</div>`;
+  profitEl.appendChild(row);
+});
+</script>
+</body>
+</html>
