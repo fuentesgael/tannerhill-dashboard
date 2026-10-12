@@ -275,6 +275,9 @@
   .owner-line { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bd); font-size: 11.5px; color: var(--mut); }
   .owner-line b { color: var(--ink); font-weight: 600; }
   .reco-card .owner-line, .chan-card .owner-line { margin-top: 8px; padding-top: 6px; }
+  .owner-line.mom-owner { margin-top: 6px; padding-top: 0; border-top: none; }
+  .warn-card .owner-line { border-top-color: #FDBA74; color: #9A3412; }
+  .warn-card .owner-line b { color: #7C2D12; }
   #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
 </head>
@@ -499,6 +502,11 @@
     return '<div class="owner-line">Owner: <b>' + esc(METRIC_OWNERS[metric]) + '</b> · Review by: <time datetime="' + iso + '">' + text + "</time></div>";
   }
   function unassignedOwnerLine() { return '<div class="owner-line">Owner: ' + esc(UNASSIGNED_OWNER) + "</div>"; }
+  // Month-over-month is a new calculation inside Lena's signed-off revenue card; it carries its own line.
+  function momOwnerLine() { return '<div class="owner-line mom-owner">MoM calculation: Not yet assigned, pending Lena\'s sign-off</div>'; }
+  // The Grill Pro reorder flag is an open decision needing action now, so it has no recurring review date.
+  var REORDER_FLAG_OWNER = "Marco";
+  function reorderOwnerLine() { return '<div class="owner-line">Owner: <b>' + esc(REORDER_FLAG_OWNER) + "</b> · Flagged in Fix Log, needs resolution</div>"; }
 
   // ---------- Shared pieces of the redesign ----------
   function legendBox() {
@@ -553,7 +561,7 @@
       "Per Lena's verbal account (see Data Notes), not this page's stale snapshot: ~1 month of cover, no reorder placed. " +
       (gp ? "The snapshot shows " + num(gp.weeks_cover, 1) + " wks, " + TIER_NAMES[stockBand(gp.weeks_cover)] +
             " — that figure is stale" + (sf.snapshotDate ? " (" + esc(sf.snapshotDate) + ")" : "") + " and does not reflect this. " : "") +
-      "Needs action regardless of what this dashboard currently displays.</div>";
+      "Needs action regardless of what this dashboard currently displays." + reorderOwnerLine() + "</div>";
   }
 
   // ---------- Executive Summary ----------
@@ -599,7 +607,7 @@
     "</div>";
     var momHtml;
     if (!mom) {
-      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) + unassignedOwnerLine() + "</div>";
+      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) + "</div>" + momOwnerLine();
     } else {
       var momLine = mom.growth !== null
         ? "month-over-month, using the latest closed data already loaded (" + esc(shortMonth(mom.prev.ym)) + "&rarr;" + esc(shortMonth(mom.latest.ym)) + ") — " +
@@ -609,7 +617,7 @@
         return "<br>" + esc(shortMonth(mom.latest.ym)) + "&rarr;" + esc(m) + ": Not available — " + esc(m) + " not yet closed.";
       }).join("");
       momHtml = '<div class="reco-card"><b>Not one of Lena\'s 4:</b> ' + momLine +
-        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine + unassignedOwnerLine() + "</div>";
+        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine + "</div>" + momOwnerLine();
     }
     var c = d.cash_in_bank, cashHas = c.value !== null && c.value !== undefined && c.status !== "no_data";
     var col1 = '<div class="col-panel"><h3>Overall Revenue</h3>' +
@@ -661,7 +669,8 @@
     var col3 = '<div class="col-panel"><h3>Marketing &amp; Ads (ROI)</h3>' +
       '<div class="mini-card"><div class="lbl">Losing money on ads' + STAR + (losses.length ? rpill("red", "Danger") : rpill("green", "Healthy")) + "</div>" +
         '<div class="val">' + money(-lossTotal) + '<span style="font-size:13px;font-weight:500;color:var(--mut)"> / yr</span></div>' +
-        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div></div>" +
+        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div>" +
+        ownerLine("profit") + "</div>" +
       '<div class="mini-card"><div class="lbl">Agency spend &mdash; BidWorks' + rpill("noband", "No band") + "</div>" + bwHtml + unassignedOwnerLine() + "</div>" +
       '<div class="mini-card"><div class="lbl">Agency spend &mdash; Handle Social' + rpill("grey", "No Data") + "</div>" +
         '<div class="val" style="color:var(--grey);font-size:17px;">No Data</div>' +
