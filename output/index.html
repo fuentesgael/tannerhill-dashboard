@@ -777,12 +777,12 @@
           channelCard(rev, "shopify", "Shopify", "#96BF48", CHANNEL_ICONS.shopify) +
           channelCard(rev, "amazon", "Amazon", "#FF9900", CHANNEL_ICONS.amazon) +
         "</div></div>" +
+      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
+      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
       '<h3 class="group-head">Inventory &amp; Fulfillment</h3>' +
       renderStock(d.weeks_of_stock_cover, staleNote) +
       reorderWarning(d.weeks_of_stock_cover, "Reorder flag — Grill Pro:") +
       '<h3 class="group-head">Marketing &amp; Ads</h3>' +
-      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
-      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
       '<div class="chart-card"><h2 class="section">Agencies</h2>' +
         '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
         '<div class="chan-grid two">' +
