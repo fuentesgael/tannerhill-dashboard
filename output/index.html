@@ -199,7 +199,7 @@
 <body>
 <header>
   <h1>Tannerhill Co. — Owner Dashboard</h1>
-  <span class="sub">Source: sources/dashboard-data.json</span>
+  <span class="sub">Source: Supabase</span>
 </header>
 
 <main id="app">
@@ -563,7 +563,7 @@
     var footer = document.getElementById("run-footer");
     footer.innerHTML = metrics + " metrics · " +
       '<span class="pending">' + esc(SCHEMA_STATUS) + "</span> · " +
-      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded dashboard-data.json">' +
+      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded its data from Supabase">' +
       esc(stamp) + "</time>";
     footer.hidden = false;
   }
