@@ -87,6 +87,8 @@
     font-size: 13px;
   }
   .banner strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
+  .nowrap { white-space: nowrap; }
+  .banner.scope { border-left-color: #9aa5a1; background: var(--grey-bg); color: var(--grey-ink); }
 
   /* ---------- Summary strip ---------- */
   .summary { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -186,6 +188,10 @@
     max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,.18); white-space: pre-line;
   }
 
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; font-size: 12.5px; color: var(--muted); }
+  footer .pending { color: var(--amber-ink); font-weight: 600; }
+  footer time { font-variant-numeric: tabular-nums; }
+
   #load-error { grid-column: 1 / -1; }
   #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
@@ -199,6 +205,7 @@
 <main id="app">
   <section class="card" id="load-status"><p class="note">Loading data…</p></section>
 </main>
+<footer id="run-footer" hidden></footer>
 <div id="tip" role="tooltip"></div>
 
 <script>
@@ -284,7 +291,7 @@
     var r = d.revenue_vs_last_year, ly = r.last_year_same_month || {};
     var cur = hasCurrentRevenue(r);
     var revCard = '<a class="stat ' + (cur ? "" : "amber") + '" href="#revenue">' +
-      '<div class="stat-top"><span class="stat-label">Revenue this month</span>' + (cur ? pill("green", "Current") : pill("amber", "Pending")) + "</div>" +
+      '<div class="stat-top"><span class="stat-label">Revenue · last closed month</span>' + (cur ? pill("green", "Current") : pill("amber", "Pending")) + "</div>" +
       '<div class="stat-value">' + (cur ? money(r.current_month_value) : "Pending") + "</div>" +
       '<div class="stat-sub">vs ' + (ly.total != null ? money(ly.total) : "—") + " in " + esc(shortMonth(ly.month)) +
         (cur ? "" : " · awaiting confirmed export") + "</div></a>";
@@ -306,7 +313,7 @@
     }
 
     var thisCol = cur
-      ? column(r.current_month_value, ["This month", money(r.current_month_value)])
+      ? column(r.current_month_value, ["Last closed month", money(r.current_month_value)])
       : '<div class="col"><div class="col-pending">' + pill("amber", "Pending") +
           '<span class="note">' + esc(r.current_month_label || "") + "</span></div></div>";
     var lyCol = ly.total != null
@@ -320,7 +327,7 @@
       '<p class="period">' + esc(r.scope || "") + "</p>" +
       '<div class="cols">' + thisCol + lyCol + "</div>" +
       '<div class="col-labels">' +
-        "<div><strong>This month</strong>" + (cur ? "" : "No bar until confirmed") + "</div>" +
+        "<div><strong>Last closed month</strong>" + (cur ? "" : "No bar until confirmed") + "</div>" +
         "<div><strong>" + esc(monthName(ly.month)) + "</strong>Amazon " + (ly.amazon != null ? money(ly.amazon) : "—") +
           " · Shopify " + (ly.shopify != null ? money(ly.shopify) : "—") + "</div>" +
       "</div>" +
@@ -413,7 +420,13 @@
     var step = Math.pow(10, Math.floor(Math.log10(v))) / 2;
     return Math.ceil(v / step) * step;
   }
-  function renderProfit(pa) {
+  function renderProfit(pa, stock) {
+    // Products the stock data marks as Kickstarter-only: their profit comes from Kickstarter sales,
+    // which the Revenue card excludes.
+    var ksSkus = (stock && stock.products || []).filter(function (p) { return /kickstarter/i.test(p.note || ""); })
+      .map(function (p) { return p.sku; });
+    var ksNames = pa.products.filter(function (p) { return ksSkus.indexOf(p.sku) !== -1; })
+      .map(function (p) { return p.name; });
     var items = pa.products.slice().sort(function (a, b) {
       return b.net_contribution_after_ads - a.net_contribution_after_ads;
     });
@@ -446,7 +459,12 @@
       '<div class="card-head"><h2>Profit after ads, by product</h2>' + pill("grey", "FY2025 annual — not monthly") + "</div>" +
       '<p class="period">Net contribution after ad spend, full year FY2025 · ' +
         (negCount ? pill("red", negCount + " loss-making") + " " : "") +
-        "Total " + money(total) + "</p>" +
+        '<span class="nowrap">Net total after ads (FY2025): ' + money(total) + "</span></p>" +
+      (ksNames.length
+        ? '<div class="banner scope">' + esc("Includes Kickstarter revenue for the " + ksNames.join(" and ") +
+            (ksNames.length > 1 ? " (their only sales channel)" : " (its only sales channel)") +
+            "; the Revenue card above excludes Kickstarter.") + "</div>"
+        : "") +
       '<div class="legend"><span><i style="background:var(--loss)"></i>Loss (left of $0)</span>' +
         '<span><i style="background:var(--gain)"></i>Gain (right of $0)</span></div>' +
       '<div class="hbars">' + rows + "</div>" +
@@ -515,7 +533,27 @@
   app.addEventListener("focusout", hideTip);
   window.addEventListener("scroll", hideTip, { passive: true });
 
+  // The data file carries no approval field, so this status is set here by hand.
+  // Change it only once the coach has actually signed off on the schema.
+  var SCHEMA_STATUS = "schema pending coach sign-off";
+
+  function renderFooter(d, loadedAt) {
+    var metrics = Object.keys(d).filter(function (k) {
+      return k !== "data_notes" && d[k] && typeof d[k] === "object" && !Array.isArray(d[k]);
+    }).length;
+    var stamp = loadedAt.toLocaleString("en-GB", {
+      day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short"
+    });
+    var footer = document.getElementById("run-footer");
+    footer.innerHTML = metrics + " metrics · " +
+      '<span class="pending">' + esc(SCHEMA_STATUS) + "</span> · " +
+      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded dashboard-data.json">' +
+      esc(stamp) + "</time>";
+    footer.hidden = false;
+  }
+
   function render(d) {
+    renderFooter(d, new Date());
     var notes = d.data_notes || [];
     var staleNote = notes.filter(function (n) { return /stock on hand/i.test(n); })[0];
     app.innerHTML =
@@ -523,7 +561,7 @@
       renderRevenue(d.revenue_vs_last_year) +
       renderCash(d.cash_in_bank) +
       renderStock(d.weeks_of_stock_cover, staleNote) +
-      renderProfit(d.profit_after_ads) +
+      renderProfit(d.profit_after_ads, d.weeks_of_stock_cover) +
       renderNotes(notes);
   }
 
