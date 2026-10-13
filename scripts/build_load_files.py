@@ -113,6 +113,26 @@ D10_TABLES = [
     ("d10_09_bidworks_invoices", "D10-09 BidWorks Invoices 2026.csv",
      [T, T, c_mon_d_y, T, N, T, T]),
 ]
+# SKU crosswalk between the three naming schemes (D10-07 item_code, D10-06a/b Amazon column,
+# D10-06c Shopify column). No source file holds this mapping; these 12 rows were confirmed by
+# the dashboard owner on 13 Oct 2026. Griddle Plate is deliberately absent (Kickstarter-only,
+# not in D10-07 or the Amazon history).
+SKU_CROSSWALK_SOURCE = "Confirmed SKU crosswalk (dashboard owner, 13 Oct 2026); checked against D10-06a/b/c headers and D10-07 item codes"
+SKU_CROSSWALK = [
+    ("TNHC-1001", "TRAILHEAD-GRILL-BLK", "trailhead-portable-grill"),
+    ("TNHC-1002", "TRAILHEAD-GRILL-PRO-V2", "trailhead-grill-pro"),
+    ("TNHC-2010", "CI-SKILLET-10IN", "cast-iron-skillet-10"),
+    ("TNHC-2006", "CI-DUTCHOVEN-6QT", "cast-iron-dutch-oven-6qt"),
+    ("TNHC-3001", "CAMPKIT-DELUXE", "camp-kitchen-kit-deluxe"),
+    ("TNHC-3002", "CAMPKIT-BASIC", "camp-kitchen-kit-basic"),
+    ("TNHC-3008", "NEST-COOKWARE-8PC", "nesting-cookware-set-8pc"),
+    ("TNHC-4001", "ACC-WINDSHIELD-SET", "windshield-panel-set"),
+    ("TNHC-4002", "ACC-PREPTABLE-FOLD", "folding-prep-table"),
+    ("TNHC-4003", "ACC-COFFEEPRESS-INS", "insulated-coffee-press"),
+    ("TNHC-4004", "ACC-FIRETOOL-SET", "fire-poker-tool-set"),
+    ("TNHC-4005", "ACC-GRATE-CLEANER", "grill-grate-cleaner-kit"),
+]
+
 EXCLUDED = [("D10-10 Yuhang PO History to 31 Mar 2026.csv",
              "Restricted per the Day 1 data classification log; not used by any metric")]
 
@@ -265,6 +285,23 @@ def main():
                 out.append(v)
             clean.append(out)
         tables.append((name, "data/d10/" + fname, list(zip(header, cleaners)), clean, removed))
+
+    # SKU crosswalk: every value must exist in the files it points into.
+    hdr = {}
+    for fname in ("D10-06a Sales History - Amazon units ordered.csv", "D10-06b Sales History - Amazon units refunded.csv",
+                  "D10-06c Sales History - Shopify net quantity.csv"):
+        with open(os.path.join(D10, fname), newline="", encoding="utf-8-sig") as fh:
+            hdr[fname[:7]] = next(csv.reader(fh))
+    with open(os.path.join(D10, "D10-07 3PL Daily Stock Jan-Mar 2026.csv"), newline="", encoding="utf-8-sig") as fh:
+        item_codes = {r["item_code"] for r in csv.DictReader(fh)}
+    assert len({r[0] for r in SKU_CROSSWALK}) == len(SKU_CROSSWALK) == len(item_codes), "crosswalk must cover every D10-07 item once"
+    for code, amazon, shopify in SKU_CROSSWALK:
+        assert code in item_codes, code
+        assert amazon in hdr["D10-06a"] and amazon in hdr["D10-06b"], amazon
+        assert shopify in hdr["D10-06c"], shopify
+    tables.append(("d10_sku_crosswalk", SKU_CROSSWALK_SOURCE,
+                   [("item_code", T), ("amazon_column", T), ("shopify_column", T)],
+                   [list(r) for r in SKU_CROSSWALK], []))
 
     # Column names must survive Postgres' 63-byte identifier limit unchanged.
     for name, _, cols, _, _ in tables:

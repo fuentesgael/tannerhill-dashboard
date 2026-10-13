@@ -320,4 +320,17 @@ grant select on table public."d10_09_bidworks_invoices" to anon;
 drop policy if exists "anon can read all rows" on public."d10_09_bidworks_invoices";
 create policy "anon can read all rows" on public."d10_09_bidworks_invoices" for select to anon using (true);
 
+-- Source: Confirmed SKU crosswalk (dashboard owner, 13 Oct 2026); checked against D10-06a/b/c headers and D10-07 item codes
+create table if not exists public."d10_sku_crosswalk" (
+  source_row integer primary key,
+  "item_code" text,
+  "amazon_column" text,
+  "shopify_column" text
+);
+alter table public."d10_sku_crosswalk" enable row level security;
+revoke all on table public."d10_sku_crosswalk" from anon;
+grant select on table public."d10_sku_crosswalk" to anon;
+drop policy if exists "anon can read all rows" on public."d10_sku_crosswalk";
+create policy "anon can read all rows" on public."d10_sku_crosswalk" for select to anon using (true);
+
 commit;

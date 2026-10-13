@@ -6,52 +6,122 @@
 <title>Tannerhill Dashboard</title>
 <link rel="icon" href="data:,">
 <style>
-  :root {
-    /* Redesign palette (dashboard-redesign-reference.html) */
-    --ink: #1F3044; --mut: #64748B; --bd: #E4E9F2; --bg: #F8F8FF;
-    --green: #10B981; --amber: #F59E0B; --red: #E11D48; --grey: #94A3B8; --navy: #1F3044;
-
-    --card: #ffffff;
-    --muted: #64748B;
-    --faint: #8a9591;
-    --line: #E4E9F2;
-    --grid: #EEF1F6;
-    --header: #1F3044;
-    --header-ink: #f4f7f6;
-
-    /* Bar and band fills use the reference's Red/Amber/Green, which pass the dataviz
-       colour-blindness check; every indicator also carries a text label. */
-    --gain: var(--green);
-    --loss: var(--red);
-    --neutral-bar: #8f9a96;
-
-    --green-bg: #D1FAE5; --green-ink: #065F46;
-    --amber-bg: #FEF3C7; --amber-ink: #92400E; --amber-line: var(--amber);
-    --red-bg:   #FFE4E6; --red-ink:   #9F1239;
-    --grey-bg:  #F1F5F9; --grey-ink:  #475569;
-  }
+  /* Layout and styling from sources/dashboard-redesign-reference-v2.html */
+  :root { --ink:#1F3044; --mut:#64748B; --bd:#E4E9F2; --bg:#F8F8FF; --green:#10B981; --amber:#F59E0B; --red:#E11D48; --grey:#94A3B8; --navy:#1F3044; }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font: 15px/1.5 Inter, system-ui, sans-serif;
-  }
+  body { margin: 0; font: 15px/1.5 Inter, system-ui, sans-serif; background: var(--bg); color: var(--ink); }
   header { background: var(--navy); color: #fff; padding: 18px 28px; }
-  header h1 { margin: 0; font: 700 22px/1.2 system-ui, sans-serif; }
-  header .sub { font-size: 13px; color: #A9B8CC; margin-top: 4px; }
-
-  /* ---------- Shell: sidebar tabs + panels ---------- */
+  header h1 { margin: 0; font: 700 22px/1.2 system-ui, sans-serif; } header .sub { font-size: 13px; color: #A9B8CC; margin-top: 4px; }
   .shell { display: flex; min-height: calc(100vh - 90px); }
   nav { width: 200px; background: #fff; border-right: 1px solid var(--bd); padding: 18px 0; flex-shrink: 0; }
   nav button { display: block; width: 100%; text-align: left; padding: 11px 22px; border: none; background: none; font: 600 13px/1.3 system-ui, sans-serif; color: var(--mut); cursor: pointer; border-left: 3px solid transparent; }
   nav button.active { color: var(--navy); border-left-color: var(--navy); background: #F8FAFF; }
-  nav button:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
+  nav button:focus-visible, .subnav button:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
   main { flex: 1; padding: 26px 30px; overflow-x: auto; min-width: 0; }
-  .tabpanel { display: none; }
-  .tabpanel.active { display: block; }
-  .dgrid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 16px; }
-  @media (max-width: 900px) { .dgrid { grid-template-columns: minmax(0, 1fr); } }
+  .tabpanel { display: none; } .tabpanel.active { display: block; }
+  .row { display: grid; gap: 14px; margin-bottom: 16px; }
+  .r4 { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; } .r2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 1100px) { .r4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .r4, .r2 { grid-template-columns: minmax(0, 1fr); } }
+  .kpi-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .stat-card { border-radius: 12px; padding: 16px 18px; color: #fff; position: relative; overflow: hidden; min-height: 110px; }
+  .stat-card .s-icon { position: absolute; right: 12px; top: 12px; width: 28px; height: 28px; opacity: .85; }
+  .stat-card .s-lbl { font: 700 11px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .9; }
+  .stat-card .s-val { font: 700 22px/1.2 system-ui, sans-serif; margin: 8px 0 2px; }
+  .stat-card .s-sub { font-size: 11px; opacity: .85; margin-bottom: 3px; }
+  .stat-card .s-cap { font-size: 10.5px; opacity: .9; margin-top: 3px; }
+  .c-revenue { background: linear-gradient(135deg, #4F46E5, #3730A3); } .c-inventory { background: linear-gradient(135deg, #0891B2, #155E75); }
+  .c-marketing { background: linear-gradient(135deg, #7C3AED, #5B21B6); } .c-cash { background: linear-gradient(135deg, #64748B, #334155); }
+  .band-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font: 700 10px/1.4 system-ui, sans-serif; margin-top: 2px; }
+  .band-pill.red { background: #fff; color: var(--red); } .band-pill.amber { background: #fff; color: #92400E; }
+  .band-pill.green { background: #fff; color: #047857; } .band-pill.grey { background: rgba(255,255,255,.25); color: #fff; }
+  .band-pill.stale { background: rgba(255,255,255,.25); color: #fff; border: 1px dashed rgba(255,255,255,.7); }
+  /* Band pills outside the coloured stat cards */
+  .light .band-pill.red { background: #FFE4E6; } .light .band-pill.amber { background: #FFFBEB; } .light .band-pill.green { background: #ECFDF5; }
+  .stale-chip { background: var(--amber); color: var(--ink); padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+  .sub-card { background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 14px; }
+  .sub-card .sc-title { font: 700 10.5px/1.3 system-ui, sans-serif; color: var(--mut); text-transform: uppercase; margin-bottom: 8px; }
+  .compare-bars { display: flex; gap: 16px; align-items: flex-end; height: 90px; margin: 8px 0; justify-content: center; }
+  .cbar { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 92px; }
+  .cbar .bv { font-size: 11px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; color: var(--mut); }
+  .cbar.hi .bv { font-size: 14px; font-weight: 800; color: var(--ink); }
+  .cbar .bf { width: 42px; border-radius: 4px 4px 0 0; min-height: 2px; }
+  .cbar .bl { font-size: 9.5px; color: var(--mut); margin-top: 4px; }
+  .mini-count-row { display: flex; gap: 8px; }
+  .mini-count { flex: 1; background: #F8FAFF; border-radius: 8px; padding: 8px; text-align: center; }
+  .mini-count .mcv { font: 700 16px/1.2 system-ui, sans-serif; } .mini-count .mcl { font-size: 9px; color: var(--mut); text-transform: uppercase; }
+  .legend-box { display: flex; gap: 22px; flex-wrap: wrap; background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; font-size: 12px; }
+  .legend-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .legend-group .gtitle { font-weight: 700; color: var(--mut); text-transform: uppercase; font-size: 10.5px; letter-spacing: .05em; margin-right: 2px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+  h2.section { font: 700 13px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); margin: 0 0 12px; }
+  h3.group-head { font: 700 15px/1.2 system-ui, sans-serif; color: var(--navy); margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); }
+  h3.group-head:first-child { margin-top: 0; }
+  .subnav { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 2px solid var(--bd); overflow-x: auto; }
+  .subnav button { padding: 9px 16px; border: none; background: none; font: 700 12.5px/1.3 system-ui, sans-serif; color: var(--mut); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; }
+  .subnav button.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .subpanel { display: none; } .subpanel.active { display: block; }
+  .chart-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; min-width: 0; }
+  .chan-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 14px; min-width: 0; }
+  .chan-top { display: flex; align-items: flex-start; gap: 10px; }
+  .chan-badge { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .chan-name { font: 700 10.5px/1.3 system-ui, sans-serif; color: var(--mut); text-transform: uppercase; }
+  .chan-val { font: 700 18px/1.2 system-ui, sans-serif; } .chan-cap { font-size: 10px; color: var(--mut); }
+  .linechart { position: relative; margin: 14px 0; }
+  .linechart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .line-key { font-size: 10.5px; margin-top: 4px; color: var(--mut); }
+  .table-wrap { overflow-x: auto; }
+  table.dtbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.dtbl th { text-align: left; color: var(--mut); font-size: 10px; text-transform: uppercase; letter-spacing: .03em; padding: 7px 8px; border-bottom: 2px solid var(--bd); }
+  table.dtbl td { padding: 8px 8px; border-bottom: 1px solid var(--bd); }
+  table.dtbl td.num, table.dtbl th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .track { background: #F1F5F9; border-radius: 4px; height: 16px; position: relative; overflow: hidden; width: 100px; display: inline-block; vertical-align: middle; }
+  .track .fill2 { height: 100%; border-radius: 4px; }
+  .matrix-status { font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
+  .matrix-status.confirmed { background: #ECFDF5; color: #047857; }
+  .matrix-status.pending { background: #FFFBEB; color: #92400E; }
+  .matrix-status.decided { background: #EEF2FF; color: #3730A3; }
+  .grpname td { font-weight: 700; color: var(--navy); font-size: 11.5px; text-transform: uppercase; padding: 14px 8px 6px; background: #F8FAFF; }
+  .unknown { color: var(--grey); font-style: italic; }
+  .flag-box { background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #9A3412; margin-top: 10px; }
+  .summary-widget { background: #F8FAFF; border: 1px solid var(--bd); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; }
+  .lbl { font: 700 10.5px/1.3 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); }
+  .val { font: 700 22px/1.15 system-ui, sans-serif; margin: 6px 0 3px; }
+  .det { font-size: 12.5px; color: var(--mut); }
+  .star { color: #F59E0B; font-weight: 800; margin-left: 4px; }
+  .na { color: var(--grey); }
+  .open-note { font-size: 10.5px; color: #92400E; margin-top: 4px; }
+  .profit-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 90px; gap: 10px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+  .profit-row .track { width: 100%; }
+  .profit-row .pv { text-align: right; font-weight: 700; white-space: nowrap; }
+  @media (max-width: 600px) { .profit-row { grid-template-columns: minmax(0, 1fr) 84px; } .profit-row .track { grid-column: 1 / -1; order: 3; } }
+  tr.flag-row td { background: #FFF7ED; }
+  tr.flag-note td { background: #FFF7ED; color: #9A3412; font-size: 12px; padding-top: 0; }
+
+  /* Owner, sourcing and calculation lines (PR #9) */
+  .owner-line { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bd); font-size: 11.5px; color: var(--mut); }
+  .owner-line b { color: var(--ink); font-weight: 600; }
+  .stat-card .owner-line { color: rgba(255,255,255,.85); border-top-color: rgba(255,255,255,.35); margin-top: 10px; padding-top: 6px; }
+  .stat-card .owner-line b { color: #fff; }
+  .owner-line + .owner-line { margin-top: 2px; padding-top: 0; border-top: none; }
+  .owner-line + .owner-line.section-owner { margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,.35); }
+  .section-owner-head { margin: -8px 0 16px; font-size: 12px; color: var(--mut); }
+  .section-owner-head b { color: var(--ink); font-weight: 600; }
+
+  /* Tooltip */
+  #tip { position: fixed; z-index: 10; pointer-events: none; display: none; background: var(--navy); color: #fff; font-size: 12px; line-height: 1.4;
+         padding: 7px 9px; border-radius: 6px; max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,.18); white-space: pre-line; }
+  [data-tip]:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+  footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--bd); font-size: 12.5px; color: var(--mut); }
+  footer .pending { color: #92400E; font-weight: 600; }
+  .card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; } .card h2 { margin: 0; font-size: 16px; }
+  .card .note { font-size: 12.5px; color: var(--mut); }
+  .pill { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.red { background: #FFE4E6; color: #9F1239; }
+  #load-error code { background: #F1F5F9; padding: 1px 5px; border-radius: 4px; }
+
   /* Phones: the sidebar becomes a scrollable tab row above the panels. */
   @media (max-width: 700px) {
     .shell { flex-direction: column; }
@@ -61,234 +131,6 @@
     main { padding: 18px 16px; }
     header { padding: 16px; }
   }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04);
-    min-width: 0;
-  }
-  .wide { grid-column: 1 / -1; }
-  .card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-  .card h2 { margin: 0; font-size: 16px; font-weight: 600; }
-  .period { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
-
-  .pill {
-    display: inline-block; white-space: nowrap;
-    padding: 3px 11px; border-radius: 999px;
-    font-size: 12px; font-weight: 600; letter-spacing: .2px;
-  }
-  .pill.green { background: var(--green-bg); color: var(--green-ink); }
-  .pill.amber { background: var(--amber-bg); color: var(--amber-ink); }
-  .pill.red   { background: var(--red-bg);   color: var(--red-ink); }
-  .pill.grey  { background: var(--grey-bg);  color: var(--grey-ink); }
-
-  .big { font-size: 34px; font-weight: 650; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .big.nodata { color: var(--grey-ink); }
-  .note { font-size: 12.5px; color: var(--muted); }
-  .sku { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
-  .source { font-size: 11.5px; color: var(--muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
-
-  .banner {
-    border-left: 4px solid var(--amber-line);
-    background: var(--amber-bg); color: var(--amber-ink);
-    border-radius: 6px; padding: 10px 12px; margin: 4px 0 14px;
-    font-size: 13px;
-  }
-  .banner strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
-  .nowrap { white-space: nowrap; }
-  .banner.scope { border-left-color: #9aa5a1; background: var(--grey-bg); color: var(--grey-ink); }
-
-  /* ---------- Revenue column chart ---------- */
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: end; height: 190px; border-bottom: 1px solid #b9c2bf; padding: 0 12px; }
-  .col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
-  .col-val { font-size: 15px; font-weight: 650; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
-  .col-bar { width: min(96px, 70%); background: var(--neutral-bar); border-radius: 4px 4px 0 0; }
-  .col-pending { margin-bottom: 10px; text-align: center; }
-  .col-pending .note { display: block; margin-top: 6px; max-width: 180px; }
-  .col-labels { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 8px 12px 0; text-align: center; }
-  .col-labels div { font-size: 12.5px; color: var(--muted); }
-  .col-labels strong { display: block; color: var(--ink); font-size: 13px; }
-
-  /* ---------- Horizontal bar rows (stock + profit) ---------- */
-  .hbars { display: grid; gap: 2px; }
-  .hrow {
-    display: grid; grid-template-columns: minmax(170px, 30%) minmax(0, 1fr) 76px;
-    align-items: center; gap: 4px 12px; padding: 6px 0; border-bottom: 1px solid var(--grid);
-  }
-  .hrow:last-child { border-bottom: 0; }
-  .hname { font-size: 13.5px; line-height: 1.3; min-width: 0; }
-  .hval { text-align: right; font-weight: 650; font-size: 13.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .track { position: relative; height: 18px; }
-  .track .bar { position: absolute; top: 2px; height: 14px; border-radius: 0 4px 4px 0; cursor: default; }
-  .track .bar:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .bar.gain { background: var(--gain); }
-  .bar.loss { background: var(--loss); border-radius: 4px 0 0 4px; }
-  .tag { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 600; padding: 0 7px; border-radius: 999px; vertical-align: 1px; }
-  .tag.red { background: var(--red-bg); color: var(--red-ink); }
-  .tag.grey { background: var(--grey-bg); color: var(--grey-ink); }
-
-  /* Stock: capped bars get a torn right edge */
-  .bar.capped { border-radius: 0; -webkit-mask: linear-gradient(-60deg, transparent 5px, #000 5px); mask: linear-gradient(-60deg, transparent 5px, #000 5px); }
-  .flagline { position: absolute; top: -6px; bottom: -6px; border-left: 2px dashed var(--loss); pointer-events: none; }
-  .gridline { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--grid); pointer-events: none; }
-  .track.untracked-track { height: auto; }
-  .untracked { display: block; font-size: 12px; color: var(--muted); line-height: 1.35; }
-
-  /* Profit: zero line */
-  .zeroline { position: absolute; top: -6px; bottom: -6px; border-left: 1px solid #9aa5a1; pointer-events: none; }
-
-  .axis { display: grid; grid-template-columns: minmax(170px, 30%) minmax(0, 1fr) 76px; gap: 12px; margin-top: 4px; }
-  .axis .ticks { position: relative; height: 16px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .axis .ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
-  .axis .ticks span.start { transform: none; }
-  .axis .ticks span.end { transform: translateX(-100%); }
-  .axis .ticks span.flag { color: var(--red-ink); font-weight: 600; }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 0 0 10px; }
-  .legend i { display: inline-block; width: 12px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-  .legend i.dash { width: 0; height: 12px; border-left: 2px dashed var(--loss); border-radius: 0; margin-right: 8px; vertical-align: -2px; }
-  /* Band indicators: a dot beside each value, plus a key per card */
-  .band { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: #b9c2bf; }
-  .band.green { background: var(--gain); }
-  .band.amber { background: var(--amber-line); }
-  .band.red   { background: var(--loss); }
-  .legend.band-key { margin-top: -4px; }
-  .legend.band-key .band { margin-right: 6px; }
-  .band-line { font-size: 12.5px; color: var(--muted); margin: 12px 0 0; }
-  .band-line strong { color: var(--ink); font-weight: 600; }
-
-  /* Phones: name stacks above the bar so the bar and value keep the full width. */
-  @media (max-width: 600px) {
-    .hrow { grid-template-columns: minmax(0, 1fr) 84px; }
-    .hname { grid-column: 1 / -1; }
-    .axis { grid-template-columns: minmax(0, 1fr) 84px; }
-    .axis > :first-child { display: none; }
-    .cols { height: 170px; gap: 12px; padding: 0 4px; }
-    .col-labels { gap: 12px; padding: 8px 4px 0; }
-  }
-
-  .card.nodata-card { background: #f7f8f8; border-style: dashed; }
-
-  /* ---------- Redesign widgets (from dashboard-redesign-reference.html). Classes that clashed with
-     the existing cards are renamed: .row -> .rrow, .pill -> .rpill, .bars -> .mbars, .note-row -> .dnote ---------- */
-  .rrow { display: grid; gap: 14px; margin-bottom: 16px; }
-  .r3 { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
-  .r2 { grid-template-columns: 3fr 2fr; }
-  @media (max-width: 900px) { .r3, .r2 { grid-template-columns: minmax(0, 1fr); } }
-  .col-panel { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 16px 18px; min-width: 0; }
-  .col-panel h3 { font: 700 12px/1.2 system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--navy); margin: 0 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--bd); }
-  .mini-card { border-bottom: 1px solid var(--bd); padding: 12px 0; position: relative; }
-  .mini-card:last-child { border-bottom: none; padding-bottom: 4px; }
-  .lbl { font: 700 10.5px/1.3 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); }
-  .star { color: #F59E0B; font-weight: 800; margin-left: 4px; }
-  .val { font: 700 22px/1.15 system-ui, sans-serif; margin: 6px 0 3px; }
-  .det { font-size: 12.5px; color: var(--mut); }
-  .rpill { display: inline-block; padding: 2px 9px; border-radius: 999px; font: 700 9.5px/1.4 system-ui, sans-serif; letter-spacing: .04em; margin-left: 6px; vertical-align: middle; }
-  .rpill.green { background: var(--green); color: #fff; } .rpill.amber { background: var(--amber); color: var(--ink); }
-  .rpill.red { background: var(--red); color: #fff; } .rpill.grey { background: var(--grey); color: #fff; }
-  .rpill.noband { background: #E2E8F0; color: var(--mut); }
-  .so-what { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--bd); font-size: 12px; color: #3B4F68; display: flex; gap: 6px; }
-  .so-what b { color: var(--ink); flex-shrink: 0; }
-  .reco-card { background: #F8FAFF; border: 1px dashed #B9C5DC; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--mut); margin-top: 6px; }
-  .warn-card { background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #9A3412; margin-top: 6px; }
-  .legend-box { display: flex; gap: 22px; flex-wrap: wrap; background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; font-size: 12.5px; }
-  .legend-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .legend-group .gtitle { font-weight: 700; color: var(--mut); text-transform: uppercase; font-size: 10.5px; letter-spacing: .05em; margin-right: 2px; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-  .leg-item { display: flex; align-items: center; white-space: nowrap; }
-  h2.section { font: 700 13px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--mut); margin: 0 0 12px; }
-  h3.group-head { font: 700 14px/1.2 system-ui, sans-serif; color: var(--navy); margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); }
-  h3.group-head:first-child { margin-top: 0; }
-  .chart-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; min-width: 0; }
-  .mbars { display: flex; align-items: flex-end; gap: 5px; height: 120px; margin-top: 10px; }
-  .mbars .bar-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-width: 0; }
-  .mbars .fill { border-radius: 3px 3px 0 0; position: relative; }
-  .mbars .fill.amazon { background: #4C7CF0; } .mbars .fill.shopify { background: #10B981; }
-  .mbars .fill.open { background: repeating-linear-gradient(45deg, #C7D4EE, #C7D4EE 4px, #DCE5F5 4px, #DCE5F5 8px) !important; }
-  .mbars .month-lbl { font-size: 9px; color: var(--mut); text-align: center; margin-top: 3px; white-space: nowrap; }
-  .mbars .val-lbl { font-size: 8.5px; color: var(--mut); text-align: center; margin-bottom: 2px; white-space: nowrap; }
-  @media (max-width: 600px) {
-    .mbars { gap: 2px; } .mbars .val-lbl { font-size: 7px; } .mbars .month-lbl { font-size: 8px; overflow: visible; }
-    /* Phones: label every third month and the last one; each bar's tooltip still names its month. */
-    .mbars .bar-col:not(:nth-child(3n+1)):not(:last-child) .month-lbl { visibility: hidden; }
-  }
-  .yoy-compare { display: flex; gap: 18px; align-items: flex-end; height: 90px; margin: 12px 0; }
-  .yoy-bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
-  .yoy-bar .bar-fill { width: 60%; border-radius: 4px 4px 0 0; }
-  .yoy-bar .bar-fill.real { background: #4C7CF0; } .yoy-bar .bar-fill.pending { background: #E2E8F0; border: 1px dashed #94A3B8; }
-  .yoy-bar .bv { font-size: 12px; font-weight: 700; margin-top: 6px; } .yoy-bar .bl { font-size: 11px; color: var(--mut); margin-top: 2px; }
-  .dnote { background: #fff; border: 1px solid var(--bd); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; font-size: 13.5px; }
-  .dnote .n-label { font-weight: 700; color: var(--navy); display: block; margin-bottom: 4px; }
-  table.rows-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-  table.rows-tbl th { text-align: left; color: var(--mut); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 6px 10px; border-bottom: 2px solid var(--bd); }
-  table.rows-tbl td { padding: 7px 10px; border-bottom: 1px solid var(--bd); overflow-wrap: anywhere; }
-  table.rows-tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .ok { color: var(--green); font-weight: 700; }
-  .fail { color: var(--red); font-weight: 700; }
-  .grpname td { font-weight: 700; color: var(--mut); font-size: 11px; text-transform: uppercase; padding: 14px 10px 4px; }
-  .refresh-banner { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 10px 16px; font-size: 13px; color: #166534; margin-bottom: 14px; display: flex; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
-  .chan-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-  @media (max-width: 900px) { .chan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 480px) { .chan-grid { grid-template-columns: minmax(0, 1fr); } }
-  .chan-card { background: #fff; border: 1px solid var(--bd); border-radius: 12px; padding: 16px; min-width: 0; }
-  .chan-card.dim { opacity: .6; }
-  .chan-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-  .chan-badge { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .chan-name { font: 700 11px/1.3 system-ui, sans-serif; color: var(--mut); text-transform: uppercase; letter-spacing: .03em; }
-  .chan-val { font: 700 20px/1.2 system-ui, sans-serif; color: var(--ink); }
-  .chan-cap { font-size: 10.5px; color: var(--mut); }
-  .chan-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .chan-pill { background: #EEF2FF; color: #3730A3; border-radius: 7px; padding: 6px 8px; text-align: center; }
-  .chan-pill.grey { background: #F1F5F9; color: var(--mut); }
-  .chan-pill .cp-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .03em; font-weight: 700; opacity: .75; }
-  .chan-pill .cp-val { font-size: 13px; font-weight: 700; margin-top: 2px; }
-  .stat-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
-  @media (max-width: 900px) { .stat-strip { grid-template-columns: minmax(0, 1fr); } }
-  .stat-card { border-radius: 12px; padding: 16px 18px; color: #fff; position: relative; overflow: hidden; min-height: 92px; }
-  .stat-card .s-icon { position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; opacity: .85; }
-  .stat-card .s-lbl { font: 700 11px/1.2 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; opacity: .9; }
-  .stat-card .s-val { font: 700 25px/1.2 system-ui, sans-serif; margin: 8px 0 2px; }
-  .stat-card .s-cap { font-size: 11.5px; opacity: .9; padding-right: 30px; }
-  .stat-card .s-tag { display: inline-block; margin-top: 6px; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.55); font-size: 10.5px; font-weight: 700; }
-  /* Deliberately NOT red/amber/green — those are reserved for RAG status, not decoration */
-  .stat-card.c-revenue { background: linear-gradient(135deg, #4F46E5, #3730A3); }
-  .stat-card.c-inventory { background: linear-gradient(135deg, #0891B2, #155E75); }
-  .stat-card.c-marketing { background: linear-gradient(135deg, #7C3AED, #5B21B6); }
-
-  /* ---------- Tooltip ---------- */
-  #tip {
-    position: fixed; z-index: 10; pointer-events: none; display: none;
-    background: var(--header); color: var(--header-ink);
-    font-size: 12px; line-height: 1.4; padding: 7px 9px; border-radius: 6px;
-    max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,.18); white-space: pre-line;
-  }
-
-  footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--bd); font-size: 12.5px; color: var(--muted); }
-  footer .pending { color: var(--amber-ink); font-weight: 600; }
-  footer time { font-variant-numeric: tabular-nums; }
-
-  #load-error { grid-column: 1 / -1; margin-bottom: 16px; }
-  #details > .card { margin-bottom: 16px; }
-  /* QC Check #4: owner and review date on each metric */
-  .owner-line { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bd); font-size: 11.5px; color: var(--mut); }
-  .owner-line b { color: var(--ink); font-weight: 600; }
-  .reco-card .owner-line, .chan-card .owner-line { margin-top: 8px; padding-top: 6px; }
-  .stat-card .owner-line { color: rgba(255,255,255,.85); border-top-color: rgba(255,255,255,.35); margin-top: 10px; padding-top: 6px; }
-  .stat-card .owner-line b { color: #fff; }
-  /* Consecutive lines share one divider; lines directly under the MoM box sit close to it */
-  .owner-line + .owner-line { margin-top: 2px; padding-top: 0; border-top: none; }
-  .reco-card .owner-line { border-top-color: #B9C5DC; }
-  /* The section-wide owner line always gets its own divider */
-  .owner-line + .owner-line.section-owner { margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,.35); }
-  .section-owner-head { margin: -6px 0 14px; font-size: 12px; color: var(--mut); }
-  .section-owner-head b { color: var(--ink); font-weight: 600; }
-  .chan-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 480px) { .chan-grid.two { grid-template-columns: minmax(0, 1fr); } }
-  .warn-card .owner-line { border-top-color: #FDBA74; color: #9A3412; }
-  .warn-card .owner-line b { color: #7C2D12; }
-  #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -323,23 +165,39 @@
 (function () {
   "use strict";
 
-  // Supabase tables. The dashboard_* tables hold exactly what dashboard-data.json held and feed
-  // every figure; the d10_* tables are read only to report their row counts.
-  var DASHBOARD_TABLES = [
-    "dashboard_data_notes", "dashboard_revenue_vs_last_year", "dashboard_weeks_of_stock_cover",
-    "dashboard_weeks_of_stock_cover_products", "dashboard_profit_after_ads",
-    "dashboard_profit_after_ads_products", "dashboard_cash_in_bank"
+  // ---------- Tables, grouped by the KPI column each one feeds ----------
+  var TABLE_GROUPS = [
+    { kpi: "Revenue", tables: [
+      ["d10_02_revenue_by_month", "All Revenue widgets, both tabs; denominator of ad spend %"] ] },
+    { kpi: "Inventory", tables: [
+      ["d10_07_3pl_daily_stock", "On hand, on the way, reorder status (latest snapshot)"],
+      ["d10_06a_sales_history_amazon_units_ordered", "Daily sell-through rate (Amazon units ordered)"],
+      ["d10_06b_sales_history_amazon_units_refunded", "Daily sell-through rate (Amazon units refunded)"],
+      ["d10_06c_sales_history_shopify_net_quantity", "Daily sell-through rate (Shopify net quantity)"],
+      ["d10_sku_crosswalk", "Joins D10-07 item codes to the D10-06 sales columns"],
+      ["d10_05_shopify_sales_by_product_weekly", "Product names (Shopify title for each SKU)"] ] },
+    { kpi: "Marketing & Ads", tables: [
+      ["d10_08_bidworks_monthly_report", "Ad spend, both periods"],
+      ["dashboard_profit_after_ads_products", "Profit after ads (FY2025)"] ] },
+    { kpi: "Cash", tables: [
+      ["dashboard_cash_in_bank", "Confirms no cash data exists"],
+      ["d10_09_bidworks_invoices", "Known upcoming outflows"] ] },
+    { kpi: "Not used in any figure (loaded and counted only)", tables: [
+      ["dashboard_data_notes", "Earlier data notes; superseded by this tab's notes"],
+      ["dashboard_revenue_vs_last_year", "Superseded by the D10-02 revenue metric"],
+      ["dashboard_weeks_of_stock_cover", "Superseded by the D10-07 inventory metric"],
+      ["dashboard_weeks_of_stock_cover_products", "Superseded by the D10-07 inventory metric"],
+      ["dashboard_profit_after_ads", "Header row for the profit table"],
+      ["d10_01_order_ledger", "—"],
+      ["d10_03_amazon_business_report", "—"],
+      ["d10_04_amazon_refunds_by_order_date", "—"] ] }
   ];
-  var D10_TABLES = [
-    "d10_01_order_ledger", "d10_02_revenue_by_month", "d10_03_amazon_business_report",
-    "d10_04_amazon_refunds_by_order_date", "d10_05_shopify_sales_by_product_weekly",
-    "d10_06a_sales_history_amazon_units_ordered", "d10_06b_sales_history_amazon_units_refunded",
-    "d10_06c_sales_history_shopify_net_quantity", "d10_07_3pl_daily_stock",
-    "d10_08_bidworks_monthly_report", "d10_09_bidworks_invoices"
-  ];
+  var ALL_TABLES = [];
+  TABLE_GROUPS.forEach(function (g) { g.tables.forEach(function (t) { ALL_TABLES.push(t[0]); }); });
   var PAGE_SIZE = 1000;   // Supabase returns at most 1,000 rows per request
   var app = document.getElementById("app");
 
+  // ---------- Formatting ----------
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -349,77 +207,39 @@
     var sign = n < 0 ? "−" : "";
     return sign + "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
   }
-  function moneyShort(n) {
-    var a = Math.abs(n), sign = n < 0 ? "−" : (n > 0 ? "+" : "");
-    return sign + "$" + (a >= 1000 ? Math.round(a / 1000) + "k" : a);
+  function money2(n) {
+    return (n < 0 ? "−" : "") + "$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function num(n, d) {
     return Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
   }
-  function pill(color, text) {
-    return '<span class="pill ' + color + '">' + esc(text) + "</span>";
-  }
+  function pill(color, text) { return '<span class="pill ' + color + '">' + esc(text) + "</span>"; }
   function monthName(ym) {
     var p = /^(\d{4})-(\d{2})$/.exec(ym || "");
     if (!p) return ym || "";
-    return new Date(Date.UTC(+p[1], +p[2] - 1, 1))
-      .toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+    return new Date(Date.UTC(+p[1], +p[2] - 1, 1)).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
   }
   function shortMonth(ym) {
     var p = /^(\d{4})-(\d{2})$/.exec(ym || "");
     if (!p) return ym || "";
-    return new Date(Date.UTC(+p[1], +p[2] - 1, 1))
-      .toLocaleString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
+    return new Date(Date.UTC(+p[1], +p[2] - 1, 1)).toLocaleString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
   }
+  function dayLabel(d) {   // Date -> "Apr 1, 2026" (local)
+    return MONTHS_SHORT[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+  function isoDate(d) {
+    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+  }
+  function parseDay(s) {   // "2026-04-01" or "2026-04-01T06:00:00" -> local Date at midnight
+    var p = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || ""));
+    return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null;
+  }
+  function signedPct(x) { return (x >= 0 ? "+" : "−") + Math.abs(x * 100).toFixed(1) + "%"; }
   function tipAttr(lines) { return ' data-tip="' + esc(lines.join("\n")) + '" tabindex="0"'; }
-
-  // ---------- Derived facts shared by the summary strip and the sections ----------
-  function stockFacts(s) {
-    var dateMatch = /\d{4}-\d{2}-\d{2}/.exec(s.as_of || "");
-    var snapshotDate = dateMatch ? dateMatch[0] : null;
-    // Products with a special-case note (e.g. Kickstarter-only) are listed after the regular SKUs.
-    var regular = s.products.filter(function (p) { return !p.note; })
-      .sort(function (a, b) { return a.weeks_cover - b.weeks_cover; });
-    return {
-      flag: s.flag_under_weeks,
-      snapshotDate: snapshotDate,
-      isStale: /stale/i.test(s.as_of || "") || !!snapshotDate,
-      regular: regular,
-      special: s.products.filter(function (p) { return p.note; }),
-      under: regular.filter(function (p) { return p.weeks_cover < s.flag_under_weeks; })
-    };
-  }
-  function hasCurrentRevenue(r) { return r.current_month_value !== null && r.current_month_value !== undefined; }
-
-  // ---------- D10 readers (first use of d10 tables in figures: d10_02 and d10_08 only) ----------
-  // Column names exactly as in supabase/schema.sql (quoted identifiers, commas and parentheses included).
-  var REV_COLS = {
-    month: "Month",
-    amazon: "Amazon (net of refunds)",
-    shopify: "Shopify (net of discounts and returns)",
-    kickstarter: "Kickstarter (recognized when rewards ship)",
-    books: "Books"
-  };
-  var BW_COLS = { month: "Month", spend: "Spend", impressions: "Impressions", ctr: "CTR" };
-
   function numOrNull(v) {
     if (v === null || v === undefined || v === "") return null;
     var n = Number(v);
     return isFinite(n) ? n : null;
-  }
-  function money2(n) {
-    return (n < 0 ? "−" : "") + "$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-  function signedPct(x) { return (x >= 0 ? "+" : "−") + Math.abs(x * 100).toFixed(1) + "%"; }
-  function prevYm(ym) {
-    var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1;
-    if (m === 0) { y -= 1; m = 12; }
-    return y + "-" + (m < 10 ? "0" : "") + m;
-  }
-  function barMonth(ym) {   // "2025-01" -> "Jan 25"
-    var p = /^(\d{4})-(\d{2})$/.exec(ym || "");
-    if (!p) return ym || "";
-    return new Date(Date.UTC(+p[1], +p[2] - 1, 1)).toLocaleString("en-US", { month: "short", timeZone: "UTC" }) + " " + p[1].slice(2);
   }
   function tableRows(results, name) {
     var t = results[name];
@@ -428,72 +248,12 @@
     if (!t.rows.length) return { error: name + " has no rows" };
     return { rows: t.rows };
   }
-
-  // d10_02: one entry per month, oldest first. A month counts as closed only when Books is exactly "Closed".
-  function revenueMonths(results) {
-    var t = tableRows(results, "d10_02_revenue_by_month");
-    if (t.error) return t;
-    var months = t.rows.map(function (r) {
-      var amazon = numOrNull(r[REV_COLS.amazon]), shopify = numOrNull(r[REV_COLS.shopify]);
-      return {
-        ym: String(r[REV_COLS.month] || "").slice(0, 7),
-        amazon: amazon,
-        shopify: shopify,
-        total: amazon === null || shopify === null ? null : amazon + shopify,   // Amazon + Shopify, Kickstarter excluded
-        kickstarter: numOrNull(r[REV_COLS.kickstarter]),
-        books: r[REV_COLS.books],
-        closed: String(r[REV_COLS.books] || "").trim() === "Closed"
-      };
-    }).sort(function (a, b) { return a.ym < b.ym ? -1 : a.ym > b.ym ? 1 : 0; });
-    return { months: months };
+  function firstError() {
+    for (var i = 0; i < arguments.length; i++) if (arguments[i] && arguments[i].error) return arguments[i].error;
+    return null;
   }
 
-  // Month-over-month for the latest closed month vs the calendar month before it.
-  // Never computed against a month that is not closed.
-  function monthOverMonth(months, key) {
-    var closed = months.filter(function (m) { return m.closed && m[key] !== null; });
-    var latest = closed[closed.length - 1];
-    var out = { latest: latest || null, prev: null, growth: null, note: null, openAfter: [] };
-    if (!latest) { out.note = "Not available — no closed month yet"; return out; }
-    out.openAfter = months.filter(function (m) { return !m.closed && m.ym > latest.ym; })
-      .map(function (m) { return shortMonth(m.ym); });
-    var pym = prevYm(latest.ym);
-    var prev = months.filter(function (m) { return m.ym === pym; })[0];
-    if (!prev) { out.note = "Not available — " + shortMonth(pym) + " is not in the data"; return out; }
-    if (!prev.closed) { out.note = "Not available — " + shortMonth(pym) + " not yet closed"; return out; }
-    if (prev[key] === null || prev[key] === 0) { out.note = "Not available — no " + shortMonth(pym) + " figure"; return out; }
-    out.prev = prev;
-    out.growth = (latest[key] - prev[key]) / prev[key];
-    return out;
-  }
-
-  function fy2025(months, key) {
-    var rows = months.filter(function (m) { return m.ym.slice(0, 4) === "2025"; });
-    if (!rows.length || rows.some(function (m) { return m[key] === null; })) return { value: null, count: rows.length };
-    return { value: rows.reduce(function (a, m) { return a + m[key]; }, 0), count: rows.length };
-  }
-
-  function bidworksStats(results) {
-    var t = tableRows(results, "d10_08_bidworks_monthly_report");
-    if (t.error) return t;
-    var rows = t.rows.slice().sort(function (a, b) { return String(a[BW_COLS.month]) < String(b[BW_COLS.month]) ? -1 : 1; });
-    function col(k) { return rows.map(function (r) { return numOrNull(r[k]); }); }
-    var spend = col(BW_COLS.spend), impr = col(BW_COLS.impressions), ctr = col(BW_COLS.ctr);
-    function complete(a) { return a.every(function (v) { return v !== null; }); }
-    function mean(a) { return a.reduce(function (x, y) { return x + y; }, 0) / a.length; }
-    return {
-      count: rows.length,
-      first: String(rows[0][BW_COLS.month]).slice(0, 7),
-      last: String(rows[rows.length - 1][BW_COLS.month]).slice(0, 7),
-      spendTotal: complete(spend) ? spend.reduce(function (x, y) { return x + y; }, 0) : null,
-      spendFlat: complete(spend) && spend.every(function (v) { return v === spend[0]; }) ? spend[0] : null,
-      spendAvg: complete(spend) ? mean(spend) : null,
-      avgImpressions: complete(impr) ? mean(impr) : null,
-      avgCtr: complete(ctr) ? mean(ctr) : null          // simple mean of the monthly CTR column
-    };
-  }
-
-  // ---------- QC Check #4: owner and review date ----------
+  // ---------- Owner, review date, sourcing (PR #9) ----------
   // Owner by function/column, per Lena's Day 9 email: Marco on stock, Priya on ads, Lena on revenue and cash.
   var METRIC_OWNERS = { revenue: "Lena", cash: "Lena", stock: "Marco", profit: "Priya", marketing: "Priya" };
   var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -505,542 +265,695 @@
     return d;
   }
   // Ownership is per column/section, so it is shown once per section, not on every card:
-  // on the section's stat-strip card (Executive Summary) and under the section heading (Details).
+  // on the section's stat card (Executive Summary) and at the top of its sub-tab (Details).
   function sectionOwnerText(metric) {
     var d = nextReviewDate(lastLoaded || new Date());
-    var iso = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
     var text = WEEKDAYS[d.getDay()] + ", " + d.getDate() + " " + MONTHS_SHORT[d.getMonth()] + " " + d.getFullYear();
-    return "Owner, all metrics in this section: <b>" + esc(METRIC_OWNERS[metric]) + '</b> · Review by: <time datetime="' + iso + '">' + text + "</time>";
+    return "Owner, all metrics in this section: <b>" + esc(METRIC_OWNERS[metric]) + '</b> · Review by: <time datetime="' + isoDate(d) + '">' + text + "</time>";
   }
   function sectionOwnerLine(metric) { return '<div class="owner-line section-owner">' + sectionOwnerText(metric) + "</div>"; }
   function sectionOwnerHead(metric) { return '<div class="section-owner-head">' + sectionOwnerText(metric) + "</div>"; }
   // Whether the methodology itself is approved: separate from who owns the number.
-  // Used for month-over-month, the three-tier stock bands and the BidWorks averages.
   function calcLine() { return '<div class="owner-line">Calculation: new, pending sign-off</div>'; }
   // Who pulls and reconciles the D10-02 revenue export (Lena still owns the decision).
   function sourcedLine() { return '<div class="owner-line">Data sourced by: Marisa (QuickBooks)</div>'; }
-  // The Grill Pro reorder flag is an open decision needing action now, so it has no recurring review date.
+  // The Grill Pro flag is an open decision needing action now, so it has no recurring review date.
   var REORDER_FLAG_OWNER = "Marco";
-  function reorderOwnerLine() { return '<div class="owner-line">Owner: <b>' + esc(REORDER_FLAG_OWNER) + "</b> · Flagged in Fix Log, needs resolution</div>"; }
+  var GRILL_PRO_ITEM = "TNHC-1002";   // Trailhead Grill Pro, per the confirmed SKU crosswalk
+  function reorderOwnerText() { return "Owner: <b>" + esc(REORDER_FLAG_OWNER) + "</b> · Flagged in Fix Log, needs resolution"; }
 
-  // ---------- Shared pieces of the redesign ----------
-  function legendBox() {
-    return '<div class="legend-box">' +
-      '<div class="legend-group"><span class="gtitle">Metric health</span>' +
-        '<span class="leg-item"><span class="dot" style="background:var(--red)"></span>Red = Danger</span>' +
-        '<span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Amber = At Risk</span>' +
-        '<span class="leg-item"><span class="dot" style="background:var(--green)"></span>Green = Healthy</span>' +
-        '<span class="leg-item"><span class="star">&#9733;</span>Lena\'s requested KPI</span></div>' +
-      '<div class="legend-group"><span class="gtitle">Data health</span>' +
-        '<span class="leg-item"><span class="dot" style="background:var(--grey)"></span>No Data = never sourced</span>' +
-        '<span class="leg-item"><span class="dot" style="background:var(--amber)"></span>Stale = sourced once, dated, not live</span></div>' +
-    "</div>";
-  }
-  function rpill(cls, text) { return '<span class="rpill ' + cls + '">' + esc(text) + "</span>"; }
-  var STAR = '<span class="star" title="Lena\'s requested KPI">&#9733;</span>';
-  function unavailable(msg) { return '<div class="val" style="color:var(--grey);font-size:17px;">Not available</div><div class="det">' + esc(msg) + "</div>"; }
-
-  // Generic icons copied unchanged from the reference file (not brand artwork).
-  var CHANNEL_ICONS = {
-    shopify: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
-    amazon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="M3 8l9-5 9 5"/></svg>',
-    bidworks: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>',
-    handle: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5A8.5 8.5 0 1 1 20.9 9.3"/><path d="M21 4L12 13l-3-3"/></svg>'
+  // ---------- Band rules ----------
+  // Wording per KPI is listed in Data Notes → "Band wording by KPI".
+  var BANDS = {
+    revenue: { amberBelow: 0.10,   // Green >= same month last year; Amber up to 10% below; Red more than 10% below
+               words: { green: "On track", amber: "Watch", red: "Below target" } },
+    inventory: { leadDays: 56,     // 8 weeks: 6wk factory + 2wk buffer (confirmed, Stacey, 13 Oct 2026)
+                 watchDays: 14,    // Watch when on hand is within 14 days' sell-through above the reorder point
+                 words: { red: "PO Now", amber: "Watch — Next PO Cycle", green: "Healthy Stock" } },
+    adSpend: { greenMax: 0.10, amberMax: 0.15,   // PROPOSED, pending sign-off (see Data Notes)
+               words: { green: "On track", amber: "Watch", red: "PO Review" } },
+    profit: { words: { green: "Profitable", red: "Losing money" } }
   };
+  function revenueBand(cur, ly) {
+    if (cur == null || ly == null || !(ly > 0)) return null;
+    if (cur >= ly) return "green";
+    if (cur >= ly * (1 - BANDS.revenue.amberBelow)) return "amber";
+    return "red";
+  }
+  function adSpendBand(pct) {
+    if (pct == null) return null;
+    return pct <= BANDS.adSpend.greenMax ? "green" : pct <= BANDS.adSpend.amberMax ? "amber" : "red";
+  }
+  function bandPill(kpi, band, label) {
+    if (!band) return '<span class="band-pill grey">Not banded</span>';
+    return '<span class="band-pill ' + band + '">' + esc(label || BANDS[kpi].words[band]) + "</span>";
+  }
+  var COLORS = { green: "#10B981", amber: "#F59E0B", red: "#E11D48" };
+
+  // ---------- Revenue (d10_02_revenue_by_month) ----------
+  // Column names exactly as in supabase/schema.sql (quoted identifiers, commas and parentheses included).
+  var REV_COLS = {
+    month: "Month",
+    amazon: "Amazon (net of refunds)",
+    shopify: "Shopify (net of discounts and returns)",
+    kickstarter: "Kickstarter (recognized when rewards ship)",
+    books: "Books"
+  };
+  function sumOf(list, key) {
+    if (!list.length || list.some(function (m) { return m[key] === null; })) return null;
+    return list.reduce(function (a, m) { return a + m[key]; }, 0);
+  }
+  function revenueData(results) {
+    var t = tableRows(results, "d10_02_revenue_by_month");
+    if (t.error) return t;
+    var months = t.rows.map(function (r) {
+      var amazon = numOrNull(r[REV_COLS.amazon]), shopify = numOrNull(r[REV_COLS.shopify]);
+      return {
+        ym: String(r[REV_COLS.month] || "").slice(0, 7),
+        amazon: amazon, shopify: shopify,
+        total: amazon === null || shopify === null ? null : amazon + shopify,   // Amazon + Shopify, Kickstarter excluded
+        kickstarter: numOrNull(r[REV_COLS.kickstarter]),
+        books: r[REV_COLS.books],
+        closed: String(r[REV_COLS.books] || "").trim() === "Closed"
+      };
+    }).sort(function (a, b) { return a.ym < b.ym ? -1 : a.ym > b.ym ? 1 : 0; });
+    function byYear(y) { return months.filter(function (m) { return m.ym.slice(0, 4) === y; }); }
+    function q1(y) { return byYear(y).filter(function (m) { return +m.ym.slice(5, 7) <= 3; }); }
+    var closed = months.filter(function (m) { return m.closed && m.total !== null; });
+    var latest = closed[closed.length - 1] || null;
+    var lastYear = latest ? months.filter(function (m) { return m.ym === (+latest.ym.slice(0, 4) - 1) + latest.ym.slice(4); })[0] || null : null;
+    var thisYear = latest ? latest.ym.slice(0, 4) : null, prevYear = thisYear ? String(+thisYear - 1) : null;
+    var fy = prevYear ? byYear(prevYear) : [];
+    var ytd = thisYear ? byYear(thisYear) : [];
+    var openIn = function (list) { return list.filter(function (m) { return !m.closed; }).map(function (m) { return shortMonth(m.ym); }); };
+    return {
+      months: months, byYear: byYear, latest: latest, lastYear: lastYear, thisYear: thisYear, prevYear: prevYear,
+      band: latest && lastYear ? revenueBand(latest.total, lastYear.total) : null,
+      q1: function (y, key) { var l = q1(y); return l.length === 3 ? sumOf(l, key) : null; },
+      q1Open: thisYear ? openIn(q1(thisYear)) : [],
+      fyComplete: fy.length === 12, fyTotal: fy.length === 12 ? sumOf(fy, "total") : null,
+      fyAvg: fy.length === 12 && sumOf(fy, "total") !== null ? sumOf(fy, "total") / 12 : null,
+      fyChannel: function (key) { return fy.length === 12 ? sumOf(fy, key) : null; },
+      ytdTotal: sumOf(ytd, "total"), ytdMonths: ytd.length, ytdOpen: openIn(ytd),
+      ksMonths: months.filter(function (m) { return m.kickstarter > 0; })
+    };
+  }
+  function openNote(list) {
+    return list.length ? '<div class="open-note">Includes ' + esc(list.join(", ")) + ", not yet closed</div>" : "";
+  }
+
+  // ---------- Inventory (d10_07 + d10_06a/b/c via d10_sku_crosswalk) ----------
+  function inventoryData(results) {
+    var st = tableRows(results, "d10_07_3pl_daily_stock"), xw = tableRows(results, "d10_sku_crosswalk"),
+        a = tableRows(results, "d10_06a_sales_history_amazon_units_ordered"),
+        b = tableRows(results, "d10_06b_sales_history_amazon_units_refunded"),
+        c = tableRows(results, "d10_06c_sales_history_shopify_net_quantity");
+    var err = firstError(st, xw, a, b, c);
+    if (err) return { error: err };
+    // Product names: Shopify product title per handle (d10_05); falls back to the 3PL description.
+    var titles = {};
+    var n5 = tableRows(results, "d10_05_shopify_sales_by_product_weekly");
+    if (!n5.error) n5.rows.forEach(function (r) { titles[r["Product variant SKU"]] = r["Product title"]; });
+    // History length: first to last day across the three sales-history tables, inclusive.
+    var days = [];
+    a.rows.forEach(function (r) { days.push(String(r.order_date)); });
+    b.rows.forEach(function (r) { days.push(String(r.refund_date)); });
+    c.rows.forEach(function (r) { days.push(String(r.Day)); });
+    days.sort();
+    var first = parseDay(days[0]), last = parseDay(days[days.length - 1]);
+    var historyDays = Math.round((last - first) / 86400000) + 1;
+    // Latest snapshot in d10_07.
+    var stamps = st.rows.map(function (r) { return String(r.snapshot_ts); }).sort();
+    var latestTs = stamps[stamps.length - 1], firstTs = stamps[0];
+    var snap = {};
+    st.rows.forEach(function (r) { if (String(r.snapshot_ts) === latestTs) snap[r.item_code] = r; });
+    function colSum(rows, col) {
+      return rows.reduce(function (s, r) {
+        var v = numOrNull(r[col]);
+        if (v === null) throw new Error("Missing value in column " + col);
+        return s + v;
+      }, 0);
+    }
+    var items = [], problems = [];
+    xw.rows.forEach(function (x) {
+      var s = snap[x.item_code];
+      if (!s) { problems.push(x.item_code + " is not in the " + latestTs.slice(0, 10) + " snapshot"); return; }
+      if (!(x.amazon_column in a.rows[0]) || !(x.amazon_column in b.rows[0]) || !(x.shopify_column in c.rows[0])) {
+        problems.push(x.item_code + ": crosswalk column not found in the sales history"); return;
+      }
+      var units = colSum(a.rows, x.amazon_column) - colSum(b.rows, x.amazon_column) + colSum(c.rows, x.shopify_column);
+      var rate = units / historyDays;
+      var rp = rate * BANDS.inventory.leadDays;
+      var avail = numOrNull(s.qty_available);
+      var band = avail === null ? null : avail <= rp ? "red" : avail <= rp + BANDS.inventory.watchDays * rate ? "amber" : "green";
+      items.push({
+        code: x.item_code, name: titles[x.shopify_column] || s.item_desc, avail: avail,
+        expected: numOrNull(s.qty_expected), expectedDate: s.expected_date, poRef: s.po_ref,
+        rate: rate, rp: rp, cover: rate > 0 && avail !== null ? avail / rate : null, band: band
+      });
+    });
+    var counts = { red: 0, amber: 0, green: 0 };
+    items.forEach(function (i) { if (i.band) counts[i.band] += 1; });
+    return {
+      items: items.sort(function (p, q) { return (p.cover === null ? Infinity : p.cover) - (q.cover === null ? Infinity : q.cover); }),
+      counts: counts, problems: problems, historyDays: historyDays, historyFrom: first, historyTo: last,
+      snapshotDate: parseDay(latestTs), firstSnapshot: parseDay(firstTs),
+      band: counts.red ? "red" : counts.amber ? "amber" : items.length ? "green" : null
+    };
+  }
+  function staleLabel(inv) { return "Stale · " + dayLabel(inv.snapshotDate); }
+
+  // ---------- Marketing (d10_08 + d10_02 + dashboard_profit_after_ads_products) ----------
+  function marketingData(results, rev) {
+    var t = tableRows(results, "d10_08_bidworks_monthly_report");
+    var out = { error: t.error };
+    if (!t.error) {
+      var rows = t.rows.map(function (r) { return { ym: String(r.Month || "").slice(0, 7), spend: numOrNull(r.Spend) }; })
+        .sort(function (p, q) { return p.ym < q.ym ? -1 : 1; });
+      var yearRows = function (y) { return rows.filter(function (r) { return r.ym.slice(0, 4) === y; }); };
+      var spendSum = function (list) { return sumOf(list, "spend"); };
+      var latestYear = rows[rows.length - 1].ym.slice(0, 4), prevYear = String(+latestYear - 1);
+      var recent = yearRows(latestYear).slice(-3);   // three most recent months of the latest year
+      var sameMonthsPrev = recent.map(function (r) { return rows.filter(function (p) { return p.ym === prevYear + r.ym.slice(4); })[0]; })
+        .filter(Boolean);
+      out = {
+        latestYear: latestYear, prevYear: prevYear, recent: recent,
+        q1Spend: recent.length === 3 ? spendSum(recent) : null,
+        q1SpendPrev: sameMonthsPrev.length === 3 ? spendSum(sameMonthsPrev) : null,
+        ytdSpend: spendSum(yearRows(latestYear)), ytdMonths: yearRows(latestYear).length,
+        fySpendPrev: yearRows(prevYear).length === 12 ? spendSum(yearRows(prevYear)) : null,
+        flat: rows.every(function (r) { return r.spend === rows[0].spend; }) ? rows[0].spend : null,
+        isQ1: recent.length === 3 && recent[0].ym.slice(5) === "01" && recent[2].ym.slice(5) === "03"
+      };
+      var revOk = rev && !rev.error;
+      out.q1Revenue = revOk ? rev.q1(latestYear, "total") : null;
+      out.q1RevenuePrev = revOk ? rev.q1(prevYear, "total") : null;
+      out.pct = out.q1Spend !== null && out.q1Revenue ? out.q1Spend / out.q1Revenue : null;
+      out.pctPrev = out.q1SpendPrev !== null && out.q1RevenuePrev ? out.q1SpendPrev / out.q1RevenuePrev : null;
+      out.ytdRevenue = revOk && rev.thisYear === latestYear ? rev.ytdTotal : null;
+      out.fyRevenuePrev = revOk && rev.prevYear === prevYear ? rev.fyTotal : null;
+      out.revError = revOk ? null : (rev && rev.error);
+      out.band = adSpendBand(out.pct);
+    }
+    var p = tableRows(results, "dashboard_profit_after_ads_products");
+    out.profitError = p.error || null;
+    if (!p.error) {
+      out.products = p.rows.map(function (r) { return { name: r.name, sku: r.sku, v: numOrNull(r.net_contribution_after_ads) }; });
+      out.profitTotal = out.products.some(function (x) { return x.v === null; }) ? null
+        : out.products.reduce(function (s, x) { return s + x.v; }, 0);   // all rows, negatives included
+    }
+    return out;
+  }
+
+  // ---------- Cash (dashboard_cash_in_bank + d10_09) ----------
+  var OUTFLOW_WINDOW_DAYS = 56;   // next 8 weeks from today
+  function cashData(results, today) {
+    var c = tableRows(results, "dashboard_cash_in_bank"), inv = tableRows(results, "d10_09_bidworks_invoices");
+    var out = { cashError: c.error || null, invError: inv.error || null };
+    if (!c.error) {
+      var row = c.rows[0];
+      out.cash = { value: numOrNull(row.value), status: row.status, asOf: row.as_of, note: row.note };
+    }
+    var start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var end = new Date(start); end.setDate(end.getDate() + OUTFLOW_WINDOW_DAYS);
+    out.windowStart = start; out.windowEnd = end;
+    if (!inv.error) {
+      var rows = inv.rows.map(function (r) { return { date: parseDay(r["Date issued"]), amount: numOrNull(r.Amount), paid: r.Paid, id: r["Invoice #"] }; })
+        .filter(function (r) { return r.date; }).sort(function (p, q) { return p.date - q.date; });
+      var latest = rows[rows.length - 1];
+      var invoiced = {};
+      rows.forEach(function (r) { invoiced[r.date.getFullYear() + "-" + r.date.getMonth()] = r; });
+      var projected = [];
+      if (latest && latest.amount !== null) {
+        var dom = latest.date.getDate();
+        for (var k = 1; k < 600; k++) {
+          var y = latest.date.getFullYear(), m = latest.date.getMonth() + k;
+          var lastDay = new Date(y, m + 1, 0).getDate();
+          var d = new Date(y, m, Math.min(dom, lastDay));
+          if (d > end) break;
+          if (d < start) continue;
+          if (invoiced[d.getFullYear() + "-" + d.getMonth()]) continue;   // that month already has a real invoice
+          projected.push({ date: d, amount: latest.amount });
+        }
+      }
+      out.latestInvoice = latest; out.projected = projected;
+      out.projectedTotal = projected.reduce(function (s, p) { return s + p.amount; }, 0);
+      out.invoiceYears = rows.map(function (r) { return r.date.getFullYear(); }).filter(function (v, i, arr) { return arr.indexOf(v) === i; });
+    }
+    return out;
+  }
+
+  // ---------- Shared pieces ----------
   var STAT_ICONS = {
     revenue: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
     inventory: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-    marketing: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>'
+    marketing: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>',
+    cash: '<svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>'
   };
-
-  // Stock facts for the redesign: active vs paused (Kickstarter-only note) and three-tier counts.
-  function stockHealth(s) {
-    var sf = stockFacts(s);
-    var paused = s.products.filter(function (p) { return /kickstarter-only/i.test(p.note || ""); });
-    var active = s.products.filter(function (p) { return paused.indexOf(p) === -1; })
-      .sort(function (a, b) { return a.weeks_cover - b.weeks_cover; });
-    var tiers = { green: 0, amber: 0, red: 0 };
-    active.forEach(function (p) { tiers[stockBand(p.weeks_cover)] += 1; });
-    return { sf: sf, paused: paused, active: active, tiers: tiers, total: s.products.length,
-             lowest: active.length ? active[0] : null };
+  // Generic icons, not brand artwork: paper plane for BidWorks, share/connect for Handle Social.
+  var AGENCY_ICONS = {
+    bidworks: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>',
+    handle: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>'
+  };
+  var STAR = '<span class="star" title="Lena\'s requested KPI">&#9733;</span>';
+  function legendBox() {
+    return '<div class="legend-box">' +
+      '<div class="legend-group"><span class="gtitle">Metric health</span>' +
+        '<span><span class="dot" style="background:var(--red)"></span>Red — e.g. PO Now / Danger</span>' +
+        '<span><span class="dot" style="background:var(--amber)"></span>Amber — e.g. Watch</span>' +
+        '<span><span class="dot" style="background:var(--green)"></span>Green — Healthy / On track</span></div>' +
+      '<div class="legend-group"><span class="gtitle">Data health</span>' +
+        '<span><span class="dot" style="background:var(--grey)"></span>No Data = never sourced</span>' +
+        '<span><span class="dot" style="background:var(--amber)"></span>Stale = sourced once, dated, not live</span></div>' +
+    "</div>" +
+    '<div class="det" style="margin-bottom:16px;font-size:12px;">Exact wording per KPI is listed in Data Notes → "Band wording by KPI."</div>';
   }
-  function staleTag(sf) { return sf.isStale ? "Stale · " + (sf.snapshotDate || "snapshot") : ""; }
+  function notAvailable(msg) { return '<div class="det na">Not available — ' + esc(msg) + "</div>"; }
+  // Two-bar comparison; the current year is larger and bolder.
+  function compareBars(prevLabel, prevVal, curLabel, curVal, color, fmt) {
+    var max = Math.max(prevVal || 0, curVal || 0);
+    var h = function (v) { return max > 0 ? Math.max(2, Math.round(v / max * 63)) : 8; };
+    return '<div class="compare-bars">' +
+      '<div class="cbar"><div class="bv">' + fmt(prevVal) + '</div><div class="bf" style="height:' + h(prevVal) + 'px;background:#CBD5E1;"' +
+        tipAttr([prevLabel, fmt(prevVal)]) + '></div><div class="bl">' + esc(prevLabel) + "</div></div>" +
+      '<div class="cbar hi"><div class="bv">' + fmt(curVal) + '</div><div class="bf" style="height:' + h(curVal) + "px;background:" + color + ';"' +
+        tipAttr([curLabel, fmt(curVal)]) + '></div><div class="bl">' + esc(curLabel) + "</div></div></div>";
+  }
+  function changeLine(prev, cur, suffix) {
+    if (prev === null || cur === null || !prev) return "";
+    var ch = (cur - prev) / prev;
+    return '<div class="det" style="text-align:center;"><b style="color:' + (ch >= 0 ? "var(--green)" : "var(--red)") + '">' +
+      signedPct(ch) + (ch >= 0 ? " increase" : " decrease") + "</b>" + (suffix || "") + "</div>";
+  }
 
-  // Grill Pro reorder flag: qualitative, from Lena's verbal account in the data notes. No table holds a
-  // count or a weeks figure for it, so the flag count stays "1" and its band breakdown stays "TBD".
-  var REORDER_FLAG_COUNT = 1;
-  function reorderWarning(s, prefix) {
-    var gp = s.products.filter(function (p) { return p.sku === "TH-GRL-02"; })[0];
-    var sf = stockFacts(s);
-    return '<div class="warn-card"' + (prefix ? ' style="margin-top:12px;"' : "") + "><b>" + (prefix || "Yes — Grill Pro.") + "</b> " +
-      "Per Lena's verbal account (see Data Notes), not this page's stale snapshot: ~1 month of cover, no reorder placed. " +
-      (gp ? "The snapshot shows " + num(gp.weeks_cover, 1) + " wks, " + TIER_NAMES[stockBand(gp.weeks_cover)] +
-            " — that figure is stale" + (sf.snapshotDate ? " (" + esc(sf.snapshotDate) + ")" : "") + " and does not reflect this. " : "") +
-      "Needs action regardless of what this dashboard currently displays." + reorderOwnerLine() + "</div>";
+  // Line chart: 12 month slots, one line per series, optional dashed average.
+  function lineChart(series, avg, opts) {
+    opts = opts || {};
+    var W = opts.w || 900, H = opts.h || 190, padL = 56, padR = 12, padT = 12, padB = 26;
+    var vals = [];
+    series.forEach(function (s) { s.data.forEach(function (v) { if (v !== null) vals.push(v); }); });
+    if (avg !== null && avg !== undefined) vals.push(avg);
+    var max = Math.max.apply(null, vals) * 1.1 || 1;
+    var x = function (i) { return padL + i * (W - padL - padR) / 11; };
+    var y = function (v) { return padT + (1 - v / max) * (H - padT - padB); };
+    var svg = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(opts.label || "Line chart") + '">';
+    [0, 0.5, 1].forEach(function (f) {
+      var v = max / 1.1 * f, yy = y(v);
+      svg += '<line x1="' + padL + '" y1="' + yy + '" x2="' + (W - padR) + '" y2="' + yy + '" stroke="#EEF1F6"/>' +
+        '<text x="' + (padL - 6) + '" y="' + (yy + 3) + '" font-size="10" fill="#64748B" text-anchor="end">$' + Math.round(v / 1000) + "k</text>";
+    });
+    if (avg !== null && avg !== undefined) {
+      svg += '<line x1="' + padL + '" y1="' + y(avg) + '" x2="' + (W - padR) + '" y2="' + y(avg) + '" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4"/>';
+    }
+    series.forEach(function (s) {
+      var pts = [];
+      s.data.forEach(function (v, i) { if (v !== null) pts.push([x(i), y(v), v, i]); });
+      svg += '<polyline points="' + pts.map(function (p) { return p[0] + "," + p[1]; }).join(" ") + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linejoin="round"/>';
+      pts.forEach(function (p) {
+        var open = s.open && s.open[p[3]];
+        svg += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (s.dots ? 4.5 : 3.5) + '" fill="' + (open ? "#fff" : s.color) + '" stroke="' + s.color + '" stroke-width="2"' +
+          tipAttr([MONTHS_SHORT[p[3]] + " " + s.label, money2(p[2]) + (open ? " — not yet closed" : "")]) + "/>";
+      });
+    });
+    MONTHS_SHORT.forEach(function (l, i) { svg += '<text x="' + x(i) + '" y="' + (H - 8) + '" font-size="10" fill="#64748B" text-anchor="middle">' + l + "</text>"; });
+    svg += "</svg>";
+    var key = series.map(function (s) { return '<span style="color:' + s.color + ';">●</span> ' + esc(s.label); }).join(" &nbsp; ") +
+      (avg !== null && avg !== undefined ? ' &nbsp; <span style="color:#94A3B8;">┄</span> ' + esc(opts.avgLabel || "Average") : "") +
+      (series.some(function (s) { return s.open && s.open.some(Boolean); }) ? " &nbsp; ○ month not yet closed" : "");
+    return '<div class="linechart">' + svg + '<div class="line-key">' + key + "</div></div>";
+  }
+  function monthSeries(rev, year, key) {
+    var arr = [], open = [];
+    for (var i = 0; i < 12; i++) { arr.push(null); open.push(false); }
+    rev.byYear(year).forEach(function (m) { var i = +m.ym.slice(5, 7) - 1; arr[i] = m[key]; open[i] = !m.closed; });
+    return { data: arr, open: open };
   }
 
   // ---------- Executive Summary ----------
-  function renderExecSummary(d, results) {
-    var r = d.revenue_vs_last_year, ly = r.last_year_same_month || {};
-    var cur = hasCurrentRevenue(r);
-    var rev = revenueMonths(results);
-    var mom = rev.months ? monthOverMonth(rev.months, "total") : null;
-    var sh = stockHealth(d.weeks_of_stock_cover);
-    var pa = d.profit_after_ads.products;
-    var profitTotal = pa.reduce(function (a, p) { return a + p.net_contribution_after_ads; }, 0);   // all 13 rows, negatives included
-    var losses = pa.filter(function (p) { return p.net_contribution_after_ads < 0; })
-      .sort(function (a, b) { return a.net_contribution_after_ads - b.net_contribution_after_ads; });
-    var lossTotal = losses.reduce(function (a, p) { return a + p.net_contribution_after_ads; }, 0);
-    var bw = bidworksStats(results);
-    var tag = staleTag(sh.sf);
-
-    // Hero strip
-    var revHero = mom && mom.latest
-      ? '<div class="s-val">' + money(mom.latest.total) + '</div><div class="s-cap">Latest closed month (unofficial) &middot; ' +
-          esc(shortMonth(mom.latest.ym)) + ", not yet signed off</div>"
-      : '<div class="s-val">Not available</div><div class="s-cap">' + esc(rev.error || "No closed month in d10_02") + "</div>";
-    var strip = '<div class="stat-strip">' +
-      '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Overall Revenue</div>' + revHero +
-        sourcedLine() + sectionOwnerLine("revenue") + "</div>" +
-      '<div class="stat-card c-inventory">' + STAT_ICONS.inventory + '<div class="s-lbl">Inventory &amp; Fulfillment</div>' +
-        '<div class="s-val">' + sh.tiers.green + '<span style="font-size:15px;"> of ' + sh.total + "</span></div>" +
-        '<div class="s-cap">SKUs healthy' + (sh.lowest ? " &middot; lowest " + num(sh.lowest.weeks_cover, 1) + " wks" : "") +
-          " &middot; " + REORDER_FLAG_COUNT + " reorder flag</div>" +
-        (tag ? '<span class="s-tag">' + esc(tag) + "</span>" : "") + calcLine() + sectionOwnerLine("stock") + "</div>" +
-      '<div class="stat-card c-marketing">' + STAT_ICONS.marketing + '<div class="s-lbl">Marketing &amp; Ads</div>' +
-        '<div class="s-val">' + money(profitTotal) + "</div>" +
-        '<div class="s-cap">Net profit after ads, FY2025 &middot; ' + losses.length + " SKU" + (losses.length === 1 ? "" : "s") + " losing money</div>" +
-        sectionOwnerLine("profit") + "</div>" +
-    "</div>";
-
-    // Column 1: Overall Revenue
-    var lyH = 60, curH = cur && ly.total ? Math.min(100, Math.round(60 * r.current_month_value / ly.total)) : 60;
-    var yoy = '<div class="yoy-compare">' +
-      '<div class="yoy-bar"><div class="bar-fill real" style="height:' + (ly.total != null ? lyH : 0) + '%"></div><div class="bv">' +
-        (ly.total != null ? money(ly.total) : "—") + '</div><div class="bl">' + esc(shortMonth(ly.month)) + "</div></div>" +
-      (cur
-        ? '<div class="yoy-bar"><div class="bar-fill real" style="height:' + curH + '%"></div><div class="bv">' + money(r.current_month_value) + '</div><div class="bl">Last closed month</div></div>'
-        : '<div class="yoy-bar"><div class="bar-fill pending" style="height:' + lyH + '%"></div><div class="bv" style="color:var(--mut)">Pending</div><div class="bl">Last closed month</div></div>') +
-    "</div>";
-    var momHtml;
-    if (!mom) {
-      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) +
-        calcLine() + sourcedLine() + "</div>";
-    } else {
-      var momLine = mom.growth !== null
-        ? "month-over-month, using the latest closed data already loaded (" + esc(shortMonth(mom.prev.ym)) + "&rarr;" + esc(shortMonth(mom.latest.ym)) + ") — " +
-          money(mom.prev.total) + " &rarr; " + money(mom.latest.total) + ', <b style="color:' + (mom.growth >= 0 ? "var(--green)" : "var(--red)") + '">' + signedPct(mom.growth) + "</b>."
-        : "month-over-month: " + esc(mom.note) + ".";
-      var openLine = mom.openAfter.map(function (m) {
-        return "<br>" + esc(shortMonth(mom.latest.ym)) + "&rarr;" + esc(m) + ": Not available — " + esc(m) + " not yet closed.";
-      }).join("");
-      momHtml = '<div class="reco-card"><b>Not one of Lena\'s 4:</b> ' + momLine +
-        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine +
-        calcLine() + sourcedLine() + "</div>";
-    }
-    var c = d.cash_in_bank, cashHas = c.value !== null && c.value !== undefined && c.status !== "no_data";
-    var col1 = '<div class="col-panel"><h3>Overall Revenue</h3>' +
-      '<div class="mini-card"><div class="lbl">Revenue vs. last year' + STAR + "</div>" + yoy +
-        '<div class="det">' + esc(r.scope || "") + "</div>" +
-        (cur ? "" : '<div class="so-what"><b>Means:</b> nothing to compare to yet — last closed month isn\'t officially sourced.</div>') +
-        momHtml + sourcedLine() + "</div>" +
-      '<div class="mini-card"><div class="lbl">Revenue, last closed month' + STAR + "</div>" +
-        (cur ? '<div class="val" style="font-size:19px;">' + money(r.current_month_value) + "</div>"
-             : '<div class="val" style="color:var(--mut);font-size:19px;">Pending</div><div class="det">This is the figure Lena\'s metric needs — not sourced yet.</div>') +
-        (mom && mom.latest && !cur
-          ? '<div class="det" style="margin-top:4px;"><b>Already sitting in the database (not yet connected to this card):</b> ' +
-              esc(shortMonth(mom.latest.ym)) + " &mdash; " + money2(mom.latest.total) + "</div>"
-          : "") + "</div>" +
-      '<div class="mini-card"><div class="lbl">Cash in the bank' + STAR + (cashHas ? "" : rpill("grey", "No Data")) + "</div>" +
-        (cashHas ? '<div class="val" style="font-size:19px;">' + money(c.value) + "</div>"
-                 : '<div class="val" style="color:var(--grey);font-size:19px;">No Data</div><div class="det">No bank feed exists in any source file</div>' +
-                   '<div class="so-what"><b>Means:</b> shown grey on purpose, not omitted — the gap stays visible.</div>') +
-      "</div></div>";
-
-    // Column 2: Inventory & Fulfillment
-    var stalePill = tag ? rpill("amber", tag) : "";
-    var col2 = '<div class="col-panel"><h3>Inventory &amp; Fulfillment (Stock Health)' + stalePill + "</h3>" +
-      '<div class="mini-card"><div class="lbl">Active vs. Paused SKUs</div>' +
-        '<div style="display:grid;grid-template-columns:104px 1fr;gap:6px 10px;font-size:12.5px;margin-top:8px;">' +
-          '<div style="font-weight:700;">Active: ' + sh.active.length + "</div><div>Healthy " + sh.tiers.green + " &middot; At Risk " + sh.tiers.amber +
-            " &middot; Danger " + sh.tiers.red + (sh.lowest ? " &middot; lowest " + num(sh.lowest.weeks_cover, 1) + " wks" : "") + "</div>" +
-          '<div style="font-weight:700;">Paused Flag: ' + sh.paused.length + "</div><div>" +
-            (sh.paused.length ? sh.paused.map(function (p) { return esc(p.name); }).join(", ") + " — Kickstarter-only" : "None") + "</div>" +
-          '<div style="font-weight:700;">Reorder Flag: ' + REORDER_FLAG_COUNT + "</div><div>Healthy TBD &middot; At Risk TBD &middot; Danger TBD (Grill Pro — qualitative account, no exact weeks figure yet)</div>" +
-        "</div>" +
-        '<div class="det" style="margin-top:8px;">See Details tab for the full SKU list and descriptions.</div>' + calcLine() + "</div>" +
-      '<div class="mini-card"><div class="lbl">Stock cover, lowest first' + STAR + "</div>" +
-        '<div class="val" style="font-size:19px;">' + sh.tiers.green + ' <span class="rpill green" style="margin-left:4px;">Healthy</span></div>' +
-        '<div class="det">' + sh.tiers.amber + ' <span style="color:var(--amber);font-weight:700;">At Risk</span> · ' + sh.tiers.red +
-          ' <span style="color:var(--red);font-weight:700;">Danger</span>' + (sh.lowest ? " · lowest is " + num(sh.lowest.weeks_cover, 1) + " wks" : "") + "</div>" +
-        '<div class="det" style="margin-top:4px;">Bands: Healthy ' + BAND_RULES.stockHealthyMinWeeks + "+ wks &middot; At Risk " + BAND_RULES.stockAtRiskMinWeeks +
-          "&ndash;" + BAND_RULES.stockHealthyMinWeeks + " wks &middot; Danger under " + BAND_RULES.stockAtRiskMinWeeks + " wks</div>" +
-        (sh.sf.isStale ? '<div class="det" style="margin-top:4px;">3PL snapshot ' + esc(sh.sf.snapshotDate || "") + " — stale, not live.</div>" : "") +
-        calcLine() + "</div>" +
-      '<div class="mini-card"><div class="lbl">Reorder flag</div>' + reorderWarning(d.weeks_of_stock_cover) + "</div></div>";
-
-    // Column 3: Marketing & Ads
-    var bwHtml = bw.error ? unavailable(bw.error)
-      : '<div class="val" style="font-size:19px;">' + (bw.spendFlat !== null ? money(bw.spendFlat) : bw.spendAvg !== null ? "avg " + money(bw.spendAvg) : "—") +
-          '<span style="font-size:12px;font-weight:500;color:var(--mut)">/mo' + (bw.spendFlat !== null ? " flat" : "") + "</span></div>" +
-        '<div class="det">' + (bw.spendTotal !== null ? money(bw.spendTotal) + " total, " : "") + esc(shortMonth(bw.first)) + "&ndash;" + esc(shortMonth(bw.last)) +
-          " (" + bw.count + " months) &middot; spend-by-product only sent annually</div>";
-    var col3 = '<div class="col-panel"><h3>Marketing &amp; Ads (ROI)</h3>' +
-      '<div class="mini-card"><div class="lbl">Losing money on ads' + STAR + (losses.length ? rpill("red", "Danger") : rpill("green", "Healthy")) + "</div>" +
-        '<div class="val">' + money(-lossTotal) + '<span style="font-size:13px;font-weight:500;color:var(--mut)"> / yr</span></div>' +
-        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div>" +
-        "</div>" +
-      '<div class="mini-card"><div class="lbl">Agency spend &mdash; BidWorks' + rpill("noband", "No band") + "</div>" + bwHtml + "</div>" +
-      '<div class="mini-card"><div class="lbl">Agency spend &mdash; Handle Social' + rpill("grey", "No Data") + "</div>" +
-        '<div class="val" style="color:var(--grey);font-size:17px;">No Data</div>' +
-        '<div class="det">No spend/performance file exists. Scope undecided &mdash; Lena set an end-of-April deadline for written scope or termination.</div>' +
-        "</div>" +
-      '<div class="mini-card"><div class="lbl">Profit after ads, by product' + STAR + "</div>" +
-        '<div class="val" style="font-size:19px;">' + money(profitTotal) + ' <span style="font-size:12px;font-weight:500;color:var(--mut)">net, FY2025</span></div>' +
-        '<div class="det">' + pa.filter(function (p) { return p.net_contribution_after_ads > 0; }).length + " profitable &middot; " + losses.length +
-          " losing money (above) &middot; full breakdown in Details</div>" + "</div></div>";
-
-    return legendBox() + strip + '<div class="rrow r3">' + col1 + col2 + col3 + "</div>";
-  }
-
-  // ---------- Details: new widgets ----------
-  function monthBars(months, key, cls) {
-    var vals = months.map(function (m) { return m[key]; }).filter(function (v) { return v !== null; });
-    var max = vals.length ? Math.max.apply(null, vals) : 0;
-    return '<div class="mbars">' + months.map(function (m) {
-      var v = m[key];
-      var tip = [monthName(m.ym), v === null ? "No figure" : money2(v), m.closed ? "Books: Closed" : "Books: " + (m.books || "—") + " — not final"];
-      if (v === null || !(max > 0)) {
-        return '<div class="bar-col"><div class="val-lbl">—</div><div class="month-lbl">' + esc(barMonth(m.ym)) + "</div></div>";
-      }
-      return '<div class="bar-col"><div class="val-lbl">$' + Math.round(v / 1000) + "k</div>" +
-        '<div class="fill ' + (m.closed ? cls : "open") + '" style="height:' + Math.round(v / max * 100) + '%"' + tipAttr(tip) + "></div>" +
-        '<div class="month-lbl">' + esc(barMonth(m.ym)) + "</div></div>";
-    }).join("") + "</div>";
-  }
-  function revenueChartCard(rev, key, title, cls, extra) {
-    if (rev.error) return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" + unavailable(rev.error) + sourcedLine() + "</div>";
-    var ms = rev.months;
-    return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" +
-      '<div class="det" style="margin-bottom:2px;">' + esc(monthName(ms[0].ym)) + " – " + esc(monthName(ms[ms.length - 1].ym)) +
-        " &middot; hatched bar = month not yet closed</div>" + monthBars(ms, key, cls) + (extra || "") + sourcedLine() + "</div>";
-  }
-  function channelCard(rev, key, name, color, icon) {
-    var top = function (val, cap) {
-      return '<div class="chan-top"><div class="chan-badge" style="background:' + color + ';">' + icon + "</div><div>" +
-        '<div class="chan-name">' + esc(name) + '</div><div class="chan-val">' + val + '</div><div class="chan-cap">' + cap + "</div></div></div>";
-    };
+  function renderSummary(rev, inv, mkt, cash) {
+    // Revenue column
+    var revCol;
     if (rev.error) {
-      return '<div class="chan-card">' + top('<span style="color:var(--grey)">Not available</span>', esc(rev.error)) + calcLine() + sourcedLine() + "</div>";
-    }
-    var fy = fy2025(rev.months, key), mom = monthOverMonth(rev.months, key);
-    return '<div class="chan-card">' +
-      top(fy.value !== null ? money(fy.value) : '<span style="color:var(--grey)">Not available</span>',
-          "Revenue, FY2025" + (fy.value !== null && fy.count !== 12 ? " (" + fy.count + " of 12 months)" : "")) +
-      '<div class="chan-pills">' +
-        '<div class="chan-pill"' + (mom.latest ? ' title="' + esc(shortMonth(mom.latest.ym)) + ', latest closed month"' : "") + '><div class="cp-lbl">Latest Mo.</div><div class="cp-val">' +
-          (mom.latest ? money(mom.latest[key]) : "—") + "</div></div>" +
-        '<div class="chan-pill"' + (mom.note ? ' title="' + esc(mom.note) + '"' : mom.prev ? ' title="' + esc(shortMonth(mom.prev.ym) + " → " + shortMonth(mom.latest.ym)) + '"' : "") +
-          '><div class="cp-lbl">MoM Growth</div><div class="cp-val">' + (mom.growth !== null ? signedPct(mom.growth) : "N/A") + "</div></div>" +
-      "</div>" + calcLine() + sourcedLine() + "</div>";
-  }
-  function bidworksCard(bw) {
-    var top = '<div class="chan-top"><div class="chan-badge" style="background:#2563EB;">' + CHANNEL_ICONS.bidworks + "</div><div>" +
-      '<div class="chan-name">BidWorks</div>';
-    if (bw.error) return '<div class="chan-card">' + top + '<div class="chan-val" style="color:var(--grey);">Not available</div><div class="chan-cap">' + esc(bw.error) + "</div></div></div>" + calcLine() + "</div>";
-    return '<div class="chan-card">' + top +
-        '<div class="chan-val">' + (bw.avgImpressions !== null ? (bw.avgImpressions / 1e6).toFixed(2) + "M" : "—") + "</div>" +
-        '<div class="chan-cap">Avg. impressions/mo</div></div></div>' +
-      '<div class="chan-pills">' +
-        '<div class="chan-pill"><div class="cp-lbl">Spend/mo</div><div class="cp-val">' +
-          (bw.spendFlat !== null ? money(bw.spendFlat) : bw.spendAvg !== null ? "avg " + money(bw.spendAvg) : "—") + "</div></div>" +
-        '<div class="chan-pill" title="Average of the ' + bw.count + ' monthly CTR figures"><div class="cp-lbl">Avg CTR</div><div class="cp-val">' +
-          (bw.avgCtr !== null ? bw.avgCtr.toFixed(2) + "%" : "—") + "</div></div>" +
-      "</div>" + calcLine() + "</div>";
-  }
-  function handleSocialCard() {
-    return '<div class="chan-card dim"><div class="chan-top"><div class="chan-badge" style="background:#94A3B8;">' + CHANNEL_ICONS.handle + "</div><div>" +
-        '<div class="chan-name">Handle Social</div><div class="chan-val" style="color:var(--grey);">No Data</div>' +
-        '<div class="chan-cap">No source file — scope undecided</div></div></div>' +
-      '<div class="chan-pills"><div class="chan-pill grey"><div class="cp-lbl">Spend/mo</div><div class="cp-val">—</div></div>' +
-        '<div class="chan-pill grey"><div class="cp-lbl">Reach</div><div class="cp-val">—</div></div></div>' + "</div>";
-  }
-
-  function renderDetails(d, results, staleNote) {
-    var rev = revenueMonths(results), bw = bidworksStats(results);
-    var ks = rev.months ? rev.months.filter(function (m) { return m.kickstarter > 0; }) : [];
-    var ksNote = ks.length
-      ? '<div class="so-what"><b>What this means:</b> ' + ks.map(function (m) {
-          return esc(monthName(m.ym)) + "'s " + money(m.kickstarter) + " of Kickstarter revenue";
-        }).join(" and ") + " is not in these bars — the channel charts show Amazon and Shopify only, so Kickstarter is excluded by design.</div>"
-      : "";
-    return legendBox() +
-      '<h3 class="group-head">Overall Revenue</h3>' + sectionOwnerHead("revenue") +
-      '<div class="dgrid">' + renderRevenue(d.revenue_vs_last_year) + renderCash(d.cash_in_bank) + "</div>" +
-      '<div class="chart-card"><h2 class="section">Revenue Channels</h2>' +
-        '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
-        '<div class="chan-grid two">' +
-          channelCard(rev, "shopify", "Shopify", "#96BF48", CHANNEL_ICONS.shopify) +
-          channelCard(rev, "amazon", "Amazon", "#FF9900", CHANNEL_ICONS.amazon) +
-        "</div></div>" +
-      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
-      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
-      '<h3 class="group-head">Inventory &amp; Fulfillment</h3>' + sectionOwnerHead("stock") +
-      renderStock(d.weeks_of_stock_cover, staleNote) +
-      reorderWarning(d.weeks_of_stock_cover, "Reorder flag — Grill Pro:") +
-      '<h3 class="group-head">Marketing &amp; Ads</h3>' + sectionOwnerHead("profit") +
-      '<div class="chart-card"><h2 class="section">Agencies</h2>' +
-        '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
-        '<div class="chan-grid two">' +
-          bidworksCard(bw) + handleSocialCard() +
-        "</div></div>" +
-      renderProfit(d.profit_after_ads, d.weeks_of_stock_cover);
-  }
-
-  // ---------- Data Notes tab (reads dashboard_data_notes) ----------
-  function noteLabel(n) {
-    if (/stock on hand|snapshot/i.test(n)) return "Stock snapshot is not live";
-    if (/revenue/i.test(n)) return "Revenue current-month figure is pending";
-    if (/profit|bidworks/i.test(n)) return "Profit after ads is annual, not monthly";
-    if (/restricted|excluded/i.test(n)) return "Supplier name intentionally excluded";
-    return "Note";
-  }
-  function renderNotesTab(notes) {
-    return '<h2 class="section">Data Notes — what to keep in mind about these numbers</h2>' +
-      notes.map(function (n) {
-        return '<div class="dnote"><span class="n-label">' + esc(noteLabel(n)) + "</span>" + esc(n) + "</div>";
-      }).join("");
-  }
-
-  // ---------- Revenue vs last year ----------
-  // ---------- Band indicators ----------
-  // Fixed display rules from the Band Calculations tab of the Agency Scorecards workbook.
-  // They only colour the values already on the page; they change no figure.
-  var BAND_RULES = {
-    revenueAmberBelow: 0.10,   // revenue: Green >= last year; Amber up to 10% below; Red more than 10% below
-    // Stock: three tiers. CHANGED from PR #7's two-band rule (Green 6+ / Red under 6);
-    // pending Lena's / the coach's sign-off, not yet final.
-    stockHealthyMinWeeks: 9,   // Healthy (Green): 9+ weeks of cover
-    stockAtRiskMinWeeks: 6     // At Risk (Amber): 6 to under 9 weeks; Danger (Red): under 6
-  };                           // profit after ads: Green positive; Red negative (no Amber)
-  var BAND_NAMES = { green: "Green", amber: "Amber", red: "Red" };
-  function revenueBand(current, lastYear) {
-    if (current == null || lastYear == null || !(lastYear > 0)) return null;
-    if (current >= lastYear) return "green";
-    if (current >= lastYear * (1 - BAND_RULES.revenueAmberBelow)) return "amber";
-    return "red";
-  }
-  var TIER_NAMES = { green: "Healthy", amber: "At Risk", red: "Danger" };
-  function stockBand(weeks) {
-    if (weeks >= BAND_RULES.stockHealthyMinWeeks) return "green";
-    if (weeks >= BAND_RULES.stockAtRiskMinWeeks) return "amber";
-    return "red";
-  }
-  function stockBandText(band) {
-    return band === "green" ? BAND_RULES.stockHealthyMinWeeks + "+ weeks of cover (Healthy)"
-      : band === "amber" ? BAND_RULES.stockAtRiskMinWeeks + " to " + BAND_RULES.stockHealthyMinWeeks + " weeks of cover (At Risk)"
-      : "under " + BAND_RULES.stockAtRiskMinWeeks + " weeks of cover (Danger)";
-  }
-  function profitBand(v) { return v > 0 ? "green" : (v < 0 ? "red" : null); }
-  function bandDot(band, why) {
-    var label = band ? "Band: " + BAND_NAMES[band] + (why ? " — " + why : "") : "Not banded" + (why ? " — " + why : "");
-    return '<span class="band ' + (band || "none") + '" role="img" aria-label="' + esc(label) + '" title="' + esc(label) + '"></span>';
-  }
-
-  function renderRevenue(r) {
-    var ly = r.last_year_same_month || {};
-    var cur = hasCurrentRevenue(r);
-    var status = cur ? pill("green", "Current") : pill("amber", "Pending");
-    var max = Math.max(ly.total || 0, cur ? r.current_month_value : 0) || 1;
-
-    function column(value, tip) {
-      var h = (value / max) * 100;
-      return '<div class="col"><div class="col-val">' + money(value) + "</div>" +
-        '<div class="col-bar" style="height:calc((100% - 30px) * ' + (h / 100).toFixed(4) + ')"' + tipAttr(tip) + "></div></div>";
+      revCol = '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Revenue' + STAR + '</div><div class="s-val">Not available</div>' +
+        '<div class="s-cap">' + esc(rev.error) + "</div>" + sourcedLine() + sectionOwnerLine("revenue") + "</div>";
+    } else {
+      var L = rev.latest, LY = rev.lastYear;
+      revCol = '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Revenue' + STAR + "</div>" +
+        '<div class="s-val">' + (L ? money2(L.total) : "Not available") + "</div>" + bandPill("revenue", rev.band) +
+        '<div class="s-cap">' + (L ? esc(shortMonth(L.ym)) + ", latest closed month" + (LY ? " · vs. " + money2(LY.total) + " " + esc(shortMonth(LY.ym)) + " · " + signedPct((L.total - LY.total) / LY.total) : "") : "No closed month") + "</div>" +
+        sourcedLine() + sectionOwnerLine("revenue") + "</div>";
+      var y0 = rev.prevYear, y1 = rev.thisYear;
+      [["total", "Overall Revenue — Q1 " + y0 + " vs. Q1 " + y1 + " (Jan–Mar)", "#4F46E5"],
+       ["amazon", "Revenue per Channel, Amazon — Q1 " + y0 + " vs. Q1 " + y1, "#FF9900"],
+       ["shopify", "Revenue per Channel, Shopify — Q1 " + y0 + " vs. Q1 " + y1, "#96BF48"]].forEach(function (g) {
+        var a = rev.q1(y0, g[0]), b = rev.q1(y1, g[0]);
+        revCol += '<div class="sub-card"><div class="sc-title">' + esc(g[1]) + "</div>" +
+          (a === null || b === null ? notAvailable("Q1 months missing in d10_02")
+            : compareBars(y0, a, y1, b, g[2], money2) + changeLine(a, b) + openNote(rev.q1Open)) + sourcedLine() + "</div>";
+      });
+      var ka = rev.q1(y0, "kickstarter"), kb = rev.q1(y1, "kickstarter");
+      var ksWhen = rev.ksMonths.length ? "in " + rev.ksMonths.map(function (m) { return shortMonth(m.ym); }).join(", ") : "";
+      revCol += '<div class="sub-card"><div class="sc-title">Revenue per Campaign, Kickstarter — Q1 ' + y0 + " vs. Q1 " + y1 + "</div>" +
+        (ka === null || kb === null ? notAvailable("Q1 months missing in d10_02")
+          : (function () {
+              var bars = '<div class="compare-bars">' +
+                '<div class="cbar"><div class="bv">' + money2(ka) + '</div><div class="bf" style="height:' + (ka || kb ? Math.max(2, Math.round(ka / Math.max(ka, kb) * 63)) : 8) + 'px;background:#CBD5E1;"></div><div class="bl">' + y0 + "</div></div>" +
+                '<div class="cbar' + (ka || kb ? " hi" : "") + '"><div class="bv">' + money2(kb) + '</div><div class="bf" style="height:' + (ka || kb ? Math.max(2, Math.round(kb / Math.max(ka, kb) * 63)) : 8) + 'px;background:#F4A300;"></div><div class="bl">' + y1 + "</div></div></div>";
+              return bars + (ka === 0 && kb === 0
+                ? '<div class="det" style="text-align:center;">No activity in Q1 of either year — Kickstarter revenue is recognized once, ' + esc(ksWhen) + (ksWhen ? ", " : "") + "when rewards ship, not spread across months</div>"
+                : changeLine(ka, kb));
+            })()) + sourcedLine() + "</div>";
     }
 
-    var thisCol = cur
-      ? column(r.current_month_value, ["Last closed month", money(r.current_month_value)])
-      : '<div class="col"><div class="col-pending">' + pill("amber", "Pending") +
-          '<span class="note">' + esc(r.current_month_label || "") + "</span></div></div>";
-    var lyCol = ly.total != null
-      ? column(ly.total, [monthName(ly.month), "Total " + money(ly.total),
-          "Amazon " + (ly.amazon != null ? money(ly.amazon) : "—"),
-          "Shopify " + (ly.shopify != null ? money(ly.shopify) : "—")])
-      : '<div class="col"><div class="col-pending">' + pill("grey", "No Data") + "</div></div>";
-
-    return '<section class="card" id="revenue">' +
-      '<div class="card-head"><h2>Revenue vs. last year</h2>' + status + "</div>" +
-      '<p class="period">' + esc(r.scope || "") + "</p>" +
-      '<div class="cols">' + thisCol + lyCol + "</div>" +
-      '<div class="col-labels">' +
-        "<div><strong>Last closed month</strong>" + (cur ? "" : "No bar until confirmed") + "</div>" +
-        "<div><strong>" + esc(monthName(ly.month)) + "</strong>Amazon " + (ly.amazon != null ? money(ly.amazon) : "—") +
-          " · Shopify " + (ly.shopify != null ? money(ly.shopify) : "—") + "</div>" +
-      "</div>" +
-      (function () {
-        var band = revenueBand(cur ? r.current_month_value : null, ly.total);
-        var text = band === "green" ? "at or above " + monthName(ly.month)
-          : band === "amber" ? "up to 10% below " + monthName(ly.month)
-          : band === "red" ? "more than 10% below " + monthName(ly.month)
-          : "last closed month pending, nothing to compare yet";
-        return '<p class="band-line">' + bandDot(band, text) + "<strong>Band: " + (band ? BAND_NAMES[band] : "Not banded") +
-          "</strong> · " + esc(text) + "</p>";
-      })() +
-      '<div class="source">As of: ' + esc(r.as_of || "—") + "<br>Source: " + esc(r.source || "—") + "</div>" +
-      sourcedLine() +
-    "</section>";
-  }
-
-  // ---------- Cash in bank ----------
-  function renderCash(c) {
-    var hasValue = c.value !== null && c.value !== undefined && c.status !== "no_data";
-    return '<section class="card nodata-card">' +
-      '<div class="card-head"><h2>Cash in the bank</h2>' + (hasValue ? pill("green", "Live") : pill("grey", "No Data")) + "</div>" +
-      '<p class="period">As of: ' + esc(c.as_of || "—") + "</p>" +
-      (hasValue
-        ? '<div class="big">' + money(c.value) + "</div>"
-        : '<div class="big nodata">No Data</div>') +
-      '<p class="note">' + esc(c.note || "") + "</p>" +
-    "</section>";
-  }
-
-  // ---------- Weeks of stock cover ----------
-  function renderStock(s, staleNote) {
-    var sf = stockFacts(s);
-    var flag = sf.flag;
-    var asOf = sf.snapshotDate || s.as_of;
-    // Axis is capped at 5x the flag so the threshold stays readable; longer bars get a torn edge.
-    var axisMax = flag * 5;
-    var pct = function (w) { return Math.min(w, axisMax) / axisMax * 100; };
-
-    var ticks = [];
-    for (var t = 0; t <= axisMax; t += flag) ticks.push(t);
-    var grid = ticks.slice(1, -1).map(function (t) {
-      return t === flag ? "" : '<span class="gridline" style="left:' + pct(t).toFixed(2) + '%"></span>';
-    }).join("") + '<span class="flagline" style="left:' + pct(flag).toFixed(2) + '%"></span>';
-
-    function row(p) {
-      var isUnder = p.weeks_cover < flag;
-      var capped = p.weeks_cover > axisMax;
-      var tip = [p.name + " (" + p.sku + ")",
-        num(p.weeks_cover, 1) + " weeks of cover" + (isUnder ? " — under " + flag + "-wk flag" : ""),
-        num(p.on_hand, 0) + " on hand · " + num(p.weekly_rate, 1) + " / wk",
-        sf.isStale ? "3PL snapshot " + asOf + " — stale, not live" : "As of " + asOf];
-      return '<div class="hrow">' +
-        '<div class="hname">' + esc(p.name) + (isUnder ? '<span class="tag red">Under ' + esc(flag) + " wks</span>" : "") +
-          '<div class="sku">' + esc(p.sku) + " · " + num(p.on_hand, 0) + " on hand · " + num(p.weekly_rate, 1) + " / wk</div></div>" +
-        '<div class="track">' + grid +
-          '<div class="bar ' + (isUnder ? "loss" : "gain") + (capped ? " capped" : "") +
-            '" style="left:0;width:' + pct(p.weeks_cover).toFixed(2) + '%"' + tipAttr(tip) + "></div></div>" +
-        '<div class="hval">' + bandDot(stockBand(p.weeks_cover),
-            stockBandText(stockBand(p.weeks_cover)) +
-            (sf.isStale ? ", as of " + asOf + " snapshot" : "")) +
-          num(p.weeks_cover, 1) + (capped ? " ›" : "") + "</div></div>";
-    }
-    function specialRow(p) {
-      return '<div class="hrow">' +
-        '<div class="hname">' + esc(p.name) + '<span class="tag grey">Not tracked</span>' +
-          '<div class="sku">' + esc(p.sku) + " · " + num(p.on_hand, 0) + " on hand · " + num(p.weekly_rate, 1) + " / wk</div></div>" +
-        '<div class="track untracked-track"' + tipAttr([p.name + " (" + p.sku + ")", p.note]) + '><span class="untracked">' + esc(p.note) + "</span></div>" +
-        '<div class="hval">' + bandDot(null, "not tracked, see note") + "—</div></div>";
+    // Inventory column
+    var invCol;
+    if (inv.error) {
+      invCol = '<div class="stat-card c-inventory">' + STAT_ICONS.inventory + '<div class="s-lbl">Inventory' + STAR + '</div><div class="s-val">Not available</div>' +
+        '<div class="s-cap">' + esc(inv.error) + "</div>" + sectionOwnerLine("stock") + "</div>";
+    } else {
+      invCol = '<div class="stat-card c-inventory">' + STAT_ICONS.inventory + '<div class="s-lbl">Inventory' + STAR + "</div>" +
+        '<div class="s-val">' + inv.counts.red + ' <span style="font-size:13px;">of ' + inv.items.length + "</span></div>" +
+        bandPill("inventory", inv.band) + ' <span class="band-pill stale">' + esc(staleLabel(inv)) + "</span>" +
+        '<div class="s-cap">SKUs at or below their reorder point · snapshot, not live</div>' + sectionOwnerLine("stock") + "</div>" +
+        '<div class="sub-card"><div class="sc-title">Band breakdown</div><div class="mini-count-row">' +
+          '<div class="mini-count" style="border-top:3px solid var(--red);"><div class="mcv">' + inv.counts.red + '</div><div class="mcl">PO Now</div></div>' +
+          '<div class="mini-count" style="border-top:3px solid var(--amber);"><div class="mcv">' + inv.counts.amber + '</div><div class="mcl">Watch</div></div>' +
+          '<div class="mini-count" style="border-top:3px solid var(--green);"><div class="mcv">' + inv.counts.green + '</div><div class="mcl">Healthy Stock</div></div>' +
+        "</div>" + (inv.problems.length ? '<div class="det na" style="margin-top:6px;">' + esc(inv.problems.join("; ")) + "</div>" : "") + "</div>" +
+        '<div class="sub-card" style="background:#F8FAFF;"><div class="sc-title">Year-over-year comparison</div>' +
+          '<div class="det">Not available — D10-07 only covers ' + esc(dayLabel(inv.firstSnapshot)) + " – " + esc(dayLabel(inv.snapshotDate)) +
+          ". No " + (inv.snapshotDate.getFullYear() - 1) + " stock snapshot exists.</div></div>";
     }
 
-    var axis = '<div class="axis"><div></div><div class="ticks">' + ticks.map(function (t, i) {
-      var cls = i === 0 ? "start" : (i === ticks.length - 1 ? "end" : "");
-      if (t === flag) cls += " flag";
-      return '<span class="' + cls + '" style="left:' + pct(t).toFixed(2) + '%">' + t + (i === ticks.length - 1 ? "+" : "") + "</span>";
-    }).join("") + "</div><div></div></div>";
+    // Marketing column
+    var mktCol;
+    if (mkt.error) {
+      mktCol = '<div class="stat-card c-marketing">' + STAT_ICONS.marketing + '<div class="s-lbl">Marketing &amp; Ads' + STAR + '</div><div class="s-val">Not available</div>' +
+        '<div class="s-cap">' + esc(mkt.error) + "</div>" + sectionOwnerLine("profit") + "</div>";
+    } else {
+      var rangeTxt = mkt.recent.length ? shortMonth(mkt.recent[0].ym).slice(0, 3) + "–" + shortMonth(mkt.recent[mkt.recent.length - 1].ym) : "";
+      var qLabel = mkt.isQ1 ? "Q1 " + mkt.latestYear : rangeTxt;
+      mktCol = '<div class="stat-card c-marketing">' + STAT_ICONS.marketing + '<div class="s-lbl">Marketing &amp; Ads' + STAR + "</div>" +
+        '<div class="s-val">' + (mkt.q1Spend !== null ? money(mkt.q1Spend) : "Not available") + "</div>" +
+        '<div class="s-sub">' + (mkt.pct !== null ? (mkt.pct * 100).toFixed(1) + "% of revenue, " + esc(qLabel) : "% of revenue not available" + (mkt.revError ? " — " + esc(mkt.revError) : "")) + "</div>" +
+        bandPill("adSpend", mkt.band) + '<div class="s-cap">BidWorks ad spend, ' + esc(rangeTxt) + (mkt.pct !== null && rev.q1Open && rev.q1Open.length ? " · revenue includes " + esc(rev.q1Open.join(", ")) + ", not yet closed" : "") + "</div>" +
+        calcLine() + sectionOwnerLine("profit") + "</div>";
+      mktCol += '<div class="sub-card"><div class="sc-title">Ad spend % of revenue, Q1 v. Q1</div>' +
+        (mkt.pct === null || mkt.pctPrev === null ? notAvailable(mkt.revError || "Q1 spend or revenue missing")
+          : compareBars(mkt.prevYear, mkt.pctPrev, mkt.latestYear, mkt.pct, "#7C3AED", function (v) { return (v * 100).toFixed(2) + "%"; }) +
+            '<div class="det" style="text-align:center;"><b style="color:' + (mkt.pct <= mkt.pctPrev ? "var(--green)" : "var(--red)") + '">' +
+              ((mkt.pct - mkt.pctPrev) * 100 >= 0 ? "+" : "−") + Math.abs((mkt.pct - mkt.pctPrev) * 100).toFixed(1) + " pts, " + (mkt.pct <= mkt.pctPrev ? "improving" : "worsening") + "</b></div>" +
+            openNote(rev.q1Open)) + "</div>";
+      mktCol += '<div class="sub-card"><div class="sc-title">Ad Spend per Agency — Q1 ' + esc(mkt.prevYear) + " vs. Q1 " + esc(mkt.latestYear) + "</div>" +
+        '<div style="display:flex;gap:12px;margin-bottom:6px;flex-wrap:wrap;">' +
+          '<div style="flex:1;min-width:150px;"><div class="det" style="margin-bottom:4px;">BidWorks</div>' +
+            (mkt.q1Spend === null || mkt.q1SpendPrev === null ? notAvailable("Q1 spend missing")
+              : compareBars(mkt.prevYear, mkt.q1SpendPrev, mkt.latestYear, mkt.q1Spend, "#2563EB", money)) + "</div>" +
+          '<div style="flex:1;min-width:110px;"><div class="det" style="margin-bottom:4px;">Handle Social</div>' +
+            '<div class="det unknown" style="margin-top:20px;text-align:center;">No Data, both years</div></div></div>' +
+        (mkt.q1Spend !== null && mkt.q1SpendPrev !== null
+          ? '<div class="det" style="text-align:center;">BidWorks: ' + (mkt.q1Spend === mkt.q1SpendPrev ? "no change" + (mkt.flat !== null ? " — flat " + money(mkt.flat) + "/mo both years" : "") : signedPct((mkt.q1Spend - mkt.q1SpendPrev) / mkt.q1SpendPrev)) + "</div>" : "") +
+        "</div>";
+      mktCol += '<div class="sub-card"><div class="sc-title">Context (annual only)</div>' +
+        (mkt.profitError ? notAvailable(mkt.profitError)
+          : '<div class="det">Net profit after ads, FY2025: <b>' + (mkt.profitTotal !== null ? money(mkt.profitTotal) : "Not available") + "</b> · FY2025 annual — no monthly breakdown exists.</div>") + "</div>";
+    }
 
-    var banner = sf.isStale
-      ? '<div class="banner"><strong>Stale snapshot — 3PL stock as of ' + esc(asOf) + ", not live</strong>" +
-          esc(staleNote || "") + "</div>"
-      : "";
+    // Cash column
+    var cashHas = cash.cash && cash.cash.value !== null && cash.cash.status !== "no_data";
+    var cashCol = '<div class="stat-card c-cash">' + STAT_ICONS.cash + '<div class="s-lbl">Cash' + STAR + "</div>" +
+      (cash.cashError ? '<div class="s-val">Not available</div><div class="s-cap">' + esc(cash.cashError) + "</div>"
+        : '<div class="s-val">' + (cashHas ? money(cash.cash.value) : "No Data") + "</div>" + '<span class="band-pill grey">' + (cashHas ? "Live" : "No Data") + "</span>" +
+          '<div class="s-cap">' + (cashHas ? "As of " + esc(cash.cash.asOf || "—") : "Needs a bank feed") + "</div>") +
+      sectionOwnerLine("cash") + "</div>";
+    cashCol += '<div class="sub-card"><div class="sc-title">Known upcoming outflows</div>' +
+      (cash.invError ? notAvailable(cash.invError)
+        : '<div class="val" style="font-size:18px;">' + money(cash.projectedTotal) + "</div>" +
+          '<div class="det">' + (cash.projected.length
+            ? cash.projected.map(function (p) { return "BidWorks retainer " + esc(dayLabel(p.date)) + ", " + money(p.amount) + " — projected, not yet invoiced"; }).join("<br>")
+            : "No projected invoices in this window") +
+          '</div><div class="det" style="margin-top:4px;">Next 8 weeks: ' + esc(dayLabel(cash.windowStart)) + " – " + esc(dayLabel(cash.windowEnd)) +
+          (cash.latestInvoice ? " · pattern from the latest invoice, " + esc(dayLabel(cash.latestInvoice.date)) + " " + money(cash.latestInvoice.amount) : "") + "</div>") + "</div>";
+    cashCol += '<div class="sub-card" style="background:#F8FAFF;"><div class="sc-title">Year-over-year comparison</div>' +
+      '<div class="det">Not available — D10-09 only covers ' + esc(cash.invoiceYears ? cash.invoiceYears.join(", ") : "2026") + " invoices.</div></div>";
 
-    return '<section class="card wide" id="stock">' +
-      '<div class="card-head"><h2>Weeks of stock cover</h2>' +
-        (sf.isStale ? pill("amber", "Stale · " + (sf.snapshotDate || "snapshot")) : "") + "</div>" +
-      '<p class="period">Sorted lowest cover first · ' + sf.under.length + " of " + sf.regular.length +
-        " SKUs under the " + esc(flag) + "-week flag in this snapshot" +
-        (sf.isStale ? " · all bars as of " + esc(asOf) : "") + "</p>" +
-      banner +
-      '<div class="legend"><span><i style="background:var(--gain)"></i>At or above flag</span>' +
-        '<span><i style="background:var(--loss)"></i>Under flag</span>' +
-        '<span><i class="dash"></i>' + esc(flag) + "-week flag</span>" +
-        "<span>Axis in weeks · › bar runs past " + axisMax + "</span></div>" +
-      '<div class="legend band-key"><span>Band:</span>' +
-        '<span><span class="band green"></span>Healthy, ' + BAND_RULES.stockHealthyMinWeeks + "+ weeks</span>" +
-        '<span><span class="band amber"></span>At Risk, ' + BAND_RULES.stockAtRiskMinWeeks + "–" + BAND_RULES.stockHealthyMinWeeks + " weeks</span>" +
-        '<span><span class="band red"></span>Danger, under ' + BAND_RULES.stockAtRiskMinWeeks + " weeks</span>" +
-        '<span><span class="band none"></span>Not banded</span></div>' +
-      '<div class="hbars">' + sf.regular.map(row).join("") + sf.special.map(specialRow).join("") + "</div>" +
-      axis +
-      '<div class="source">As of: ' + esc(s.as_of || "—") + "<br>Source: " + esc(s.source || "—") + "</div>" +
-      calcLine() +
-    "</section>";
+    return legendBox() + '<div class="row r4">' +
+      '<div class="kpi-col">' + revCol + "</div>" + '<div class="kpi-col">' + invCol + "</div>" +
+      '<div class="kpi-col">' + mktCol + "</div>" + '<div class="kpi-col">' + cashCol + "</div></div>";
   }
 
-  // ---------- Profit after ads ----------
-  function niceCeil(v) {
-    if (v <= 0) return 1;
-    var step = Math.pow(10, Math.floor(Math.log10(v))) / 2;
-    return Math.ceil(v / step) * step;
-  }
-  function renderProfit(pa, stock) {
-    // Products the stock data marks as Kickstarter-only: their profit comes from Kickstarter sales,
-    // which the Revenue card excludes.
-    var ksSkus = (stock && stock.products || []).filter(function (p) { return /kickstarter/i.test(p.note || ""); })
-      .map(function (p) { return p.sku; });
-    var ksNames = pa.products.filter(function (p) { return ksSkus.indexOf(p.sku) !== -1; })
-      .map(function (p) { return p.name; });
-    var items = pa.products.slice().sort(function (a, b) {
-      return b.net_contribution_after_ads - a.net_contribution_after_ads;
-    });
-    var vals = items.map(function (p) { return p.net_contribution_after_ads; });
-    // Symmetric scale so zero sits in the centre.
-    var ext = niceCeil(Math.max.apply(null, vals.map(Math.abs)));
-    var pos = function (v) { return 50 + (v / ext) * 50; };
-    var negCount = vals.filter(function (v) { return v < 0; }).length;
-    var total = vals.reduce(function (a, b) { return a + b; }, 0);
-
-    var rows = items.map(function (p) {
-      var v = p.net_contribution_after_ads;
-      var w = Math.abs(v) / ext * 50;
-      var left = v < 0 ? 50 - w : 50;
-      var tip = [p.name + " (" + p.sku + ")", "Net contribution after ads: " + money(v), "FY2025 annual"];
-      return '<div class="hrow">' +
-        '<div class="hname">' + esc(p.name) + '<div class="sku">' + esc(p.sku) + "</div></div>" +
-        '<div class="track"><span class="zeroline" style="left:50%"></span>' +
-          '<div class="bar ' + (v < 0 ? "loss" : "gain") + '" style="left:' + left.toFixed(2) + "%;width:" + w.toFixed(2) + '%"' + tipAttr(tip) + "></div></div>" +
-        '<div class="hval">' + bandDot(profitBand(v), v > 0 ? "positive after ads" : (v < 0 ? "negative after ads" : "break-even")) +
-          money(v) + "</div></div>";
+  // ---------- Details: Revenue ----------
+  function monthTable(rev, key, withBooks) {
+    var y0 = rev.prevYear, y1 = rev.thisYear, a = monthSeries(rev, y0, key), b = monthSeries(rev, y1, key);
+    var books = {};
+    rev.byYear(y1).forEach(function (m) { books[+m.ym.slice(5, 7) - 1] = m.books; });
+    var rows = MONTHS_SHORT.map(function (l, i) {
+      return "<tr><td>" + l + '</td><td class="num">' + (a.data[i] !== null ? money2(a.data[i]) : "—") + '</td><td class="num">' + (b.data[i] !== null ? money2(b.data[i]) : "—") + "</td>" +
+        (withBooks ? "<td>" + esc(books[i] || "—") + "</td>" : "") + "</tr>";
     }).join("");
+    return '<div class="table-wrap"><table class="dtbl"><tr><th>Month</th><th class="num">' + y0 + '</th><th class="num">' + y1 + "</th>" +
+      (withBooks ? "<th>Books " + y1 + "</th>" : "") + "</tr>" + rows + "</table></div>";
+  }
+  function renderDetailsRevenue(rev) {
+    if (rev.error) return sectionOwnerHead("revenue") + '<div class="chart-card">' + notAvailable(rev.error) + sourcedLine() + "</div>";
+    var L = rev.latest, LY = rev.lastYear, y0 = rev.prevYear, y1 = rev.thisYear;
+    var s25 = monthSeries(rev, y0, "total"), s26 = monthSeries(rev, y1, "total");
+    var paceTxt = rev.ytdTotal !== null && rev.fyTotal
+      ? money2(rev.ytdTotal) + " is " + (rev.ytdTotal / rev.fyTotal * 100).toFixed(1) + "% of FY" + y0 + "'s full-year total (" + money2(rev.fyTotal) + ")"
+      : null;
+    var channelNow = function (key, label) {
+      var cur = L ? L[key] : null, prev = LY ? LY[key] : null, band = revenueBand(cur, prev);
+      return "<div><div class=\"det\">" + label + ", " + esc(L ? shortMonth(L.ym) : "") + '</div><div class="val" style="font-size:18px;">' +
+        (cur !== null ? money2(cur) : "—") + " " + bandPill("revenue", band) + "</div>" +
+        (prev !== null && cur !== null ? '<div class="det">vs. ' + money2(prev) + " " + esc(shortMonth(LY.ym)) + " · " + signedPct((cur - prev) / prev) + "</div>" : "") + "</div>";
+    };
+    var q1Row = function (key, label) {
+      var a = rev.q1(y0, key), b = rev.q1(y1, key), fy = rev.fyChannel(key);
+      return "<tr><td>" + label + '</td><td class="num">' + (a !== null ? money2(a) : "—") + '</td><td class="num">' + (b !== null ? money2(b) : "—") + "</td>" +
+        '<td class="num" style="color:' + (a && b !== null && b >= a ? "var(--green)" : "var(--red)") + '">' + (a && b !== null ? signedPct((b - a) / a) : "—") + "</td>" +
+        '<td class="num">' + (fy !== null ? money2(fy) : "—") + "</td></tr>";
+    };
+    var avgCh = function (key) { var t = rev.fyChannel(key); return t !== null ? t / 12 : null; };
+    return sectionOwnerHead("revenue") +
+      '<div class="summary-widget light"><div class="lbl">Current performance' + STAR + "</div>" +
+        '<div class="val" style="font-size:24px;">' + (L ? money2(L.total) : "Not available") + " " + bandPill("revenue", rev.band) + "</div>" +
+        '<div class="det">' + (L ? esc(shortMonth(L.ym)) + ", latest closed month" + (LY ? " · vs. " + money2(LY.total) + " " + esc(shortMonth(LY.ym)) + " → " + signedPct((L.total - LY.total) / LY.total) : "") : "") +
+        " · Amazon + Shopify, Kickstarter excluded</div>" + sourcedLine() + "</div>" +
+      '<div class="chart-card"><h2 class="section">Same months, year over year</h2>' +
+        '<div class="det" style="margin-bottom:6px;">' + y0 + " (full year) vs. " + y1 + " (" + rev.ytdMonths + " month" + (rev.ytdMonths === 1 ? "" : "s") + " so far" +
+          (rev.ytdOpen.length ? ", " + esc(rev.ytdOpen.join(", ")) + " not yet closed" : "") + ")" +
+          (rev.fyAvg !== null ? " · dashed line = FY" + y0 + " monthly average, " + money2(rev.fyAvg) : "") + "</div>" +
+        lineChart([{ data: s25.data, color: "#CBD5E1", label: y0 }, { data: s26.data, open: s26.open, color: "#4F46E5", label: y1, dots: true }], rev.fyAvg,
+          { label: "Monthly revenue, " + y0 + " vs " + y1, avgLabel: "FY" + y0 + " average" }) + sourcedLine() + "</div>" +
+      '<div class="chart-card"><h2 class="section">Monthly figures</h2>' + monthTable(rev, "total", true) + sourcedLine() + "</div>" +
+      '<h3 class="group-head">Revenue by Channel</h3>' +
+      '<div class="summary-widget light"><div class="lbl">Current split</div>' +
+        '<div style="display:flex;gap:24px;margin-top:6px;flex-wrap:wrap;">' + channelNow("amazon", "Amazon") + channelNow("shopify", "Shopify") + "</div>" +
+        '<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--bd);"><div class="det"><b>FY' + y1 + " YTD pace:</b> " +
+          (paceTxt ? esc(paceTxt) + " — a pace figure, not a growth rate (" + rev.ytdMonths + " months so far vs. 12 months already closed)." : "Not available.") + "</div>" +
+          openNote(rev.ytdOpen) + "</div>" + sourcedLine() + "</div>" +
+      '<div class="row r2">' +
+        '<div class="chart-card"><h2 class="section">Amazon, year over year</h2>' +
+          lineChart([{ data: monthSeries(rev, y0, "amazon").data, color: "#CBD5E1", label: y0 }, { data: monthSeries(rev, y1, "amazon").data, open: monthSeries(rev, y1, "amazon").open, color: "#FF9900", label: y1, dots: true }],
+            avgCh("amazon"), { w: 460, h: 180, label: "Amazon monthly revenue", avgLabel: "FY" + y0 + " average" }) + sourcedLine() + "</div>" +
+        '<div class="chart-card"><h2 class="section">Shopify, year over year</h2>' +
+          lineChart([{ data: monthSeries(rev, y0, "shopify").data, color: "#CBD5E1", label: y0 }, { data: monthSeries(rev, y1, "shopify").data, open: monthSeries(rev, y1, "shopify").open, color: "#96BF48", label: y1, dots: true }],
+            avgCh("shopify"), { w: 460, h: 180, label: "Shopify monthly revenue", avgLabel: "FY" + y0 + " average" }) + sourcedLine() + "</div>" +
+      "</div>" +
+      '<div class="chart-card"><h2 class="section">Both channels — Q1 comparison</h2><div class="table-wrap"><table class="dtbl">' +
+        '<tr><th>Channel</th><th class="num">Q1 ' + y0 + '</th><th class="num">Q1 ' + y1 + '</th><th class="num">Change</th><th class="num">FY' + y0 + "</th></tr>" +
+        q1Row("amazon", "Amazon") + q1Row("shopify", "Shopify") + "</table></div>" + openNote(rev.q1Open) + sourcedLine() + "</div>" +
+      '<div class="chart-card"><h2 class="section">Amazon — monthly detail</h2>' + monthTable(rev, "amazon", false) + sourcedLine() + "</div>" +
+      '<div class="chart-card"><h2 class="section">Shopify — monthly detail</h2>' + monthTable(rev, "shopify", false) + sourcedLine() + "</div>" +
+      '<div class="chart-card" style="background:#F8FAFF;"><h2 class="section">FY' + y1 + " YTD vs. FY" + y0 + " full year — pace, not a growth figure</h2>" +
+        '<div class="det" style="margin-bottom:8px;">Different scopes on purpose: ' + rev.ytdMonths + " months so far vs. 12 months already closed.</div>" +
+        (rev.ytdTotal !== null && rev.fyTotal
+          ? '<div style="font-size:20px;font-weight:700;">' + money2(rev.ytdTotal) + ' <span style="font-size:13px;font-weight:500;color:var(--mut)">is ' +
+            (rev.ytdTotal / rev.fyTotal * 100).toFixed(1) + "% of FY" + y0 + "'s full-year total (" + money2(rev.fyTotal) + ")</span></div>"
+          : notAvailable("FY" + y0 + " is incomplete in d10_02")) +
+        openNote(rev.ytdOpen) + sourcedLine() + "</div>";
+  }
 
-    var axis = '<div class="axis"><div></div><div class="ticks">' +
-      '<span class="start" style="left:0">' + moneyShort(-ext) + " loss</span>" +
-      '<span style="left:50%">$0</span>' +
-      '<span class="end" style="left:100%">' + moneyShort(ext) + " gain</span>" +
-      "</div><div></div></div>";
+  // ---------- Details: Inventory ----------
+  function renderDetailsInventory(inv) {
+    if (inv.error) return sectionOwnerHead("stock") + '<div class="chart-card">' + notAvailable(inv.error) + "</div>";
+    var rows = inv.items.map(function (i) {
+      var pct = i.rp > 0 && i.avail !== null ? i.avail / i.rp * 100 : null;
+      var color = i.band ? COLORS[i.band] : "#94A3B8";
+      var isFlag = i.code === GRILL_PRO_ITEM;
+      return '<tr class="' + (isFlag ? "flag-row" : "") + '"><td>' + (isFlag ? '<span title="Flagged in Fix Log" aria-label="Flagged in Fix Log">⚠️</span> ' : "") + esc(i.name) +
+          '<div class="det" style="font-size:11px;">' + esc(i.code) + "</div></td>" +
+        '<td class="num">' + (i.avail !== null ? num(i.avail, 0) : "—") + "</td>" +
+        '<td class="num">' + (i.expected ? num(i.expected, 0) + '<div class="det" style="font-size:11px;">' + esc([i.poRef, i.expectedDate ? "due " + dayLabel(parseDay(i.expectedDate)) : ""].filter(Boolean).join(", ")) + "</div>" : "—") + "</td>" +
+        '<td class="num">' + num(i.rate, 2) + "/day</td>" +
+        '<td class="num">' + num(i.rp, 0) + "</td>" +
+        '<td style="white-space:nowrap;">' + (pct !== null ? '<div class="track"' + tipAttr([i.name, num(i.avail, 0) + " on hand vs reorder point " + num(i.rp, 0)]) + '><div class="fill2" style="width:' + Math.min(100, pct).toFixed(1) + "%;background:" + color + '"></div></div> ' + pct.toFixed(0) + "%" : "—") + "</td>" +
+        '<td class="num">' + (i.cover !== null ? num(i.cover, 1) : "—") + "</td>" +
+        '<td style="color:' + color + ';font-weight:700;">' + (i.band ? esc(BANDS.inventory.words[i.band]) : "—") + "</td></tr>" +
+        (isFlag ? '<tr class="flag-note"><td colspan="8">⚠️ ' + reorderOwnerText() +
+          " — Lena's account: ~1 month of cover, no reorder placed. This file (" + esc(dayLabel(inv.snapshotDate)) + "): " + (i.avail !== null ? num(i.avail, 0) : "—") + " available, ≈" +
+          (i.cover !== null ? num(i.cover, 0) : "—") + " days of cover.</td></tr>" : "");
+    }).join("");
+    return sectionOwnerHead("stock") +
+      '<div class="chart-card"><h2 class="section">Reorder status — full detail' + STAR + ' <span class="stale-chip">' + esc(staleLabel(inv)) + "</span></h2>" +
+        '<div class="det" style="margin-bottom:10px;">Reorder point = daily sell-through rate × 8 weeks (confirmed: 6wk factory + 2wk buffer, Stacey, 13 Oct 2026) · ' +
+          "daily rate = (Amazon units ordered − refunded + Shopify net quantity) ÷ " + inv.historyDays + " days of history (" + esc(dayLabel(inv.historyFrom)) + " – " + esc(dayLabel(inv.historyTo)) + ") · " +
+          "no peak/low season split in our data · stock as of " + esc(dayLabel(inv.snapshotDate)) + " · Griddle Plate excluded (Kickstarter-only)</div>" +
+        (inv.problems.length ? '<div class="flag-box">' + esc(inv.problems.join("; ")) + "</div>" : "") +
+        '<div class="table-wrap"><table class="dtbl"><tr><th>Product</th><th class="num">On Hand</th><th class="num">On the Way</th><th class="num">Daily Rate</th><th class="num">Reorder Pt</th><th>Stock vs. RP</th><th class="num">Days Cover</th><th>Status</th></tr>' +
+        rows + "</table></div></div>";
+  }
 
-    return '<section class="card wide" id="profit">' +
-      '<div class="card-head"><h2>Profit after ads, by product</h2>' + pill("grey", "FY2025 annual — not monthly") + "</div>" +
-      '<p class="period">Net contribution after ad spend, full year FY2025 · ' +
-        (negCount ? pill("red", negCount + " loss-making") + " " : "") +
-        '<span class="nowrap">Net total after ads (FY2025): ' + money(total) + "</span></p>" +
-      (ksNames.length
-        ? '<div class="banner scope">' + esc("Includes Kickstarter revenue for the " + ksNames.join(" and ") +
-            (ksNames.length > 1 ? " (their only sales channel)" : " (its only sales channel)") +
-            "; the Revenue card above excludes Kickstarter.") + "</div>"
-        : "") +
-      '<div class="legend"><span><i style="background:var(--loss)"></i>Loss (left of $0)</span>' +
-        '<span><i style="background:var(--gain)"></i>Gain (right of $0)</span></div>' +
-      '<div class="legend band-key"><span>Band:</span>' +
-        '<span><span class="band green"></span>Green, positive</span>' +
-        '<span><span class="band red"></span>Red, negative</span></div>' +
-      '<div class="hbars">' + rows + "</div>" +
-      axis +
-      '<div class="source">As of: ' + esc(pa.as_of || "—") + "<br>Source: " + esc(pa.source || "—") + "</div>" +
-    "</section>";
+  // ---------- Details: Marketing & Ads ----------
+  function renderDetailsMarketing(mkt, rev) {
+    if (mkt.error && mkt.profitError) return sectionOwnerHead("profit") + '<div class="chart-card">' + notAvailable(mkt.error) + "</div>";
+    var html = sectionOwnerHead("profit");
+    if (mkt.error) {
+      html += '<div class="chart-card">' + notAvailable(mkt.error) + "</div>";
+    } else {
+      var ytdPct = mkt.ytdSpend !== null && mkt.ytdRevenue ? mkt.ytdSpend / mkt.ytdRevenue : null;
+      var fyPct = mkt.fySpendPrev !== null && mkt.fyRevenuePrev ? mkt.fySpendPrev / mkt.fyRevenuePrev : null;
+      var ytdRange = mkt.ytdMonths ? "Jan–" + shortMonth(mkt.latestYear + "-" + ("0" + mkt.ytdMonths).slice(-2)) : "";
+      html += '<h3 class="group-head" style="margin-top:0;">' + esc(mkt.latestYear) + " Year to Date</h3>" +
+        '<div class="row r2">' +
+          '<div class="chart-card light"><div class="lbl">Ad Spend, YTD</div><div class="val" style="font-size:22px;">' + (mkt.ytdSpend !== null ? money(mkt.ytdSpend) : "—") + " " + bandPill("adSpend", adSpendBand(ytdPct)) + "</div>" +
+            '<div class="det">' + (ytdPct !== null ? (ytdPct * 100).toFixed(1) + "% of " + money2(mkt.ytdRevenue) + " revenue (Amazon + Shopify), " + esc(ytdRange) : "% of revenue not available") + "</div>" +
+            openNote(rev && !rev.error ? rev.ytdOpen : []) + calcLine() + "</div>" +
+          '<div class="chart-card"><div class="lbl">By agency</div>' +
+            '<div style="display:flex;gap:18px;flex-wrap:wrap;">' +
+              '<div style="flex:1;"><div class="det">BidWorks</div><div class="val" style="font-size:18px;">' + (mkt.ytdSpend !== null ? money(mkt.ytdSpend) : "—") + "</div></div>" +
+              '<div style="flex:1;"><div class="det">Handle Social</div><div class="val unknown" style="font-size:16px;">No source file</div></div></div>' +
+            '<div class="det" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd);">Q1 ' + esc(mkt.prevYear) + " vs. Q1 " + esc(mkt.latestYear) + ": BidWorks " +
+              (mkt.q1Spend !== null && mkt.q1SpendPrev !== null ? (mkt.q1Spend === mkt.q1SpendPrev ? money(mkt.q1Spend) + " both years (flat)" : money(mkt.q1SpendPrev) + " → " + money(mkt.q1Spend)) : "not available") +
+              " · Handle Social not comparable, no data either year.</div></div>" +
+        "</div>" +
+        '<h3 class="group-head">FY' + esc(mkt.prevYear) + "</h3>" +
+        '<div class="row r2">' +
+          '<div class="chart-card light"><div class="lbl">Ad Spend, Full Year</div><div class="val" style="font-size:22px;">' + (mkt.fySpendPrev !== null ? money(mkt.fySpendPrev) : "—") + " " + bandPill("adSpend", adSpendBand(fyPct)) + "</div>" +
+            '<div class="det">' + (fyPct !== null ? (fyPct * 100).toFixed(1) + "% of " + money2(mkt.fyRevenuePrev) + " revenue (Amazon + Shopify, Kickstarter excluded)" : "% of revenue not available") + "</div>" + calcLine() + "</div>" +
+          '<div class="chart-card"><div class="lbl">Net profit after ads</div><div class="val" style="font-size:22px;">' + (mkt.profitTotal !== null && mkt.profitTotal !== undefined ? money(mkt.profitTotal) : "—") + "</div>" +
+            '<div class="det">' + (mkt.products ? mkt.products.filter(function (p) { return p.v > 0; }).length + " profitable · " + mkt.products.filter(function (p) { return p.v < 0; }).length + " losing money · FY2025 annual — no monthly breakdown exists" : esc(mkt.profitError || "")) + "</div></div>" +
+        "</div>";
+      html += '<h3 class="group-head">Agencies</h3><div class="row r2">' +
+        '<div class="chan-card"><div class="chan-top"><div class="chan-badge" style="background:#2563EB;">' + AGENCY_ICONS.bidworks + "</div>" +
+          '<div><div class="chan-name">BidWorks</div><div class="chan-val">' + (mkt.ytdSpend !== null ? money(mkt.ytdSpend) : "—") + "</div>" +
+          '<div class="chan-cap">YTD ' + esc(mkt.latestYear) + (mkt.fySpendPrev !== null ? " · " + money(mkt.fySpendPrev) + " FY" + esc(mkt.prevYear) : "") + "</div></div></div></div>" +
+        '<div class="chan-card"><div class="chan-top"><div class="chan-badge" style="background:#0D9488;">' + AGENCY_ICONS.handle + "</div>" +
+          '<div><div class="chan-name">Handle Social</div><div class="chan-val unknown">No Data</div><div class="chan-cap">No spend file</div></div></div></div>' +
+        "</div>";
+    }
+    html += '<h3 class="group-head">Profit after ads, by product</h3><div class="chart-card">';
+    if (mkt.profitError) {
+      html += notAvailable(mkt.profitError);
+    } else {
+      var items = mkt.products.slice().sort(function (p, q) { return p.v - q.v; });
+      var maxP = Math.max.apply(null, items.map(function (p) { return Math.abs(p.v); })) || 1;
+      html += '<div class="det" style="margin-bottom:10px;">FY2025 annual — no monthly breakdown exists · sorted lowest first</div>' +
+        items.map(function (p) {
+          var c = p.v >= 0 ? "#10B981" : "#E11D48";
+          return '<div class="profit-row"><div>' + esc(p.name) + '</div><div class="track"' + tipAttr([p.name, money(p.v) + " net after ads, FY2025"]) + '><div class="fill2" style="width:' +
+            (Math.abs(p.v) / maxP * 100).toFixed(1) + "%;background:" + c + '"></div></div><div class="pv" style="color:' + c + '">' + money(p.v) + "</div></div>";
+        }).join("");
+    }
+    return html + "</div>";
+  }
+
+  // ---------- Details: Cash ----------
+  function renderDetailsCash(cash, inv) {
+    var restock = !inv.error ? inv.items.filter(function (i) { return i.expected > 0; }) : [];
+    var lines = (cash.projected || []).map(function (p) {
+      return "<tr><td>BidWorks retainer — " + esc(MONTHS_SHORT[p.date.getMonth()]) + "</td><td>~" + esc(dayLabel(p.date)) + ' (projected, not yet invoiced)</td><td class="num">' + money(p.amount) +
+        "</td><td>Pattern from D10-09 (latest invoice " + esc(dayLabel(cash.latestInvoice.date)) + ")</td></tr>";
+    }).join("") +
+      restock.map(function (i) {
+        return "<tr><td>Inventory restock — " + esc(i.name) + "</td><td>" + (i.expectedDate ? "Due " + esc(dayLabel(parseDay(i.expectedDate))) : "Unknown") + '</td><td class="num unknown">Unknown — not in our files</td>' +
+          "<td>D10-07: " + num(i.expected, 0) + " units" + (i.poRef ? ", " + esc(i.poRef) : "") + " — no dollar value in our files</td></tr>";
+      }).join("") +
+      '<tr><td>3PL monthly invoice</td><td class="unknown">Unknown</td><td class="num unknown">Unknown</td><td>Not in our files</td></tr>' +
+      '<tr><td>Handle Social retainer</td><td class="unknown">Unknown</td><td class="num unknown">Unknown</td><td>No source file</td></tr>' +
+      '<tr><td>Payroll</td><td class="unknown">Unknown</td><td class="num unknown">Unknown</td><td>Not in our files</td></tr>';
+    var cashHas = cash.cash && cash.cash.value !== null && cash.cash.status !== "no_data";
+    return sectionOwnerHead("cash") +
+      '<div class="row r2">' +
+        '<div class="chart-card"><div class="lbl">Available Cash' + STAR + "</div>" +
+          (cash.cashError ? notAvailable(cash.cashError) : '<div class="val ' + (cashHas ? "" : "unknown") + '" style="font-size:20px;">' + (cashHas ? money(cash.cash.value) : "Unknown") + "</div>" +
+          '<div class="det">' + (cashHas ? "As of " + esc(cash.cash.asOf || "—") : "No bank feed or confirmed balance exists.") + "</div>") + "</div>" +
+        '<div class="chart-card"><div class="lbl">Known Upcoming Outflows, ' + esc(dayLabel(cash.windowStart)) + " – " + esc(dayLabel(cash.windowEnd)) + "</div>" +
+          (cash.invError ? notAvailable(cash.invError) : '<div class="val" style="font-size:20px;">' + money(cash.projectedTotal) + "</div>" +
+          '<div class="det">' + cash.projected.length + " projected BidWorks invoice" + (cash.projected.length === 1 ? "" : "s") +
+            (cash.projected.length ? " (" + cash.projected.map(function (p) { return MONTHS_SHORT[p.date.getMonth()]; }).join(", ") + ")" : "") + " · rest unknown</div>") + "</div>" +
+      "</div>" +
+      '<div class="chart-card"><h2 class="section">Upcoming outflows</h2><div class="table-wrap"><table class="dtbl">' +
+        '<tr><th>Item</th><th>Due</th><th class="num">Amount</th><th>Basis</th></tr>' + lines + "</table></div>" +
+        '<div class="flag-box"><b>Why this differs from the peer dashboard\'s $54,600 (their reported figure, not from our files):</b> ' +
+          "their total appears to include an already-paid March BidWorks invoice (likely counted twice), plus a Handle Social retainer and a supplier PO balance we have no source for. " +
+          "Our " + money(cash.projectedTotal || 0) + " counts only invoices that can be projected from D10-09.</div></div>";
+  }
+
+  function renderDetails(rev, inv, mkt, cash) {
+    var subs = [["d-rev", "Revenue"], ["d-inv", "Inventory"], ["d-mkt", "Marketing &amp; Ads"], ["d-cash", "Cash"]];
+    return legendBox() +
+      '<div class="subnav" role="tablist" aria-label="Details sections">' + subs.map(function (s, i) {
+        return '<button class="sub-btn' + (i ? "" : " active") + '" role="tab" id="sub-' + s[0] + '" aria-controls="' + s[0] + '" aria-selected="' + (i ? "false" : "true") + '"' + (i ? ' tabindex="-1"' : "") + ' data-sub="' + s[0] + '">' + s[1] + "</button>";
+      }).join("") + "</div>" +
+      '<div class="subpanel active" id="d-rev" role="tabpanel" aria-labelledby="sub-d-rev">' + renderDetailsRevenue(rev) + "</div>" +
+      '<div class="subpanel" id="d-inv" role="tabpanel" aria-labelledby="sub-d-inv">' + renderDetailsInventory(inv) + "</div>" +
+      '<div class="subpanel" id="d-mkt" role="tabpanel" aria-labelledby="sub-d-mkt">' + renderDetailsMarketing(mkt, rev) + "</div>" +
+      '<div class="subpanel" id="d-cash" role="tabpanel" aria-labelledby="sub-d-cash">' + renderDetailsCash(cash, inv) + "</div>";
+  }
+
+  // ---------- Data Notes ----------
+  function renderNotes(inv, cash) {
+    var gp = !inv.error ? inv.items.filter(function (i) { return i.code === GRILL_PRO_ITEM; })[0] : null;
+    var st = function (cls, text) { return '<span class="matrix-status ' + cls + '">' + esc(text) + "</span>"; };
+    var row = function (kpi, point, rule, status) { return "<tr><td>" + kpi + "</td><td>" + point + "</td><td>" + rule + "</td><td>" + status + "</td></tr>"; };
+    var grp = function (name) { return '<tr class="grpname"><td colspan="4">' + name + "</td></tr>"; };
+    return '<h2 class="section">Band wording by KPI</h2><div class="table-wrap"><table class="dtbl">' +
+        '<tr><th>KPI</th><th style="color:var(--red)">Red</th><th style="color:#92400E">Amber</th><th style="color:#047857">Green</th></tr>' +
+        "<tr><td>Revenue</td><td>Below target — flag to Lena (more than 10% below the same month last year)</td><td>Watch — within 10% of last year</td><td>On track (at or above the same month last year)</td></tr>" +
+        "<tr><td>Inventory</td><td>PO Now (on hand at or below the reorder point)</td><td>Watch — Next PO Cycle (within 14 days' sell-through above the reorder point)</td><td>Healthy Stock</td></tr>" +
+        "<tr><td>Marketing &amp; Ads (ad spend %)</td><td>PO Review (&gt;15%, proposed)</td><td>Watch (10–15%, proposed)</td><td>On track (≤10%, proposed)</td></tr>" +
+        "<tr><td>Marketing &amp; Ads (profit after ads)</td><td>Losing money — review ad spend</td><td>— (no amber tier)</td><td>Profitable</td></tr>" +
+      "</table></div>" +
+      '<div class="det" style="margin:10px 0 24px;">Marketing\'s ad-spend-% thresholds (15%/10%) are proposed by us, pending sign-off — not confirmed.</div>' +
+      '<h2 class="section">Decision Matrix</h2><div class="table-wrap"><table class="dtbl">' +
+        "<tr><th>KPI</th><th>Decision point</th><th>Current rule</th><th>Status</th></tr>" +
+        grp("Revenue") +
+        row("Revenue", "Kickstarter in/out (trend metrics)", "Excluded", st("decided", "Decided")) +
+        row("Revenue", "Comparison period", "Q1 v. Q1, plus a separate YTD-vs-full-year pace figure", st("decided", "Decided")) +
+        grp("Inventory") +
+        row("Inventory", "Reorder lead time", "8 weeks (6wk factory + 2wk buffer)", st("confirmed", "Confirmed — Stacey, 13 Oct 2026")) +
+        row("Inventory", "Peak/low season split", "Not used — no data exists", st("pending", "Pending — our PO Now count (" + (inv.error ? "—" : inv.counts.red) + ") differs from a peer pod's")) +
+        row("Inventory", "Grill Pro's real current count", "Lena: ~1 month of cover. File (" + (inv.error ? "D10-07" : esc(dayLabel(inv.snapshotDate))) + "): " +
+          (gp ? num(gp.avail, 0) + " available, ≈" + num(gp.cover, 0) + " days of cover" : "not available"), st("pending", "Pending — confirm with Marco")) +
+        grp("Marketing &amp; Ads") +
+        row("Marketing", "Main KPI metric", "Ad spend $, latest closed quarter (Q1), matching Revenue's cadence", st("decided", "Decided")) +
+        row("Marketing", "Band thresholds for ad-spend %", "Proposed: Green ≤10%, Amber 10–15%, Red &gt;15%", st("pending", "Pending — needs sign-off")) +
+        row("Marketing", "Handle Social spend", "No source file — not estimated", st("pending", "Pending — no source exists")) +
+        grp("Cash") +
+        row("Cash", "Discrepancy vs. a peer pod's total", "Our " + (cash.invError ? "—" : money(cash.projectedTotal)) + " excludes an apparent double-count and two lines we have no source for",
+          st("pending", "Pending — worth raising with them")) +
+      "</table></div>";
+  }
+
+  // ---------- Rows read from Supabase ----------
+  var lastLoaded = null;
+  function renderLoadReport(results) {
+    var total = 0, read = 0;
+    var body = TABLE_GROUPS.map(function (g) {
+      return '<tr class="grpname"><td colspan="3">' + esc(g.kpi) + "</td></tr>" + g.tables.map(function (t) {
+        var r = results[t[0]] || { ok: false, error: "Not read" };
+        if (r.ok) { total += r.rows.length; read += 1; }
+        return '<tr><td style="overflow-wrap:anywhere">' + esc(t[0]) + '</td><td class="num">' + (r.ok ? num(r.rows.length, 0) : "—") + "</td><td>" +
+          (r.ok ? '<span style="color:var(--green);font-weight:700;">✓</span> ' + esc(t[1]) : '<span style="color:var(--red);font-weight:700;">Failed:</span> ' + esc(r.error)) + "</td></tr>";
+      }).join("");
+    }).join("");
+    var stamp = lastLoaded ? lastLoaded.toLocaleString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+    return '<h2 class="section">Rows read from Supabase, by KPI</h2>' +
+      '<div class="det" style="margin-bottom:12px;">Last refreshed: <b>' + esc(stamp) + "</b> · build mode: manual (no scheduled job yet)</div>" +
+      '<div class="table-wrap"><table class="dtbl" id="load-report"><tr><th>Table</th><th class="num">Rows</th><th>Feeds</th></tr>' + body + "</table></div>" +
+      '<div class="det" style="margin-top:12px;"><b>' + num(total, 0) + " rows across " + read + " tables</b>" +
+        (read < ALL_TABLES.length ? " · " + (ALL_TABLES.length - read) + " of " + ALL_TABLES.length + " tables failed" : "") + "</div>";
   }
 
   // ---------- Tooltip ----------
@@ -1069,60 +982,59 @@
   app.addEventListener("focusout", hideTip);
   window.addEventListener("scroll", hideTip, { passive: true });
 
-  // The data file carries no approval field, so this status is set here by hand.
+  // ---------- Footer ----------
+  // The data carries no approval field, so this status is set here by hand.
   // Change it only once the coach has actually signed off on the schema.
   var SCHEMA_STATUS = "schema pending coach sign-off";
-
-  function renderFooter(d, loadedAt) {
-    var metrics = Object.keys(d).filter(function (k) {
-      return k !== "data_notes" && d[k] && typeof d[k] === "object" && !Array.isArray(d[k]);
-    }).length;
-    var stamp = loadedAt.toLocaleString("en-GB", {
-      day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short"
-    });
+  var KPI_COUNT = 4;   // Revenue, Inventory, Marketing & Ads, Cash
+  function renderFooter(loadedAt) {
+    var stamp = loadedAt.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
     var footer = document.getElementById("run-footer");
-    footer.innerHTML = metrics + " metrics · " +
-      '<span class="pending">' + esc(SCHEMA_STATUS) + "</span> · " +
-      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded its data from Supabase">' +
-      esc(stamp) + "</time>";
+    footer.innerHTML = KPI_COUNT + " metrics · " + '<span class="pending">' + esc(SCHEMA_STATUS) + "</span> · " +
+      'last run <time datetime="' + loadedAt.toISOString() + '" title="When this page last loaded its data from Supabase">' + esc(stamp) + "</time>";
     footer.hidden = false;
   }
 
+  // ---------- Tabs (top level and Details sub-tabs) ----------
+  function wireTabs(buttons, panelOf) {
+    function show(btn, focus) {
+      buttons.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+        panelOf(b).classList.toggle("active", on);
+      });
+      hideTip();
+      if (focus) btn.focus();
+    }
+    buttons.forEach(function (btn, i) {
+      btn.addEventListener("click", function () { show(btn); });
+      btn.addEventListener("keydown", function (e) {
+        var k = e.key, n = buttons.length, j = null;
+        if (k === "ArrowDown" || k === "ArrowRight") j = (i + 1) % n;
+        else if (k === "ArrowUp" || k === "ArrowLeft") j = (i - 1 + n) % n;
+        else if (k === "Home") j = 0;
+        else if (k === "End") j = n - 1;
+        if (j !== null) { e.preventDefault(); show(buttons[j], true); }
+      });
+    });
+  }
+  wireTabs(Array.prototype.slice.call(document.querySelectorAll(".tab-btn")), function (b) { return document.getElementById(b.dataset.tab); });
+
   function setPanel(id, html) { document.getElementById(id).innerHTML = html; }
 
-  function render(d, results) {
-    renderFooter(d, lastLoaded);
-    var notes = d.data_notes || [];
-    var staleNote = notes.filter(function (n) { return /stock on hand/i.test(n); })[0];
-    setPanel("summary", renderExecSummary(d, results));
-    setPanel("details", renderDetails(d, results, staleNote));
-    setPanel("notes", renderNotesTab(notes));
+  function render(results) {
+    renderFooter(lastLoaded);
+    var rev = revenueData(results);
+    var inv = inventoryData(results);
+    var mkt = marketingData(results, rev);
+    var cash = cashData(results, lastLoaded);
+    setPanel("summary", renderSummary(rev, inv, mkt, cash));
+    setPanel("details", renderDetails(rev, inv, mkt, cash));
+    setPanel("notes", renderNotes(inv, cash));
+    wireTabs(Array.prototype.slice.call(document.querySelectorAll(".sub-btn")), function (b) { return document.getElementById(b.dataset.sub); });
   }
-
-  // ---------- Tabs ----------
-  var tabButtons = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
-  function showTab(btn, focus) {
-    tabButtons.forEach(function (b) {
-      var on = b === btn;
-      b.classList.toggle("active", on);
-      b.setAttribute("aria-selected", on ? "true" : "false");
-      b.tabIndex = on ? 0 : -1;
-      document.getElementById(b.dataset.tab).classList.toggle("active", on);
-    });
-    hideTip();
-    if (focus) btn.focus();
-  }
-  tabButtons.forEach(function (btn, i) {
-    btn.addEventListener("click", function () { showTab(btn); });
-    btn.addEventListener("keydown", function (e) {
-      var k = e.key, n = tabButtons.length, j = null;
-      if (k === "ArrowDown" || k === "ArrowRight") j = (i + 1) % n;
-      else if (k === "ArrowUp" || k === "ArrowLeft") j = (i - 1 + n) % n;
-      else if (k === "Home") j = 0;
-      else if (k === "End") j = n - 1;
-      if (j !== null) { e.preventDefault(); showTab(tabButtons[j], true); }
-    });
-  });
 
   // ---------- Reading from Supabase ----------
   function errorText(err) {
@@ -1167,106 +1079,6 @@
     });
   }
 
-  // Rebuilds the exact object dashboard-data.json used to provide, so render() is unchanged.
-  function buildDashboard(t) {
-    function fail(name, msg) { var e = new Error(msg); e.table = name; throw e; }
-    function one(name) {
-      var r = t[name].rows;
-      if (r.length !== 1) fail(name, "Expected 1 row, got " + r.length);
-      return r[0];
-    }
-    function some(name) {
-      var r = t[name].rows;
-      if (!r.length) fail(name, "No rows");
-      return r;
-    }
-    // A missing value stays null (shown as Pending / No Data / "—"), never 0.
-    function num(name, v) {
-      if (v === null || v === undefined || v === "") return null;
-      var n = Number(v);
-      if (!isFinite(n)) fail(name, "Not a number: " + v);
-      return n;
-    }
-    var rv = one("dashboard_revenue_vs_last_year");
-    var sc = one("dashboard_weeks_of_stock_cover");
-    var pa = one("dashboard_profit_after_ads");
-    var ca = one("dashboard_cash_in_bank");
-    return {
-      data_notes: some("dashboard_data_notes").map(function (r) { return r.note; }),
-      revenue_vs_last_year: {
-        as_of: rv.as_of,
-        current_month_value: num("dashboard_revenue_vs_last_year", rv.current_month_value),
-        current_month_label: rv.current_month_label,
-        last_year_same_month: {
-          month: rv.last_year_same_month_month ? String(rv.last_year_same_month_month).slice(0, 7) : null,
-          amazon: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_amazon),
-          shopify: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_shopify),
-          total: num("dashboard_revenue_vs_last_year", rv.last_year_same_month_total)
-        },
-        source: rv.source,
-        scope: rv.scope
-      },
-      weeks_of_stock_cover: {
-        as_of: sc.as_of,
-        flag_under_weeks: num("dashboard_weeks_of_stock_cover", sc.flag_under_weeks),
-        products: some("dashboard_weeks_of_stock_cover_products").map(function (r) {
-          var t2 = "dashboard_weeks_of_stock_cover_products";
-          var p = { sku: r.sku, name: r.name, on_hand: num(t2, r.on_hand),
-                    weekly_rate: num(t2, r.weekly_rate), weeks_cover: num(t2, r.weeks_cover) };
-          if (r.note !== null && r.note !== undefined) p.note = r.note;
-          return p;
-        }),
-        source: sc.source
-      },
-      profit_after_ads: {
-        as_of: pa.as_of,
-        products: some("dashboard_profit_after_ads_products").map(function (r) {
-          return { sku: r.sku, name: r.name,
-                   net_contribution_after_ads: num("dashboard_profit_after_ads_products", r.net_contribution_after_ads) };
-        }),
-        source: pa.source
-      },
-      cash_in_bank: {
-        as_of: ca.as_of,
-        value: num("dashboard_cash_in_bank", ca.value),
-        status: ca.status,
-        note: ca.note
-      }
-    };
-  }
-
-  // d10 tables that feed figures on this page (first used in the redesign); the rest are counted only.
-  var D10_USED = {
-    d10_02_revenue_by_month: "revenue by month, channel cards, month-over-month, Overall Revenue",
-    d10_08_bidworks_monthly_report: "BidWorks card"
-  };
-  var lastLoaded = null;
-
-  function renderLoadReport(results) {
-    var total = 0, read = 0, names = DASHBOARD_TABLES.concat(D10_TABLES);
-    function rows(list) {
-      return list.map(function (n) {
-        var r = results[n] || { ok: false, error: "Not read" };
-        if (r.ok) { total += r.rows.length; read += 1; }
-        return "<tr><td>" + esc(n) + (D10_USED[n] ? '<div class="det">Used in: ' + esc(D10_USED[n]) + "</div>" : "") + "</td>" +
-          '<td class="num">' + (r.ok ? num(r.rows.length, 0) : "—") + "</td>" +
-          (r.ok ? '<td class="ok">✓</td>' : '<td class="fail">Failed: ' + esc(r.error) + "</td>") + "</tr>";
-      }).join("");
-    }
-    var stamp = lastLoaded ? lastLoaded.toLocaleString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
-    var body = rows(DASHBOARD_TABLES), d10 = rows(D10_TABLES);
-    return '<h2 class="section">Rows read from Supabase</h2>' +
-      '<div class="refresh-banner"><span>Last refreshed: <b>' + esc(stamp) + "</b></span><span>Build mode: manual (no scheduled job yet)</span></div>" +
-      '<div class="det" style="margin-bottom:12px;">Dashboard tables feed the four original metrics. Of the D10 tables, ' +
-        "d10_02 and d10_08 now feed figures on this page; the others are loaded and counted only.</div>" +
-      '<table class="rows-tbl" id="load-report"><tr><th>Table</th><th>Rows read</th><th>Status</th></tr>' +
-        '<tr class="grpname"><td colspan="3">Dashboard tables</td></tr>' + body +
-        '<tr class="grpname"><td colspan="3">D10 source tables (d10_02 and d10_08 used in figures; others counted only)</td></tr>' + d10 +
-      "</table>" +
-      '<div class="det" style="margin-top:12px;"><b>' + num(total, 0) + " rows across " + read + " tables</b>" +
-        (read < names.length ? " · " + (names.length - read) + " of " + names.length + " tables failed" : "") + "</div>";
-  }
-
   function showLoadError(title, lines) {
     var card = '<section class="card" id="load-error">' +
         '<div class="card-head"><h2>' + esc(title) + "</h2>" + pill("red", "Error") + "</div>" +
@@ -1298,29 +1110,13 @@
         "Remove it now and rotate it in Supabase: this page is public, so only the publishable key may go here."]);
     }
     var client = window.supabase.createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
-    var names = DASHBOARD_TABLES.concat(D10_TABLES);
-    Promise.all(names.map(function (n) { return readTable(client, n); })).then(function (list) {
+    Promise.all(ALL_TABLES.map(function (n) { return readTable(client, n); })).then(function (list) {
       lastLoaded = new Date();
       var results = {};
       list.forEach(function (r) { results[r.name] = r; });
-      var failed = DASHBOARD_TABLES.filter(function (n) { return !results[n].ok; });
-      var d = null;
-      if (!failed.length) {
-        try { d = buildDashboard(results); }
-        catch (e) {
-          var bad = e.table || "dashboard tables";
-          results[bad] = { name: bad, ok: false, error: e.message || String(e) };
-          failed = [bad];
-        }
-      }
-      if (d) {
-        try { render(d, results); }
-        catch (e) { d = null; failed = []; showLoadError("Dashboard not shown", ["Drawing failed: " + esc(e.message || e)]); }
-      }
-      if (!d && failed.length) {
-        showLoadError("Dashboard not shown", ["These tables did not load, so no figures are shown in their place:"]
-          .concat(failed.map(function (n) { return "<strong>" + esc(n) + "</strong>: " + esc(results[n].error); })));
-      }
+      // Each KPI column reports its own missing tables; a failed table never shows as zero.
+      try { render(results); }
+      catch (e) { showLoadError("Dashboard not shown", ["Drawing failed: " + esc(e.message || e)]); }
       setPanel("rows", renderLoadReport(results));
     }).catch(function (e) {
       showLoadError("Data not loaded", [esc(e.message || e)]);
