@@ -271,6 +271,23 @@
 
   #load-error { grid-column: 1 / -1; margin-bottom: 16px; }
   #details > .card { margin-bottom: 16px; }
+  /* QC Check #4: owner and review date on each metric */
+  .owner-line { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bd); font-size: 11.5px; color: var(--mut); }
+  .owner-line b { color: var(--ink); font-weight: 600; }
+  .reco-card .owner-line, .chan-card .owner-line { margin-top: 8px; padding-top: 6px; }
+  .stat-card .owner-line { color: rgba(255,255,255,.85); border-top-color: rgba(255,255,255,.35); margin-top: 10px; padding-top: 6px; }
+  .stat-card .owner-line b { color: #fff; }
+  /* Consecutive lines share one divider; lines directly under the MoM box sit close to it */
+  .owner-line + .owner-line { margin-top: 2px; padding-top: 0; border-top: none; }
+  .reco-card .owner-line { border-top-color: #B9C5DC; }
+  /* The section-wide owner line always gets its own divider */
+  .owner-line + .owner-line.section-owner { margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,.35); }
+  .section-owner-head { margin: -6px 0 14px; font-size: 12px; color: var(--mut); }
+  .section-owner-head b { color: var(--ink); font-weight: 600; }
+  .chan-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 480px) { .chan-grid.two { grid-template-columns: minmax(0, 1fr); } }
+  .warn-card .owner-line { border-top-color: #FDBA74; color: #9A3412; }
+  .warn-card .owner-line b { color: #7C2D12; }
   #load-error code { background: var(--grey-bg); padding: 1px 5px; border-radius: 4px; }
 </style>
 </head>
@@ -476,6 +493,36 @@
     };
   }
 
+  // ---------- QC Check #4: owner and review date ----------
+  // Owner by function/column, per Lena's Day 9 email: Marco on stock, Priya on ads, Lena on revenue and cash.
+  var METRIC_OWNERS = { revenue: "Lena", cash: "Lena", stock: "Marco", profit: "Priya", marketing: "Priya" };
+  var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  // First Monday of the month after `now` (local time), so the date moves on by itself each month.
+  function nextReviewDate(now) {
+    var d = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
+    return d;
+  }
+  // Ownership is per column/section, so it is shown once per section, not on every card:
+  // on the section's stat-strip card (Executive Summary) and under the section heading (Details).
+  function sectionOwnerText(metric) {
+    var d = nextReviewDate(lastLoaded || new Date());
+    var iso = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+    var text = WEEKDAYS[d.getDay()] + ", " + d.getDate() + " " + MONTHS_SHORT[d.getMonth()] + " " + d.getFullYear();
+    return "Owner, all metrics in this section: <b>" + esc(METRIC_OWNERS[metric]) + '</b> · Review by: <time datetime="' + iso + '">' + text + "</time>";
+  }
+  function sectionOwnerLine(metric) { return '<div class="owner-line section-owner">' + sectionOwnerText(metric) + "</div>"; }
+  function sectionOwnerHead(metric) { return '<div class="section-owner-head">' + sectionOwnerText(metric) + "</div>"; }
+  // Whether the methodology itself is approved: separate from who owns the number.
+  // Used for month-over-month, the three-tier stock bands and the BidWorks averages.
+  function calcLine() { return '<div class="owner-line">Calculation: new, pending sign-off</div>'; }
+  // Who pulls and reconciles the D10-02 revenue export (Lena still owns the decision).
+  function sourcedLine() { return '<div class="owner-line">Data sourced by: Marisa (QuickBooks)</div>'; }
+  // The Grill Pro reorder flag is an open decision needing action now, so it has no recurring review date.
+  var REORDER_FLAG_OWNER = "Marco";
+  function reorderOwnerLine() { return '<div class="owner-line">Owner: <b>' + esc(REORDER_FLAG_OWNER) + "</b> · Flagged in Fix Log, needs resolution</div>"; }
+
   // ---------- Shared pieces of the redesign ----------
   function legendBox() {
     return '<div class="legend-box">' +
@@ -529,7 +576,7 @@
       "Per Lena's verbal account (see Data Notes), not this page's stale snapshot: ~1 month of cover, no reorder placed. " +
       (gp ? "The snapshot shows " + num(gp.weeks_cover, 1) + " wks, " + TIER_NAMES[stockBand(gp.weeks_cover)] +
             " — that figure is stale" + (sf.snapshotDate ? " (" + esc(sf.snapshotDate) + ")" : "") + " and does not reflect this. " : "") +
-      "Needs action regardless of what this dashboard currently displays.</div>";
+      "Needs action regardless of what this dashboard currently displays." + reorderOwnerLine() + "</div>";
   }
 
   // ---------- Executive Summary ----------
@@ -553,15 +600,17 @@
           esc(shortMonth(mom.latest.ym)) + ", not yet signed off</div>"
       : '<div class="s-val">Not available</div><div class="s-cap">' + esc(rev.error || "No closed month in d10_02") + "</div>";
     var strip = '<div class="stat-strip">' +
-      '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Overall Revenue</div>' + revHero + "</div>" +
+      '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Overall Revenue</div>' + revHero +
+        sourcedLine() + sectionOwnerLine("revenue") + "</div>" +
       '<div class="stat-card c-inventory">' + STAT_ICONS.inventory + '<div class="s-lbl">Inventory &amp; Fulfillment</div>' +
         '<div class="s-val">' + sh.tiers.green + '<span style="font-size:15px;"> of ' + sh.total + "</span></div>" +
         '<div class="s-cap">SKUs healthy' + (sh.lowest ? " &middot; lowest " + num(sh.lowest.weeks_cover, 1) + " wks" : "") +
           " &middot; " + REORDER_FLAG_COUNT + " reorder flag</div>" +
-        (tag ? '<span class="s-tag">' + esc(tag) + "</span>" : "") + "</div>" +
+        (tag ? '<span class="s-tag">' + esc(tag) + "</span>" : "") + calcLine() + sectionOwnerLine("stock") + "</div>" +
       '<div class="stat-card c-marketing">' + STAT_ICONS.marketing + '<div class="s-lbl">Marketing &amp; Ads</div>' +
         '<div class="s-val">' + money(profitTotal) + "</div>" +
-        '<div class="s-cap">Net profit after ads, FY2025 &middot; ' + losses.length + " SKU" + (losses.length === 1 ? "" : "s") + " losing money</div></div>" +
+        '<div class="s-cap">Net profit after ads, FY2025 &middot; ' + losses.length + " SKU" + (losses.length === 1 ? "" : "s") + " losing money</div>" +
+        sectionOwnerLine("profit") + "</div>" +
     "</div>";
 
     // Column 1: Overall Revenue
@@ -575,7 +624,8 @@
     "</div>";
     var momHtml;
     if (!mom) {
-      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) + "</div>";
+      momHtml = '<div class="reco-card"><b>Month-over-month:</b> Not available — ' + esc(rev.error) +
+        calcLine() + sourcedLine() + "</div>";
     } else {
       var momLine = mom.growth !== null
         ? "month-over-month, using the latest closed data already loaded (" + esc(shortMonth(mom.prev.ym)) + "&rarr;" + esc(shortMonth(mom.latest.ym)) + ") — " +
@@ -585,14 +635,15 @@
         return "<br>" + esc(shortMonth(mom.latest.ym)) + "&rarr;" + esc(m) + ": Not available — " + esc(m) + " not yet closed.";
       }).join("");
       momHtml = '<div class="reco-card"><b>Not one of Lena\'s 4:</b> ' + momLine +
-        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine + "</div>";
+        (cur ? "" : " Shown only because the official YoY figure is still pending.") + openLine +
+        calcLine() + sourcedLine() + "</div>";
     }
     var c = d.cash_in_bank, cashHas = c.value !== null && c.value !== undefined && c.status !== "no_data";
     var col1 = '<div class="col-panel"><h3>Overall Revenue</h3>' +
       '<div class="mini-card"><div class="lbl">Revenue vs. last year' + STAR + "</div>" + yoy +
         '<div class="det">' + esc(r.scope || "") + "</div>" +
         (cur ? "" : '<div class="so-what"><b>Means:</b> nothing to compare to yet — last closed month isn\'t officially sourced.</div>') +
-        momHtml + "</div>" +
+        momHtml + sourcedLine() + "</div>" +
       '<div class="mini-card"><div class="lbl">Revenue, last closed month' + STAR + "</div>" +
         (cur ? '<div class="val" style="font-size:19px;">' + money(r.current_month_value) + "</div>"
              : '<div class="val" style="color:var(--mut);font-size:19px;">Pending</div><div class="det">This is the figure Lena\'s metric needs — not sourced yet.</div>') +
@@ -617,7 +668,7 @@
             (sh.paused.length ? sh.paused.map(function (p) { return esc(p.name); }).join(", ") + " — Kickstarter-only" : "None") + "</div>" +
           '<div style="font-weight:700;">Reorder Flag: ' + REORDER_FLAG_COUNT + "</div><div>Healthy TBD &middot; At Risk TBD &middot; Danger TBD (Grill Pro — qualitative account, no exact weeks figure yet)</div>" +
         "</div>" +
-        '<div class="det" style="margin-top:8px;">See Details tab for the full SKU list and descriptions.</div></div>' +
+        '<div class="det" style="margin-top:8px;">See Details tab for the full SKU list and descriptions.</div>' + calcLine() + "</div>" +
       '<div class="mini-card"><div class="lbl">Stock cover, lowest first' + STAR + "</div>" +
         '<div class="val" style="font-size:19px;">' + sh.tiers.green + ' <span class="rpill green" style="margin-left:4px;">Healthy</span></div>' +
         '<div class="det">' + sh.tiers.amber + ' <span style="color:var(--amber);font-weight:700;">At Risk</span> · ' + sh.tiers.red +
@@ -625,7 +676,7 @@
         '<div class="det" style="margin-top:4px;">Bands: Healthy ' + BAND_RULES.stockHealthyMinWeeks + "+ wks &middot; At Risk " + BAND_RULES.stockAtRiskMinWeeks +
           "&ndash;" + BAND_RULES.stockHealthyMinWeeks + " wks &middot; Danger under " + BAND_RULES.stockAtRiskMinWeeks + " wks</div>" +
         (sh.sf.isStale ? '<div class="det" style="margin-top:4px;">3PL snapshot ' + esc(sh.sf.snapshotDate || "") + " — stale, not live.</div>" : "") +
-      "</div>" +
+        calcLine() + "</div>" +
       '<div class="mini-card"><div class="lbl">Reorder flag</div>' + reorderWarning(d.weeks_of_stock_cover) + "</div></div>";
 
     // Column 3: Marketing & Ads
@@ -637,15 +688,17 @@
     var col3 = '<div class="col-panel"><h3>Marketing &amp; Ads (ROI)</h3>' +
       '<div class="mini-card"><div class="lbl">Losing money on ads' + STAR + (losses.length ? rpill("red", "Danger") : rpill("green", "Healthy")) + "</div>" +
         '<div class="val">' + money(-lossTotal) + '<span style="font-size:13px;font-weight:500;color:var(--mut)"> / yr</span></div>' +
-        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div></div>" +
+        '<div class="det">' + (losses.length ? losses.map(function (p) { return esc(p.name) + " " + money(p.net_contribution_after_ads); }).join(" &middot; ") : "No product negative after ads") + "</div>" +
+        "</div>" +
       '<div class="mini-card"><div class="lbl">Agency spend &mdash; BidWorks' + rpill("noband", "No band") + "</div>" + bwHtml + "</div>" +
       '<div class="mini-card"><div class="lbl">Agency spend &mdash; Handle Social' + rpill("grey", "No Data") + "</div>" +
         '<div class="val" style="color:var(--grey);font-size:17px;">No Data</div>' +
-        '<div class="det">No spend/performance file exists. Scope undecided &mdash; Lena set an end-of-April deadline for written scope or termination.</div></div>' +
+        '<div class="det">No spend/performance file exists. Scope undecided &mdash; Lena set an end-of-April deadline for written scope or termination.</div>' +
+        "</div>" +
       '<div class="mini-card"><div class="lbl">Profit after ads, by product' + STAR + "</div>" +
         '<div class="val" style="font-size:19px;">' + money(profitTotal) + ' <span style="font-size:12px;font-weight:500;color:var(--mut)">net, FY2025</span></div>' +
         '<div class="det">' + pa.filter(function (p) { return p.net_contribution_after_ads > 0; }).length + " profitable &middot; " + losses.length +
-          " losing money (above) &middot; full breakdown in Details</div></div></div>";
+          " losing money (above) &middot; full breakdown in Details</div>" + "</div></div>";
 
     return legendBox() + strip + '<div class="rrow r3">' + col1 + col2 + col3 + "</div>";
   }
@@ -666,11 +719,11 @@
     }).join("") + "</div>";
   }
   function revenueChartCard(rev, key, title, cls, extra) {
-    if (rev.error) return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" + unavailable(rev.error) + "</div>";
+    if (rev.error) return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" + unavailable(rev.error) + sourcedLine() + "</div>";
     var ms = rev.months;
     return '<div class="chart-card"><h2 class="section">' + esc(title) + "</h2>" +
       '<div class="det" style="margin-bottom:2px;">' + esc(monthName(ms[0].ym)) + " – " + esc(monthName(ms[ms.length - 1].ym)) +
-        " &middot; hatched bar = month not yet closed</div>" + monthBars(ms, key, cls) + (extra || "") + "</div>";
+        " &middot; hatched bar = month not yet closed</div>" + monthBars(ms, key, cls) + (extra || "") + sourcedLine() + "</div>";
   }
   function channelCard(rev, key, name, color, icon) {
     var top = function (val, cap) {
@@ -678,7 +731,7 @@
         '<div class="chan-name">' + esc(name) + '</div><div class="chan-val">' + val + '</div><div class="chan-cap">' + cap + "</div></div></div>";
     };
     if (rev.error) {
-      return '<div class="chan-card">' + top('<span style="color:var(--grey)">Not available</span>', esc(rev.error)) + "</div>";
+      return '<div class="chan-card">' + top('<span style="color:var(--grey)">Not available</span>', esc(rev.error)) + calcLine() + sourcedLine() + "</div>";
     }
     var fy = fy2025(rev.months, key), mom = monthOverMonth(rev.months, key);
     return '<div class="chan-card">' +
@@ -689,12 +742,12 @@
           (mom.latest ? money(mom.latest[key]) : "—") + "</div></div>" +
         '<div class="chan-pill"' + (mom.note ? ' title="' + esc(mom.note) + '"' : mom.prev ? ' title="' + esc(shortMonth(mom.prev.ym) + " → " + shortMonth(mom.latest.ym)) + '"' : "") +
           '><div class="cp-lbl">MoM Growth</div><div class="cp-val">' + (mom.growth !== null ? signedPct(mom.growth) : "N/A") + "</div></div>" +
-      "</div></div>";
+      "</div>" + calcLine() + sourcedLine() + "</div>";
   }
   function bidworksCard(bw) {
     var top = '<div class="chan-top"><div class="chan-badge" style="background:#2563EB;">' + CHANNEL_ICONS.bidworks + "</div><div>" +
       '<div class="chan-name">BidWorks</div>';
-    if (bw.error) return '<div class="chan-card">' + top + '<div class="chan-val" style="color:var(--grey);">Not available</div><div class="chan-cap">' + esc(bw.error) + "</div></div></div></div>";
+    if (bw.error) return '<div class="chan-card">' + top + '<div class="chan-val" style="color:var(--grey);">Not available</div><div class="chan-cap">' + esc(bw.error) + "</div></div></div>" + calcLine() + "</div>";
     return '<div class="chan-card">' + top +
         '<div class="chan-val">' + (bw.avgImpressions !== null ? (bw.avgImpressions / 1e6).toFixed(2) + "M" : "—") + "</div>" +
         '<div class="chan-cap">Avg. impressions/mo</div></div></div>' +
@@ -703,14 +756,14 @@
           (bw.spendFlat !== null ? money(bw.spendFlat) : bw.spendAvg !== null ? "avg " + money(bw.spendAvg) : "—") + "</div></div>" +
         '<div class="chan-pill" title="Average of the ' + bw.count + ' monthly CTR figures"><div class="cp-lbl">Avg CTR</div><div class="cp-val">' +
           (bw.avgCtr !== null ? bw.avgCtr.toFixed(2) + "%" : "—") + "</div></div>" +
-      "</div></div>";
+      "</div>" + calcLine() + "</div>";
   }
   function handleSocialCard() {
     return '<div class="chan-card dim"><div class="chan-top"><div class="chan-badge" style="background:#94A3B8;">' + CHANNEL_ICONS.handle + "</div><div>" +
         '<div class="chan-name">Handle Social</div><div class="chan-val" style="color:var(--grey);">No Data</div>' +
         '<div class="chan-cap">No source file — scope undecided</div></div></div>' +
       '<div class="chan-pills"><div class="chan-pill grey"><div class="cp-lbl">Spend/mo</div><div class="cp-val">—</div></div>' +
-        '<div class="chan-pill grey"><div class="cp-lbl">Reach</div><div class="cp-val">—</div></div></div></div>';
+        '<div class="chan-pill grey"><div class="cp-lbl">Reach</div><div class="cp-val">—</div></div></div>' + "</div>";
   }
 
   function renderDetails(d, results, staleNote) {
@@ -722,19 +775,23 @@
         }).join(" and ") + " is not in these bars — the channel charts show Amazon and Shopify only, so Kickstarter is excluded by design.</div>"
       : "";
     return legendBox() +
-      '<h3 class="group-head">Overall Revenue</h3>' +
+      '<h3 class="group-head">Overall Revenue</h3>' + sectionOwnerHead("revenue") +
       '<div class="dgrid">' + renderRevenue(d.revenue_vs_last_year) + renderCash(d.cash_in_bank) + "</div>" +
-      '<h3 class="group-head">Inventory &amp; Fulfillment</h3>' +
-      renderStock(d.weeks_of_stock_cover, staleNote) +
-      reorderWarning(d.weeks_of_stock_cover, "Reorder flag — Grill Pro:") +
-      '<h3 class="group-head">Marketing &amp; Ads</h3>' +
-      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
-      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
-      '<div class="chart-card"><h2 class="section">Channels &amp; Agencies</h2>' +
+      '<div class="chart-card"><h2 class="section">Revenue Channels</h2>' +
         '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
-        '<div class="chan-grid">' +
+        '<div class="chan-grid two">' +
           channelCard(rev, "shopify", "Shopify", "#96BF48", CHANNEL_ICONS.shopify) +
           channelCard(rev, "amazon", "Amazon", "#FF9900", CHANNEL_ICONS.amazon) +
+        "</div></div>" +
+      revenueChartCard(rev, "amazon", "Revenue by month — Amazon", "amazon") +
+      revenueChartCard(rev, "shopify", "Revenue by month — Shopify", "shopify", ksNote) +
+      '<h3 class="group-head">Inventory &amp; Fulfillment</h3>' + sectionOwnerHead("stock") +
+      renderStock(d.weeks_of_stock_cover, staleNote) +
+      reorderWarning(d.weeks_of_stock_cover, "Reorder flag — Grill Pro:") +
+      '<h3 class="group-head">Marketing &amp; Ads</h3>' + sectionOwnerHead("profit") +
+      '<div class="chart-card"><h2 class="section">Agencies</h2>' +
+        '<div class="det" style="margin-bottom:14px;">Real figures from source files where available. Logos are generic icons, not brand artwork — company names carry identification.</div>' +
+        '<div class="chan-grid two">' +
           bidworksCard(bw) + handleSocialCard() +
         "</div></div>" +
       renderProfit(d.profit_after_ads, d.weeks_of_stock_cover);
@@ -831,6 +888,7 @@
           "</strong> · " + esc(text) + "</p>";
       })() +
       '<div class="source">As of: ' + esc(r.as_of || "—") + "<br>Source: " + esc(r.source || "—") + "</div>" +
+      sourcedLine() +
     "</section>";
   }
 
@@ -918,6 +976,7 @@
       '<div class="hbars">' + sf.regular.map(row).join("") + sf.special.map(specialRow).join("") + "</div>" +
       axis +
       '<div class="source">As of: ' + esc(s.as_of || "—") + "<br>Source: " + esc(s.source || "—") + "</div>" +
+      calcLine() +
     "</section>";
   }
 
