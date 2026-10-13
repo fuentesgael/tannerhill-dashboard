@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tannerhill Co. — Dashboard Mockup v5 (Review Only)</title>
+<style>
+  :root { --ink:#1F3044; --mut:#64748B; --bd:#E4E9F2; --bg:#F8F8FF; --green:#10B981; --amber:#F59E0B; --red:#E11D48; --grey:#94A3B8; --navy:#1F3044; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 Inter,system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+  .mockup-banner { background:#FEF3C7; color:#92400E; text-align:center; padding:8px 16px; font-size:13px; font-weight:600; border-bottom:2px solid #F59E0B; }
+  header { background:var(--navy); color:#fff; padding:18px 28px; }
+  header h1 { margin:0; font:700 22px/1.2 system-ui,sans-serif; } header .sub { font-size:13px; color:#A9B8CC; margin-top:4px; }
+  .shell { display:flex; min-height:calc(100vh - 90px); }
+  nav { width:200px; background:#fff; border-right:1px solid var(--bd); padding:18px 0; flex-shrink:0; }
+  nav button { display:block; width:100%; text-align:left; padding:11px 22px; border:none; background:none; font:600 13px/1.3 system-ui,sans-serif; color:var(--mut); cursor:pointer; border-left:3px solid transparent; }
+  nav button.active { color:var(--navy); border-left-color:var(--navy); background:#F8FAFF; }
+  main { flex:1; padding:26px 30px; overflow-x:auto; }
+  .tabpanel { display:none; } .tabpanel.active { display:block; }
+  .row { display:grid; gap:14px; margin-bottom:16px; }
+  .r4 { grid-template-columns:repeat(4,1fr); align-items:start; } .r2 { grid-template-columns:1fr 1fr; }
+  @media (max-width:1100px){ .r4{grid-template-columns:1fr 1fr;} }
+  .kpi-col { display:flex; flex-direction:column; gap:10px; }
+  .stat-card { border-radius:12px; padding:16px 18px; color:#fff; position:relative; overflow:hidden; min-height:110px; }
+  .stat-card .s-icon { position:absolute; right:12px; top:12px; width:28px; height:28px; opacity:.85; }
+  .stat-card .s-lbl { font:700 11px/1.2 system-ui,sans-serif; letter-spacing:.04em; text-transform:uppercase; opacity:.9; }
+  .stat-card .s-val { font:700 22px/1.2 system-ui,sans-serif; margin:8px 0 2px; }
+  .stat-card .s-sub { font-size:11px; opacity:.85; margin-bottom:3px; }
+  .stat-card .s-cap { font-size:10.5px; opacity:.9; }
+  .c-revenue { background:linear-gradient(135deg,#4F46E5,#3730A3); } .c-inventory { background:linear-gradient(135deg,#0891B2,#155E75); }
+  .c-marketing { background:linear-gradient(135deg,#7C3AED,#5B21B6); } .c-cash { background:linear-gradient(135deg,#64748B,#334155); }
+  .band-pill { display:inline-block; padding:3px 10px; border-radius:999px; font:700 10px/1.4 system-ui,sans-serif; margin-top:2px; }
+  .band-pill.red { background:#fff; color:var(--red); } .band-pill.amber { background:#fff; color:#92400E; }
+  .band-pill.green { background:#fff; color:#047857; } .band-pill.grey { background:rgba(255,255,255,.25); color:#fff; }
+  .sub-card { background:#fff; border:1px solid var(--bd); border-radius:10px; padding:12px 14px; }
+  .sub-card .sc-title { font:700 10.5px/1.3 system-ui,sans-serif; color:var(--mut); text-transform:uppercase; margin-bottom:8px; }
+  .compare-bars { display:flex; gap:16px; align-items:flex-end; height:90px; margin:8px 0; justify-content:center; }
+  .cbar { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; width:68px; }
+  .cbar .bv { font-size:11px; font-weight:600; margin-bottom:4px; white-space:nowrap; color:var(--mut); }
+  .cbar.hi .bv { font-size:14px; font-weight:800; color:var(--ink); }
+  .cbar .bf { width:42px; border-radius:4px 4px 0 0; }
+  .cbar .bl { font-size:9.5px; color:var(--mut); margin-top:4px; }
+  .mini-count-row { display:flex; gap:8px; }
+  .mini-count { flex:1; background:#F8FAFF; border-radius:8px; padding:8px; text-align:center; }
+  .mini-count .mcv { font:700 16px/1.2 system-ui,sans-serif; } .mini-count .mcl { font-size:9px; color:var(--mut); text-transform:uppercase; }
+  .legend-box { display:flex; gap:22px; flex-wrap:wrap; background:#fff; border:1px solid var(--bd); border-radius:10px; padding:12px 18px; margin-bottom:18px; font-size:12px; }
+  .legend-group { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .legend-group .gtitle { font-weight:700; color:var(--mut); text-transform:uppercase; font-size:10.5px; letter-spacing:.05em; margin-right:2px; }
+  .dot { width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:5px; }
+  h2.section { font:700 13px/1.2 system-ui,sans-serif; letter-spacing:.04em; text-transform:uppercase; color:var(--mut); margin:0 0 12px; }
+  h3.group-head { font:700 15px/1.2 system-ui,sans-serif; color:var(--navy); margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--navy); }
+  h3.group-head:first-child { margin-top:0; }
+  .subnav { display:flex; gap:8px; margin-bottom:18px; border-bottom:2px solid var(--bd); }
+  .subnav button { padding:9px 16px; border:none; background:none; font:700 12.5px/1.3 system-ui,sans-serif; color:var(--mut); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; }
+  .subnav button.active { color:var(--navy); border-bottom-color:var(--navy); }
+  .subpanel { display:none; } .subpanel.active { display:block; }
+  .chart-card { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:18px 20px; margin-bottom:16px; }
+  .chan-card { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:14px; }
+  .chan-top { display:flex; align-items:flex-start; gap:10px; }
+  .chan-badge { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .chan-name { font:700 10.5px/1.3 system-ui,sans-serif; color:var(--mut); text-transform:uppercase; }
+  .chan-val { font:700 18px/1.2 system-ui,sans-serif; } .chan-cap { font-size:10px; color:var(--mut); }
+  .linechart { position:relative; height:170px; margin:14px 0; }
+  table.dtbl { width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.dtbl th { text-align:left; color:var(--mut); font-size:10px; text-transform:uppercase; letter-spacing:.03em; padding:7px 8px; border-bottom:2px solid var(--bd); }
+  table.dtbl td { padding:8px 8px; border-bottom:1px solid var(--bd); }
+  .track { background:#F1F5F9; border-radius:4px; height:16px; position:relative; overflow:hidden; width:100px; display:inline-block; vertical-align:middle;}
+  .track .fill2 { height:100%; border-radius:4px; }
+  .matrix-status { font-weight:700; font-size:11px; padding:2px 8px; border-radius:5px; }
+  .matrix-status.confirmed { background:#ECFDF5; color:#047857; }
+  .matrix-status.pending { background:#FFFBEB; color:#92400E; }
+  .matrix-status.decided { background:#EEF2FF; color:#3730A3; }
+  .grpname { font-weight:700; color:var(--navy); font-size:11.5px; text-transform:uppercase; padding:14px 8px 6px; background:#F8FAFF; }
+  .unknown { color:var(--grey); font-style:italic; }
+  .flag-box { background:#FFF7ED; border:1px solid #FDBA74; border-radius:8px; padding:10px 12px; font-size:12px; color:#9A3412; margin-top:10px; }
+  .summary-widget { background:#F8FAFF; border:1px solid var(--bd); border-radius:10px; padding:16px 18px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<div class="mockup-banner">MOCKUP v5 — full dollar amounts on comparisons (Q1 2026 bold/bigger), Marketing's main widget leads with $42,000, Revenue Details restructured (widget → chart → table), per-channel line charts split out, Inventory band wording updated.</div>
+
+<header><h1>Tannerhill Co. — Owner Dashboard</h1><div class="sub">Four metrics · signed schema · mockup v5</div></header>
+
+<div class="shell">
+  <nav>
+    <button class="tab-btn active" data-tab="summary">Executive Summary</button>
+    <button class="tab-btn" data-tab="details">Details</button>
+    <button class="tab-btn" data-tab="notes">Data Notes</button>
+    <button class="tab-btn" data-tab="rows">Rows read from Supabase</button>
+  </nav>
+
+  <main>
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="tabpanel active" id="summary">
+      <div class="legend-box">
+        <div class="legend-group">
+          <span class="gtitle">Metric health</span>
+          <span><span class="dot" style="background:var(--red)"></span>Red — e.g. PO Now / Danger</span>
+          <span><span class="dot" style="background:var(--amber)"></span>Amber — e.g. Watch</span>
+          <span><span class="dot" style="background:var(--green)"></span>Green — Healthy / On track</span>
+        </div>
+        <div class="legend-group">
+          <span class="gtitle">Data health</span>
+          <span><span class="dot" style="background:var(--grey)"></span>No Data</span>
+          <span><span class="dot" style="background:var(--amber)"></span>Stale</span>
+        </div>
+      </div>
+      <div class="det" style="margin-bottom:16px;color:var(--mut);font-size:12px;">Exact wording per KPI is listed in Data Notes → "Band wording by KPI."</div>
+
+      <div class="row r4">
+
+        <!-- REVENUE -->
+        <div class="kpi-col">
+          <div class="stat-card c-revenue">
+            <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div class="s-lbl">Revenue</div><div class="s-val">$93,127.60</div>
+            <span class="band-pill amber">Watch</span><div class="s-cap">Feb 2026, latest closed month</div>
+          </div>
+          <div class="sub-card"><div class="sc-title">Overall Revenue — Q1 2025 vs. Q1 2026 (Jan–Mar)</div>
+            <div class="compare-bars">
+              <div class="cbar"><div class="bv">$349,130.00</div><div class="bf" style="height:48px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+              <div class="cbar hi"><div class="bv">$400,652.85</div><div class="bf" style="height:63px;background:#4F46E5;"></div><div class="bl">2026</div></div>
+            </div><div class="det" style="text-align:center;"><b style="color:var(--green)">+14.8% increase</b></div></div>
+          <div class="sub-card"><div class="sc-title">Revenue per Channel, Amazon — Q1 2025 vs. Q1 2026</div>
+            <div class="compare-bars">
+              <div class="cbar"><div class="bv">$271,759.00</div><div class="bf" style="height:46px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+              <div class="cbar hi"><div class="bv">$321,149.95</div><div class="bf" style="height:61px;background:#FF9900;"></div><div class="bl">2026</div></div>
+            </div><div class="det" style="text-align:center;"><b style="color:var(--green)">+18.2% increase</b></div></div>
+          <div class="sub-card"><div class="sc-title">Revenue per Channel, Shopify — Q1 2025 vs. Q1 2026</div>
+            <div class="compare-bars">
+              <div class="cbar"><div class="bv">$77,371.00</div><div class="bf" style="height:52px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+              <div class="cbar hi"><div class="bv">$79,502.90</div><div class="bf" style="height:55px;background:#96BF48;"></div><div class="bl">2026</div></div>
+            </div><div class="det" style="text-align:center;"><b style="color:var(--green)">+2.8% increase</b></div></div>
+          <div class="sub-card"><div class="sc-title">Revenue per Campaign, Kickstarter — Q1 2025 vs. Q1 2026</div>
+            <div class="compare-bars">
+              <div class="cbar"><div class="bv">$0.00</div><div class="bf" style="height:8px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+              <div class="cbar"><div class="bv">$0.00</div><div class="bf" style="height:8px;background:#F4A300;"></div><div class="bl">2026</div></div>
+            </div><div class="det" style="text-align:center;">No activity in Q1 of either year — Kickstarter revenue is recognized once, in Sep 2025, when rewards shipped</div></div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="kpi-col">
+          <div class="stat-card c-inventory">
+            <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <div class="s-lbl">Inventory</div><div class="s-val">9 <span style="font-size:13px;">of 12</span></div>
+            <span class="band-pill red">PO Now</span> <span class="band-pill" style="background:rgba(255,255,255,.25);color:#fff;">Stale · Apr 1, 2026</span><div class="s-cap">Snapshot, not live</div>
+          </div>
+          <div class="sub-card"><div class="sc-title">Band breakdown</div>
+            <div class="mini-count-row">
+              <div class="mini-count" style="border-top:3px solid var(--red);"><div class="mcv">9</div><div class="mcl">PO Now</div></div>
+              <div class="mini-count" style="border-top:3px solid var(--amber);"><div class="mcv">0</div><div class="mcl">Watch</div></div>
+              <div class="mini-count" style="border-top:3px solid var(--green);"><div class="mcv">3</div><div class="mcl">Healthy Stock</div></div>
+            </div></div>
+          <div class="sub-card" style="background:#F8FAFF;"><div class="sc-title">Year-over-year comparison</div>
+            <div class="det">Not available — D10-07 only covers Jan 1 – Apr 1, 2026. No 2025 stock snapshot exists.</div></div>
+        </div>
+
+        <!-- MARKETING -->
+        <div class="kpi-col">
+          <div class="stat-card c-marketing">
+            <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg>
+            <div class="s-lbl">Marketing &amp; Ads</div><div class="s-val">$42,000</div>
+            <div class="s-sub">10.5% of revenue, Q1 2026</div>
+            <span class="band-pill amber">Watch</span><div class="s-cap">BidWorks ad spend, Jan–Mar 2026</div>
+          </div>
+          <div class="sub-card"><div class="sc-title">Ad spend % of revenue, Q1 v. Q1</div>
+            <div class="compare-bars">
+              <div class="cbar"><div class="bv">12.03%</div><div class="bf" style="height:60px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+              <div class="cbar hi"><div class="bv">10.48%</div><div class="bf" style="height:52px;background:#7C3AED;"></div><div class="bl">2026</div></div>
+            </div><div class="det" style="text-align:center;"><b style="color:var(--green)">−1.5 pts, improving</b></div></div>
+          <div class="sub-card"><div class="sc-title">Ad Spend per Agency — Q1 2025 vs. Q1 2026</div>
+            <div style="display:flex;gap:18px;margin-bottom:6px;">
+              <div style="flex:1;"><div class="det" style="margin-bottom:4px;">BidWorks</div>
+                <div class="compare-bars" style="height:70px;">
+                  <div class="cbar"><div class="bv">$42,000</div><div class="bf" style="height:46px;background:#CBD5E1;"></div><div class="bl">2025</div></div>
+                  <div class="cbar hi"><div class="bv">$42,000</div><div class="bf" style="height:46px;background:#2563EB;"></div><div class="bl">2026</div></div>
+                </div></div>
+              <div style="flex:1;"><div class="det" style="margin-bottom:4px;">Handle Social</div>
+                <div class="det unknown" style="margin-top:20px;text-align:center;">No Data, both years</div></div>
+            </div>
+            <div class="det" style="text-align:center;">BidWorks: no change — flat $14,000/mo both years</div></div>
+          <div class="sub-card"><div class="sc-title">Context (annual only)</div>
+            <div class="det">Net profit after ads, FY2025: <b>$611,000</b> · no monthly breakdown exists.</div></div>
+        </div>
+
+        <!-- CASH -->
+        <div class="kpi-col">
+          <div class="stat-card c-cash">
+            <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+            <div class="s-lbl">Cash</div><div class="s-val">No Data</div>
+            <span class="band-pill grey">No Data</span><div class="s-cap">Needs a bank feed</div>
+          </div>
+          <div class="sub-card"><div class="sc-title">Known upcoming outflows</div>
+            <div class="val" style="font-size:18px;">$28,000</div>
+            <div class="det">Apr + May BidWorks retainers (projected) · 31 Mar – 25 May 2026</div></div>
+          <div class="sub-card" style="background:#F8FAFF;"><div class="sc-title">Year-over-year comparison</div>
+            <div class="det">Not available — D10-09 only covers 2026 invoices.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="tabpanel" id="details">
+      <div class="subnav">
+        <button class="sub-btn active" data-sub="d-rev">Revenue</button>
+        <button class="sub-btn" data-sub="d-inv">Inventory</button>
+        <button class="sub-btn" data-sub="d-mkt">Marketing &amp; Ads</button>
+        <button class="sub-btn" data-sub="d-cash">Cash</button>
+      </div>
+
+      <!-- REVENUE: widget -> chart -> table -> channel section -->
+      <div class="subpanel active" id="d-rev">
+        <div class="summary-widget">
+          <div class="lbl">Current performance</div>
+          <div class="val" style="font-size:24px;">$93,127.60 <span class="band-pill amber" style="color:#92400E;background:#FFFBEB;">Watch</span></div>
+          <div class="det">Feb 2026, latest closed month · vs. $87,235.00 Feb 2025 → +6.8%</div>
+        </div>
+        <div class="chart-card"><h2 class="section">Same months, year over year</h2>
+          <div class="det" style="margin-bottom:6px;">2025 (full year) vs. 2026 (Jan–Mar so far, Mar not yet closed) · dashed line = FY2025 monthly average, $140,789.42</div>
+          <div class="linechart" id="line-monthly"></div></div>
+        <div class="chart-card"><h2 class="section">Monthly figures</h2>
+          <table class="dtbl"><tr><th>Month</th><th>2025</th><th>2026</th><th>Books 2026</th></tr><tbody id="rev-table-body"></tbody></table></div>
+
+        <h3 class="group-head">Revenue by Channel</h3>
+        <div class="summary-widget">
+          <div class="lbl">Current split</div>
+          <div style="display:flex;gap:24px;margin-top:6px;">
+            <div><div class="det">Amazon, Feb 2026</div><div class="val" style="font-size:18px;">$72,623.20 <span class="band-pill green" style="color:#047857;background:#ECFDF5;">On track</span></div></div>
+            <div><div class="det">Shopify, Feb 2026</div><div class="val" style="font-size:18px;">$20,504.40 <span class="band-pill green" style="color:#047857;background:#ECFDF5;">On track</span></div></div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--bd);">
+            <div class="det"><b>FY2026 YTD pace:</b> $400,652.85 is 23.7% of FY2025's full-year total ($1,689,473.00) — a pace figure, not a growth rate (3 months so far vs. 12 months already closed).</div>
+          </div>
+        </div>
+        <div class="row r2">
+          <div class="chart-card"><h2 class="section">Amazon, year over year</h2><div class="linechart" id="line-amz-yoy"></div></div>
+          <div class="chart-card"><h2 class="section">Shopify, year over year</h2><div class="linechart" id="line-shop-yoy"></div></div>
+        </div>
+
+        <div class="chart-card"><h2 class="section">Both channels — Q1 comparison</h2>
+          <table class="dtbl"><tr><th>Channel</th><th>Q1 2025</th><th>Q1 2026</th><th>Change</th><th>FY2025</th></tr>
+          <tr><td>Amazon</td><td>$271,759.00</td><td>$321,149.95</td><td style="color:var(--green)">+18.2%</td><td>$1,314,048.00</td></tr>
+          <tr><td>Shopify</td><td>$77,371.00</td><td>$79,502.90</td><td style="color:var(--green)">+2.8%</td><td>$375,425.00</td></tr></table></div>
+        <div class="chart-card"><h2 class="section">Amazon — monthly detail</h2>
+          <table class="dtbl"><tr><th>Month</th><th>2025</th><th>2026</th></tr><tbody id="amz-table-body"></tbody></table></div>
+        <div class="chart-card"><h2 class="section">Shopify — monthly detail</h2>
+          <table class="dtbl"><tr><th>Month</th><th>2025</th><th>2026</th></tr><tbody id="shop-table-body"></tbody></table></div>
+
+        <div class="chart-card" style="background:#F8FAFF;"><h2 class="section">FY2026 YTD vs. FY2025 full year — pace, not a growth figure</h2>
+          <div class="det" style="margin-bottom:8px;">Different scopes on purpose: 3 months so far vs. 12 months already closed.</div>
+          <div style="font-size:20px;font-weight:700;">$400,652.85 <span style="font-size:13px;font-weight:500;color:var(--mut)">is 23.7% of FY2025's full-year total ($1,689,473.00)</span></div></div>
+      </div>
+
+      <div class="subpanel" id="d-inv">
+        <div class="chart-card"><h2 class="section">Reorder status — full detail <span style="background:var(--amber);color:var(--ink);padding:2px 9px;border-radius:999px;font-size:10px;font-weight:700;margin-left:6px;">Stale · Apr 1, 2026</span></h2>
+          <div class="det" style="margin-bottom:10px;">Reorder point = daily sell-through rate × 8 weeks (confirmed: 6wk factory + 2wk buffer, Stacey, 13 Oct 2026) · no peak/low season split in our data · stock as of Apr 1, 2026</div>
+          <table class="dtbl"><tr><th>Product</th><th>On Hand</th><th>On the Way</th><th>Daily Rate</th><th>Reorder Pt</th><th>Stock vs. RP</th><th>Days Cover</th><th>Status</th></tr>
+          <tbody id="inv-table-body"></tbody></table></div>
+      </div>
+
+      <div class="subpanel" id="d-mkt">
+        <h3 class="group-head" style="margin-top:0;">2026 Year to Date</h3>
+        <div class="row r2">
+          <div class="chart-card"><div class="lbl">Ad Spend, YTD</div><div class="val" style="font-size:22px;">$42,000</div>
+            <div class="det">10.5% of $400,652.85 revenue, Jan–Mar 2026</div></div>
+          <div class="chart-card"><div class="lbl">By agency</div>
+            <div style="display:flex;gap:18px;">
+              <div style="flex:1;"><div class="det">BidWorks</div><div class="val" style="font-size:18px;">$42,000</div></div>
+              <div style="flex:1;"><div class="det">Handle Social</div><div class="val unknown" style="font-size:16px;">No source file</div></div>
+            </div>
+            <div class="det" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd);">Q1 2025 vs. Q1 2026: BidWorks $42,000 both years (flat) · Handle Social not comparable, no data either year.</div></div>
+        </div>
+        <h3 class="group-head">FY2025</h3>
+        <div class="row r2">
+          <div class="chart-card"><div class="lbl">Ad Spend, Full Year</div><div class="val" style="font-size:22px;">$168,000</div>
+            <div class="det">8.8% of $1,900,000 total revenue (incl. Kickstarter — see Data Notes)</div></div>
+          <div class="chart-card"><div class="lbl">Net profit after ads</div><div class="val" style="font-size:22px;">$611,000</div>
+            <div class="det">11 profitable · 2 losing money</div></div>
+        </div>
+        <h3 class="group-head">Agencies</h3>
+        <div class="row r2">
+          <div class="chan-card"><div class="chan-top">
+            <div class="chan-badge" style="background:#2563EB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-9-3z"/></svg></div>
+            <div><div class="chan-name">BidWorks</div><div class="chan-val">$42,000</div><div class="chan-cap">YTD 2026 · $168,000 FY2025</div></div>
+          </div></div>
+          <div class="chan-card" style="opacity:.6;"><div class="chan-top">
+            <div class="chan-badge" style="background:#94A3B8;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5A8.5 8.5 0 1 1 20.9 9.3"/><path d="M21 4L12 13l-3-3"/></svg></div>
+            <div><div class="chan-name">Handle Social</div><div class="chan-val unknown">No Data</div><div class="chan-cap">No spend file</div></div>
+          </div></div>
+        </div>
+        <h3 class="group-head">Profit after ads, by product</h3>
+        <div class="chart-card"><div id="profitbars"></div></div>
+      </div>
+
+      <div class="subpanel" id="d-cash">
+        <div class="row r2">
+          <div class="chart-card"><div class="lbl">Available Cash</div><div class="val unknown" style="font-size:20px;">Unknown</div>
+            <div class="det">No bank feed or confirmed balance exists.</div></div>
+          <div class="chart-card"><div class="lbl">Known Upcoming Outflows, 31 Mar – 25 May 2026</div><div class="val" style="font-size:20px;">$28,000</div>
+            <div class="det">2 projected BidWorks invoices (Apr, May) · rest unknown</div></div>
+        </div>
+        <div class="chart-card"><h2 class="section">Upcoming outflows</h2>
+          <table class="dtbl"><tr><th>Item</th><th>Due</th><th>Amount</th><th>Basis</th></tr>
+            <tr><td>BidWorks retainer — April</td><td>~Apr 3, 2026 (projected)</td><td>$14,000</td><td>Pattern from D10-09</td></tr>
+            <tr><td>BidWorks retainer — May</td><td>~May 3, 2026 (projected)</td><td>$14,000</td><td>Same pattern</td></tr>
+            <tr><td>Inventory restock — Grill Grate Cleaner Kit</td><td>Arrived Apr 2, 2026</td><td class="unknown">Unknown</td><td>D10-07: 600 units, PO-2602-011 — no dollar value in our files</td></tr>
+            <tr><td>3PL monthly invoice</td><td>Unknown</td><td class="unknown">Unknown</td><td>Not in our files</td></tr>
+            <tr><td>Handle Social retainer</td><td>Unknown</td><td class="unknown">Unknown</td><td>No source file</td></tr>
+            <tr><td>Payroll</td><td>Unknown</td><td class="unknown">Unknown</td><td>Not in our files</td></tr>
+          </table>
+          <div class="flag-box"><b>Why this differs from the peer dashboard's $54,600:</b> their total includes an already-paid March BidWorks invoice (likely a double-count), plus a Handle Social retainer and a named supplier PO balance we have no source for.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA NOTES -->
+    <div class="tabpanel" id="notes">
+      <h2 class="section">Band wording by KPI</h2>
+      <table class="dtbl">
+        <tr><th>KPI</th><th style="color:var(--red)">Red</th><th style="color:#92400E">Amber</th><th style="color:#047857">Green</th></tr>
+        <tr><td>Revenue</td><td>Below target — flag to Lena</td><td>Watch — within 10% of last year</td><td>On track</td></tr>
+        <tr><td>Inventory</td><td>PO Now</td><td>Watch — Next PO Cycle</td><td>Healthy Stock</td></tr>
+        <tr><td>Marketing &amp; Ads (ad spend %)</td><td>PO Review (&gt;15%, proposed)</td><td>Watch (10–15%, proposed)</td><td>On track (≤10%, proposed)</td></tr>
+        <tr><td>Marketing &amp; Ads (profit after ads)</td><td>Losing money — review ad spend</td><td>— (no amber tier)</td><td>Profitable</td></tr>
+      </table>
+      <div class="det" style="margin:10px 0 24px;">Marketing's ad-spend-% thresholds (15%/10%) are proposed by us, not yet confirmed.</div>
+
+      <h2 class="section">Decision Matrix</h2>
+      <table class="dtbl">
+        <tr><th>KPI</th><th>Decision point</th><th>Current rule</th><th>Status</th></tr>
+        <tr class="grpname"><td colspan="4">Revenue</td></tr>
+        <tr><td>Revenue</td><td>Kickstarter in/out (trend metrics)</td><td>Excluded</td><td><span class="matrix-status decided">Decided</span></td></tr>
+        <tr><td>Revenue</td><td>Comparison period</td><td>Q1 v. Q1, plus a separate YTD-vs-full-year pace figure</td><td><span class="matrix-status decided">Decided</span></td></tr>
+        <tr class="grpname"><td colspan="4">Inventory</td></tr>
+        <tr><td>Inventory</td><td>Reorder lead time</td><td>8 weeks (6wk factory + 2wk buffer)</td><td><span class="matrix-status confirmed">Confirmed — Stacey, 13 Oct 2026</span></td></tr>
+        <tr><td>Inventory</td><td>Peak/low season split</td><td>Not used — no data exists</td><td><span class="matrix-status pending">Open — our count (9) differs from a peer's (8)</span></td></tr>
+        <tr><td>Inventory</td><td>Grill Pro discrepancy</td><td>Lena: ~1 month. File: ~1.8 months.</td><td><span class="matrix-status pending">Open — confirm with Marco</span></td></tr>
+        <tr class="grpname"><td colspan="4">Marketing &amp; Ads</td></tr>
+        <tr><td>Marketing</td><td>Main KPI metric</td><td>Ad spend $, latest closed quarter (Q1), matching Revenue's cadence</td><td><span class="matrix-status decided">Decided</span></td></tr>
+        <tr><td>Marketing</td><td>Band thresholds for ad-spend %</td><td>Proposed: Green ≤10%, Amber 10–15%, Red &gt;15%</td><td><span class="matrix-status pending">Open — needs sign-off</span></td></tr>
+        <tr><td>Marketing</td><td>Handle Social spend</td><td>No source file</td><td><span class="matrix-status pending">Open</span></td></tr>
+        <tr class="grpname"><td colspan="4">Cash</td></tr>
+        <tr><td>Cash</td><td>Discrepancy vs. peer's $54,600</td><td>Our $28,000 excludes an apparent double-count and two unverifiable lines</td><td><span class="matrix-status pending">Open — raise with the peer pod</span></td></tr>
+      </table>
+    </div>
+
+    <div class="tabpanel" id="rows">
+      <h2 class="section">Rows read from Supabase, by KPI</h2>
+      <table class="dtbl">
+        <tr><th>Table</th><th>Rows</th><th>Feeds</th></tr>
+        <tr class="grpname"><td colspan="3">Revenue</td></tr>
+        <tr><td>d10_02_revenue_by_month</td><td>15</td><td>All Revenue widgets, both tabs</td></tr>
+        <tr class="grpname"><td colspan="3">Inventory</td></tr>
+        <tr><td>d10_07_3pl_daily_stock</td><td>1,092</td><td>On hand, on the way, reorder status</td></tr>
+        <tr><td>d10_06a/b/c sales history (3 tables)</td><td>1,365</td><td>Daily sell-through rate</td></tr>
+        <tr class="grpname"><td colspan="3">Marketing &amp; Ads</td></tr>
+        <tr><td>d10_08_bidworks_monthly_report</td><td>15</td><td>Ad spend, both periods</td></tr>
+        <tr><td>dashboard_profit_after_ads_products</td><td>13</td><td>Profit after ads</td></tr>
+        <tr class="grpname"><td colspan="3">Cash</td></tr>
+        <tr><td>dashboard_cash_in_bank</td><td>1</td><td>Confirms no data exists</td></tr>
+        <tr><td>d10_09_bidworks_invoices</td><td>3</td><td>Upcoming outflows</td></tr>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active');
+}));
+document.querySelectorAll('.sub-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.sub-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById(btn.dataset.sub).classList.add('active');
+}));
+
+const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const total25 = [78686,87235,183209,166554,163223,148410,214013,213189,84443,100147,114452,135912];
+const total26 = [85805.15,93127.60,221720.10];
+const amz25 = [61248,67904,142607,129643,127050,114724,166368,165943,65728,77953,89088,105792];
+const amz26 = [66675.10,72623.20,181851.65];
+const shop25 = [17438,19331,40602,36911,36173,33686,47645,47246,18715,22194,25364,30120];
+const shop26 = [19130.05,20504.40,39868.45];
+
+function drawMonthlySeries(elId, seriesPairs, avgLine) {
+  const el = document.getElementById(elId);
+  const w = el.clientWidth || 900, h=170, pad=28;
+  const allVals = seriesPairs.flatMap(s=>s.data).concat(avgLine?[avgLine]:[]);
+  const maxV = Math.max(...allVals) * 1.1;
+  const stepX = (w-pad*2)/11;
+  let svg = `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  if (avgLine) { const ay = h-pad-(avgLine/maxV)*(h-pad*1.5);
+    svg += `<line x1="${pad}" y1="${ay}" x2="${w-pad}" y2="${ay}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4"/>`; }
+  seriesPairs.forEach(s => {
+    const xy = s.data.map((v,i)=>[pad+i*stepX, h-pad-(v/maxV)*(h-pad*1.5)]);
+    svg += `<polyline points="${xy.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2.5"/>`;
+    xy.forEach(p=>svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="${s.r||3.5}" fill="${s.color}"/>`);
+  });
+  monthLabels.forEach((l,i)=>svg+=`<text x="${pad+i*stepX}" y="${h-6}" font-size="9" fill="#64748B" text-anchor="middle">${l}</text>`);
+  svg += `</svg>`;
+  if (seriesPairs.length>1) svg_legend(el, seriesPairs);
+  el.innerHTML = svg + (seriesPairs.length>1 ? `<div style="font-size:11px;margin-top:4px;">${seriesPairs.map(s=>`<span style="color:${s.color};">●</span> ${s.label}`).join(' &nbsp; ')}</div>` : '');
+}
+function svg_legend(){}
+drawMonthlySeries('line-monthly', [{data: total25.concat(total26.slice(0,0)).length?total25:[], color:'#CBD5E1', label:'2025'}], null); // placeholder unused
+// Actual monthly combined chart (single series, all 15 months)
+(function(){
+  const el = document.getElementById('line-monthly');
+  const w = el.clientWidth || 900, h=170, pad=28;
+  const maxV = Math.max(...total25, ...total26, 140789.42)*1.1;
+  const stepX = (w-pad*2)/11;
+  const ay = h-pad-(140789.42/maxV)*(h-pad*1.5);
+  const xy25 = total25.map((v,i)=>[pad+i*stepX, h-pad-(v/maxV)*(h-pad*1.5)]);
+  const xy26 = total26.map((v,i)=>[pad+i*stepX, h-pad-(v/maxV)*(h-pad*1.5)]);
+  let svg = `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  svg += `<line x1="${pad}" y1="${ay}" x2="${w-pad}" y2="${ay}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4"/>`;
+  svg += `<polyline points="${xy25.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>`;
+  svg += `<polyline points="${xy26.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#4F46E5" stroke-width="2.5"/>`;
+  xy26.forEach(p=>svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#4F46E5"/>`);
+  monthLabels.forEach((l,i)=>svg+=`<text x="${pad+i*stepX}" y="${h-6}" font-size="9" fill="#64748B" text-anchor="middle">${l}</text>`);
+  svg += `</svg><div style="font-size:10.5px;margin-top:4px;"><span style="color:#CBD5E1;">●</span> 2025 &nbsp; <span style="color:#4F46E5;">●</span> 2026 &nbsp; <span style="color:#94A3B8;">┄</span> FY2025 average</div>`;
+  el.innerHTML = svg;
+})();
+
+function drawYoYChannel(elId, series25, series26, color26) {
+  const el = document.getElementById(elId);
+  const w = el.clientWidth || 440, h=160, pad=26;
+  const maxV = Math.max(...series25, ...series26)*1.1;
+  const stepX = (w-pad*2)/11;
+  const xy25 = series25.map((v,i)=>[pad+i*stepX, h-pad-(v/maxV)*(h-pad*1.5)]);
+  const xy26 = series26.map((v,i)=>[pad+i*stepX, h-pad-(v/maxV)*(h-pad*1.5)]);
+  let svg = `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  svg += `<polyline points="${xy25.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>`;
+  svg += `<polyline points="${xy26.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${color26}" stroke-width="2.5"/>`;
+  xy26.forEach(p=>svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${color26}"/>`);
+  monthLabels.forEach((l,i)=>svg+=`<text x="${pad+i*stepX}" y="${h-6}" font-size="8" fill="#64748B" text-anchor="middle">${l}</text>`);
+  svg += `</svg><div style="font-size:10.5px;margin-top:4px;"><span style="color:#CBD5E1;">●</span> 2025 &nbsp; <span style="color:${color26};">●</span> 2026</div>`;
+  el.innerHTML = svg;
+}
+drawYoYChannel('line-amz-yoy', amz25, amz26, '#FF9900');
+drawYoYChannel('line-shop-yoy', shop25, shop26, '#96BF48');
+
+function fillTable(bodyId, m25, m26, booksArr) {
+  const tb = document.getElementById(bodyId);
+  monthLabels.forEach((l,i)=>{
+    const tr=document.createElement('tr');
+    const v26 = m26[i]!==undefined ? `$${m26[i].toLocaleString(undefined,{minimumFractionDigits:2})}` : '—';
+    const extra = booksArr ? `<td>${booksArr[i]||'—'}</td>` : '';
+    tr.innerHTML = `<td>${l}</td><td>$${m25[i].toLocaleString(undefined,{minimumFractionDigits:2})}</td><td>${v26}</td>${extra}`;
+    tb.appendChild(tr);
+  });
+}
+const books26 = ['Closed','Closed','Not closed','','','','','','','','',''];
+fillTable('rev-table-body', total25, total26, books26);
+fillTable('amz-table-body', amz25, amz26, null);
+fillTable('shop-table-body', shop25, shop26, null);
+
+const inv = [
+  {n:'Grill Grate Cleaner Kit', oh:4, way:600, rate:6.03, rp:337.8, days:0.7, status:'PO Now'},
+  {n:'Fire Poker & Tool Set', oh:15, way:0, rate:4.67, rp:261.8, days:3.2, status:'PO Now'},
+  {n:'Camp Kitchen Kit, Basic', oh:29, way:0, rate:2.95, rp:165.2, days:9.8, status:'PO Now'},
+  {n:'Trailhead Grill Pro', oh:38, way:0, rate:1.59, rp:89.1, days:23.9, status:'PO Now'},
+  {n:'Cast Iron Dutch Oven 6qt', oh:91, way:0, rate:5.02, rp:281.1, days:18.1, status:'PO Now'},
+  {n:'Camp Kitchen Kit, Deluxe', oh:81, way:0, rate:2.49, rp:139.7, days:32.5, status:'PO Now'},
+  {n:'Nesting Cookware Set 8pc', oh:43, way:0, rate:2.04, rp:114.5, days:21.0, status:'PO Now'},
+  {n:'Cast Iron Skillet 10in', oh:333, way:0, rate:10.73, rp:601.1, days:31.0, status:'PO Now'},
+  {n:'Trailhead Portable Grill', oh:272, way:0, rate:6.51, rp:364.8, days:41.8, status:'PO Now'},
+  {n:'Folding Prep Table', oh:283, way:0, rate:1.44, rp:80.4, days:197.2, status:'Healthy Stock'},
+  {n:'Insulated Coffee Press', oh:601, way:0, rate:5.40, rp:302.3, days:111.3, status:'Healthy Stock'},
+  {n:'Windshield Panel Set', oh:950, way:0, rate:2.04, rp:114.3, days:465.3, status:'Healthy Stock'},
+];
+const colorFor = s => s==='PO Now' ? '#E11D48' : (s==='Watch — Next PO Cycle' ? '#F59E0B' : '#10B981');
+const tbody = document.getElementById('inv-table-body');
+inv.sort((a,b)=>a.days-b.days).forEach(r => {
+  const pct = Math.min(100, (r.oh/r.rp)*100);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${r.n}</td><td>${r.oh}</td><td>${r.way||'—'}</td><td>${r.rate}/day</td><td>${r.rp.toFixed(0)}</td>
+    <td><div class="track"><div class="fill2" style="width:${pct}%;background:${colorFor(r.status)}"></div></div> ${pct.toFixed(0)}%</td>
+    <td>${r.days}</td><td style="color:${colorFor(r.status)};font-weight:700;">${r.status}</td>`;
+  tbody.appendChild(tr);
+});
+const profit = [
+  {n:'Windshield Panel Set', v:-21685}, {n:'Folding Prep Table', v:-19525}, {n:'Grill Grate Cleaner Kit', v:15105},
+  {n:'Fire Poker & Tool Set', v:20802}, {n:'Insulated Coffee Press', v:28436}, {n:'Nesting Cookware Set 8pc', v:34328},
+  {n:'Camp Kitchen Kit, Basic', v:40834}, {n:'Cast Iron Dutch Oven 6qt', v:58012}, {n:'Trailhead Grill Pro', v:56106},
+  {n:'Cast Iron Skillet 10in', v:70816}, {n:'Camp Kitchen Kit, Deluxe', v:61794}, {n:'Griddle Plate', v:117895},
+  {n:'Trailhead Portable Grill', v:148082}
+];
+const maxP = Math.max(...profit.map(p=>Math.abs(p.v)));
+const profitEl = document.getElementById('profitbars');
+profit.sort((a,b)=>a.v-b.v).forEach(p => {
+  const pct = (Math.abs(p.v)/maxP)*100;
+  const row = document.createElement('div');
+  row.style.cssText='display:grid;grid-template-columns:170px 1fr 90px;gap:10px;align-items:center;margin-bottom:8px;font-size:13px;';
+  row.innerHTML = `<div>${p.n}</div><div class="track" style="width:100%;"><div class="fill2" style="width:${pct}%;background:${p.v>=0?'#10B981':'#E11D48'}"></div></div><div style="text-align:right;font-weight:700;color:${p.v>=0?'#10B981':'#E11D48'}">${p.v<0?'-':''}$${Math.abs(p.v).toLocaleString()}</div>`;
+  profitEl.appendChild(row);
+});
+</script>
+</body>
+</html>
