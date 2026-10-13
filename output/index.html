@@ -291,7 +291,7 @@
                  watchDays: 14,    // Watch when on hand is within 14 days' sell-through above the reorder point
                  words: { red: "PO Now", amber: "Watch — Next PO Cycle", green: "Healthy Stock" } },
     adSpend: { greenMax: 0.10, amberMax: 0.15,   // PROPOSED, pending sign-off (see Data Notes)
-               words: { green: "On track", amber: "Watch", red: "PO Review" } },
+               words: { green: "On track", amber: "Watch", red: "Act now — review spend" } },
     profit: { words: { green: "Profitable", red: "Losing money" } }
   };
   function revenueBand(cur, ly) {
@@ -354,6 +354,8 @@
       fyComplete: fy.length === 12, fyTotal: fy.length === 12 ? sumOf(fy, "total") : null,
       fyAvg: fy.length === 12 && sumOf(fy, "total") !== null ? sumOf(fy, "total") / 12 : null,
       fyChannel: function (key) { return fy.length === 12 ? sumOf(fy, key) : null; },
+      // Total revenue including Kickstarter: used only for the FY ad-spend ratio (see Data Notes).
+      fyTotalInclKs: fy.length === 12 && sumOf(fy, "total") !== null && sumOf(fy, "kickstarter") !== null ? sumOf(fy, "total") + sumOf(fy, "kickstarter") : null,
       ytdTotal: sumOf(ytd, "total"), ytdMonths: ytd.length, ytdOpen: openIn(ytd),
       ksMonths: months.filter(function (m) { return m.kickstarter > 0; })
     };
@@ -451,7 +453,7 @@
       out.pct = out.q1Spend !== null && out.q1Revenue ? out.q1Spend / out.q1Revenue : null;
       out.pctPrev = out.q1SpendPrev !== null && out.q1RevenuePrev ? out.q1SpendPrev / out.q1RevenuePrev : null;
       out.ytdRevenue = revOk && rev.thisYear === latestYear ? rev.ytdTotal : null;
-      out.fyRevenuePrev = revOk && rev.prevYear === prevYear ? rev.fyTotal : null;
+      out.fyRevenuePrev = revOk && rev.prevYear === prevYear ? rev.fyTotalInclKs : null;
       out.revError = revOk ? null : (rev && rev.error);
       out.band = adSpendBand(out.pct);
     }
@@ -791,8 +793,8 @@
         '<td class="num">' + (i.cover !== null ? num(i.cover, 1) : "—") + "</td>" +
         '<td style="color:' + color + ';font-weight:700;">' + (i.band ? esc(BANDS.inventory.words[i.band]) : "—") + "</td></tr>" +
         (isFlag ? '<tr class="flag-note"><td colspan="8">⚠️ ' + reorderOwnerText() +
-          " — Lena's account: ~1 month of cover, no reorder placed. This file (" + esc(dayLabel(inv.snapshotDate)) + "): " + (i.avail !== null ? num(i.avail, 0) : "—") + " available, ≈" +
-          (i.cover !== null ? num(i.cover, 0) : "—") + " days of cover.</td></tr>" : "");
+          " — " + (i.cover !== null ? "~" + num(i.cover, 0) + " days of cover (recalculated)" : "days of cover not available") +
+          " vs. Lena's account of ~1 month — roughly consistent, worth a quick confirmation with Marco, not an open conflict.</td></tr>" : "");
     }).join("");
     return sectionOwnerHead("stock") +
       '<div class="chart-card"><h2 class="section">Reorder status — full detail' + STAR + ' <span class="stale-chip">' + esc(staleLabel(inv)) + "</span></h2>" +
@@ -830,7 +832,7 @@
         '<h3 class="group-head">FY' + esc(mkt.prevYear) + "</h3>" +
         '<div class="row r2">' +
           '<div class="chart-card light"><div class="lbl">Ad Spend, Full Year</div><div class="val" style="font-size:22px;">' + (mkt.fySpendPrev !== null ? money(mkt.fySpendPrev) : "—") + " " + bandPill("adSpend", adSpendBand(fyPct)) + "</div>" +
-            '<div class="det">' + (fyPct !== null ? (fyPct * 100).toFixed(1) + "% of " + money2(mkt.fyRevenuePrev) + " revenue (Amazon + Shopify, Kickstarter excluded)" : "% of revenue not available") + "</div>" + calcLine() + "</div>" +
+            '<div class="det">' + (fyPct !== null ? (fyPct * 100).toFixed(1) + "% of " + money2(mkt.fyRevenuePrev) + " total revenue (Amazon + Shopify + Kickstarter)" : "% of revenue not available") + "</div>" + calcLine() + "</div>" +
           '<div class="chart-card"><div class="lbl">Net profit after ads</div><div class="val" style="font-size:22px;">' + (mkt.profitTotal !== null && mkt.profitTotal !== undefined ? money(mkt.profitTotal) : "—") + "</div>" +
             '<div class="det">' + (mkt.products ? mkt.products.filter(function (p) { return p.v > 0; }).length + " profitable · " + mkt.products.filter(function (p) { return p.v < 0; }).length + " losing money · FY2025 annual — no monthly breakdown exists" : esc(mkt.profitError || "")) + "</div></div>" +
         "</div>";
@@ -912,10 +914,11 @@
         '<tr><th>KPI</th><th style="color:var(--red)">Red</th><th style="color:#92400E">Amber</th><th style="color:#047857">Green</th></tr>' +
         "<tr><td>Revenue</td><td>Below target — flag to Lena (more than 10% below the same month last year)</td><td>Watch — within 10% of last year</td><td>On track (at or above the same month last year)</td></tr>" +
         "<tr><td>Inventory</td><td>PO Now (on hand at or below the reorder point)</td><td>Watch — Next PO Cycle (within 14 days' sell-through above the reorder point)</td><td>Healthy Stock</td></tr>" +
-        "<tr><td>Marketing &amp; Ads (ad spend %)</td><td>PO Review (&gt;15%, proposed)</td><td>Watch (10–15%, proposed)</td><td>On track (≤10%, proposed)</td></tr>" +
+        "<tr><td>Marketing &amp; Ads (ad spend %)</td><td>Act now — review spend (&gt;15%, proposed)</td><td>Watch (10–15%, proposed)</td><td>On track (≤10%, proposed)</td></tr>" +
         "<tr><td>Marketing &amp; Ads (profit after ads)</td><td>Losing money — review ad spend</td><td>— (no amber tier)</td><td>Profitable</td></tr>" +
       "</table></div>" +
-      '<div class="det" style="margin:10px 0 24px;">Marketing\'s ad-spend-% thresholds (15%/10%) are proposed by us, pending sign-off — not confirmed.</div>' +
+      '<div class="det" style="margin:10px 0 6px;">Marketing\'s ad-spend-% thresholds (15%/10%) are proposed by us, pending sign-off — not confirmed.</div>' +
+      '<div class="det" style="margin:0 0 24px;">FY ad spend ratio: This ratio uses total revenue including Kickstarter, unlike the Amazon+Shopify-only basis used for revenue trend metrics elsewhere, because it measures company-wide spend efficiency, not channel trend.</div>' +
       '<h2 class="section">Decision Matrix</h2><div class="table-wrap"><table class="dtbl">' +
         "<tr><th>KPI</th><th>Decision point</th><th>Current rule</th><th>Status</th></tr>" +
         grp("Revenue") +
@@ -924,8 +927,9 @@
         grp("Inventory") +
         row("Inventory", "Reorder lead time", "8 weeks (6wk factory + 2wk buffer)", st("confirmed", "Confirmed — Stacey, 13 Oct 2026")) +
         row("Inventory", "Peak/low season split", "Not used — no data exists", st("pending", "Pending — our PO Now count (" + (inv.error ? "—" : inv.counts.red) + ") differs from a peer pod's")) +
-        row("Inventory", "Grill Pro's real current count", "Lena: ~1 month of cover. File (" + (inv.error ? "D10-07" : esc(dayLabel(inv.snapshotDate))) + "): " +
-          (gp ? num(gp.avail, 0) + " available, ≈" + num(gp.cover, 0) + " days of cover" : "not available"), st("pending", "Pending — confirm with Marco")) +
+        row("Inventory", "Grill Pro cover",
+          "Grill Pro: " + (gp && gp.cover !== null ? "~" + num(gp.cover, 0) + " days of cover (recalculated)" : "days of cover not available") +
+          " vs. Lena's account of ~1 month — roughly consistent, worth a quick confirmation with Marco, not an open conflict.", st("pending", "Quick confirmation — Marco")) +
         grp("Marketing &amp; Ads") +
         row("Marketing", "Main KPI metric", "Ad spend $, latest closed quarter (Q1), matching Revenue's cadence", st("decided", "Decided")) +
         row("Marketing", "Band thresholds for ad-spend %", "Proposed: Green ≤10%, Amber 10–15%, Red &gt;15%", st("pending", "Pending — needs sign-off")) +
