@@ -138,8 +138,15 @@ create table if not exists public."d10_02_revenue_by_month" (
   "Kickstarter (recognized when rewards ship)" numeric,
   "Total revenue" numeric,
   "Kickstarter pledges collected, net of fees (cash, not revenue)" numeric,
-  "Books" text
+  "Books" text,
+  "updated_at" timestamptz default now()
 );
+do $$ begin
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'd10_02_revenue_by_month' and column_name = 'updated_at') then
+    alter table public."d10_02_revenue_by_month" add column "updated_at" timestamptz;
+    alter table public."d10_02_revenue_by_month" alter column "updated_at" set default now();
+  end if;
+end $$;
 do $$ begin
   if not exists (select 1 from pg_constraint where conrelid = 'public."d10_02_revenue_by_month"'::regclass and conname = 'd10_02_revenue_by_month_Month_key') then
     alter table public."d10_02_revenue_by_month" add constraint "d10_02_revenue_by_month_Month_key" unique ("Month");

@@ -10,11 +10,13 @@
 --        - MONTH NOT IN THE TABLE YET -> it ADDS a new row for that month:
 --            Amazon and Shopify = this batch's totals, Kickstarter = 0,
 --            Kickstarter pledges = 0, Total revenue = Amazon + Shopify,
---            Books = 'Open - not yet closed'.
+--            Books = 'Open - not yet closed', updated_at = now.
 --        - MONTH ALREADY IN THE TABLE -> it ADDS this batch's totals ON TOP OF the
 --            numbers already there (Amazon, Shopify and Total revenue all go up by
---            this batch's amounts). It never replaces them, and it leaves Books and
---            Kickstarter alone.
+--            this batch's amounts) and updated_at is set to now. It never replaces
+--            the amounts, and it leaves Books and Kickstarter alone.
+--      updated_at is what the dashboard shows as "Data as of". It only changes
+--      when this query actually adds or updates a month, never when nothing is staged.
 --   4. Empties the staging table, so the same batch can't be counted twice.
 --   5. Shows a small table of what it did: each month touched, whether that row was
 --      "added" or "updated", the amounts this batch added, and the month's new totals.
@@ -108,14 +110,15 @@ upserted as (
     (source_row, "Month",
      "Amazon (net of refunds)", "Shopify (net of discounts and returns)",
      "Kickstarter (recognized when rewards ship)", "Total revenue",
-     "Kickstarter pledges collected, net of fees (cash, not revenue)", "Books")
+     "Kickstarter pledges collected, net of fees (cash, not revenue)", "Books", updated_at)
   select
     (select coalesce(max(source_row), 0) from public.d10_02_revenue_by_month)
       + row_number() over (partition by b.is_new order by b.month),
     b.month,
     b.amazon, b.shopify,
     0.00, b.amazon + b.shopify,
-    0.00, 'Open - not yet closed'
+    0.00, 'Open - not yet closed',
+    now()
   from batch_new b
   order by b.month
   -- Month already exists -> ADD this batch's amounts to what's there; don't replace.
@@ -123,10 +126,11 @@ upserted as (
   on conflict ("Month") do update set
     "Amazon (net of refunds)"                = coalesce(r."Amazon (net of refunds)", 0)                + excluded."Amazon (net of refunds)",
     "Shopify (net of discounts and returns)" = coalesce(r."Shopify (net of discounts and returns)", 0) + excluded."Shopify (net of discounts and returns)",
-    "Total revenue"                          = coalesce(r."Total revenue", 0)                          + excluded."Total revenue"
+    "Total revenue"                          = coalesce(r."Total revenue", 0)                          + excluded."Total revenue",
+    updated_at                               = now()
   -- xmax = 0 is Postgres' marker for "this row was just inserted" (vs. updated).
   returning r."Month", (r.xmax = 0) as was_added,
-            r."Amazon (net of refunds)", r."Shopify (net of discounts and returns)", r."Total revenue", r."Books"
+            r."Amazon (net of refunds)", r."Shopify (net of discounts and returns)", r."Total revenue", r."Books", r.updated_at
 ),
 -- B3. Empty the staging table (only the rows this run read).
 emptied as (
@@ -144,6 +148,7 @@ select
   u."Shopify (net of discounts and returns)"                     as shopify_now,
   u."Total revenue"                                              as total_revenue_now,
   u."Books"                                                      as books,
+  u.updated_at                                                   as updated_at,
   (select count(*) from emptied)                                 as staging_rows_used
 from upserted u
 join batch b on b.month = u."Month"

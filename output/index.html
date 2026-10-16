@@ -91,6 +91,8 @@
   .star { color: #F59E0B; font-weight: 800; margin-left: 4px; }
   .na { color: var(--grey); }
   .open-note { font-size: 10.5px; color: #92400E; margin-top: 4px; }
+  .data-asof { font-size: 12px; color: var(--mut); margin: 0 0 8px; }
+  .data-asof.small { font-size: 11px; color: inherit; opacity: .85; margin: 6px 0 0; }
   .profit-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 90px; gap: 10px; align-items: center; margin-bottom: 8px; font-size: 13px; }
   .profit-row .track { width: 100%; }
   .profit-row .pv { text-align: right; font-weight: 700; white-space: nowrap; }
@@ -317,8 +319,27 @@
     amazon: "Amazon (net of refunds)",
     shopify: "Shopify (net of discounts and returns)",
     kickstarter: "Kickstarter (recognized when rewards ship)",
-    books: "Books"
+    books: "Books",
+    updatedAt: "updated_at"   // when the row's numbers last changed (set by supabase/revenue_update_query.sql)
   };
+  // "Jan–Apr" for consecutive months, else "Jan, Mar, Apr".
+  function monthRangeLabel(nums) {
+    if (!nums.length) return "";
+    var consecutive = nums.every(function (n, i) { return i === 0 || n === nums[i - 1] + 1; });
+    if (nums.length === 1) return MONTHS_SHORT[nums[0] - 1];
+    return consecutive ? MONTHS_SHORT[nums[0] - 1] + "–" + MONTHS_SHORT[nums[nums.length - 1] - 1]
+      : nums.map(function (n) { return MONTHS_SHORT[n - 1]; }).join(", ");
+  }
+  // Latest stored updated_at across the revenue rows: when the data last changed, not when the page loaded.
+  function revenueDataAsOf(rows) {
+    var hasColumn = rows.some(function (r) { return Object.prototype.hasOwnProperty.call(r, REV_COLS.updatedAt); });
+    var latest = null;
+    rows.forEach(function (r) {
+      var ms = r[REV_COLS.updatedAt] ? Date.parse(r[REV_COLS.updatedAt]) : NaN;
+      if (!isNaN(ms) && (latest === null || ms > latest)) latest = ms;
+    });
+    return { hasColumn: hasColumn, at: latest === null ? null : new Date(latest) };
+  }
   function sumOf(list, key) {
     if (!list.length || list.some(function (m) { return m[key] === null; })) return null;
     return list.reduce(function (a, m) { return a + m[key]; }, 0);
@@ -346,6 +367,13 @@
     var fy = prevYear ? byYear(prevYear) : [];
     var ytd = thisYear ? byYear(thisYear) : [];
     var openIn = function (list) { return list.filter(function (m) { return !m.closed; }).map(function (m) { return shortMonth(m.ym); }); };
+    // Year-over-year period for the Executive Summary comparisons: every CLOSED month of this year,
+    // against the same calendar months of last year (same closed-only rule as the single-month card).
+    // Months not yet closed are shown separately as received-so-far, never added to the comparison.
+    var periodMonths = ytd.filter(function (m) { return m.closed; });
+    var pendingMonths = ytd.filter(function (m) { return !m.closed; });
+    var periodNums = periodMonths.map(function (m) { return +m.ym.slice(5, 7); });
+    var periodPrev = fy.filter(function (m) { return periodNums.indexOf(+m.ym.slice(5, 7)) >= 0; });
     return {
       months: months, byYear: byYear, latest: latest, lastYear: lastYear, thisYear: thisYear, prevYear: prevYear,
       band: latest && lastYear ? revenueBand(latest.total, lastYear.total) : null,
@@ -357,8 +385,34 @@
       // Total revenue including Kickstarter: used only for the FY ad-spend ratio (see Data Notes).
       fyTotalInclKs: fy.length === 12 && sumOf(fy, "total") !== null && sumOf(fy, "kickstarter") !== null ? sumOf(fy, "total") + sumOf(fy, "kickstarter") : null,
       ytdTotal: sumOf(ytd, "total"), ytdMonths: ytd.length, ytdOpen: openIn(ytd),
+      periodLabel: monthRangeLabel(periodNums),
+      period: function (key) {
+        return { prev: periodNums.length && periodPrev.length === periodNums.length ? sumOf(periodPrev, key) : null,
+                 cur: periodNums.length ? sumOf(periodMonths, key) : null };
+      },
+      pending: function (key) { return pendingMonths.map(function (m) { return { label: shortMonth(m.ym), v: m[key] }; }); },
+      dataAsOf: revenueDataAsOf(t.rows),
       ksMonths: months.filter(function (m) { return m.kickstarter > 0; })
     };
+  }
+  // "Data as of": the newest stored updated_at in d10_02, never the page-load time.
+  function dataAsOfLine(rev, small) {
+    var d = rev.dataAsOf, txt;
+    if (d.at) {
+      txt = 'Data as of <time datetime="' + d.at.toISOString() + '" title="When the revenue figures last changed in Supabase (updated_at)">' +
+        esc(d.at.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short" })) + "</time>";
+    } else {
+      txt = "Data as of: not recorded — " + (d.hasColumn ? "these rows were loaded before change times were tracked; the next revenue update will set it"
+        : "the updated_at column isn't in Supabase yet (re-run supabase/schema.sql)");
+    }
+    return '<div class="data-asof' + (small ? " small" : "") + '">' + txt + "</div>";
+  }
+  // Months not yet closed: received-so-far totals, labelled as left out of the comparison above.
+  function pendingNote(list) {
+    if (!list.length) return "";
+    return '<div class="open-note">Not yet included above: ' + list.map(function (p) {
+      return esc(p.label) + " " + (p.v !== null ? money2(p.v) : "—") + " received so far";
+    }).join(", ") + " (" + (list.length === 1 ? "month" : "months") + " not yet closed)</div>";
   }
   function openNote(list) {
     return list.length ? '<div class="open-note">Includes ' + esc(list.join(", ")) + ", not yet closed</div>" : "";
@@ -603,28 +657,31 @@
       revCol = '<div class="stat-card c-revenue">' + STAT_ICONS.revenue + '<div class="s-lbl">Revenue' + STAR + "</div>" +
         '<div class="s-val">' + (L ? money2(L.total) : "Not available") + "</div>" + bandPill("revenue", rev.band) +
         '<div class="s-cap">' + (L ? esc(shortMonth(L.ym)) + ", latest closed month" + (LY ? " · vs. " + money2(LY.total) + " " + esc(shortMonth(LY.ym)) + " · " + signedPct((L.total - LY.total) / LY.total) : "") : "No closed month") + "</div>" +
-        sourcedLine() + sectionOwnerLine("revenue") + "</div>";
+        dataAsOfLine(rev, true) + sourcedLine() + sectionOwnerLine("revenue") + "</div>";
       var y0 = rev.prevYear, y1 = rev.thisYear;
-      [["total", "Overall Revenue — Q1 " + y0 + " vs. Q1 " + y1 + " (Jan–Mar)", "#4F46E5"],
-       ["amazon", "Revenue per Channel, Amazon — Q1 " + y0 + " vs. Q1 " + y1, "#FF9900"],
-       ["shopify", "Revenue per Channel, Shopify — Q1 " + y0 + " vs. Q1 " + y1, "#96BF48"]].forEach(function (g) {
-        var a = rev.q1(y0, g[0]), b = rev.q1(y1, g[0]);
+      // Period grows with the data: every closed month of this year vs. the same months last year.
+      var per = rev.periodLabel, perTitle = per ? per + " " + y0 + " vs. " + per + " " + y1 : y0 + " vs. " + y1;
+      var perMissing = per ? "the same months of " + y0 + " aren't all in d10_02" : "no " + y1 + " month is closed yet";
+      [["total", "Overall Revenue — " + perTitle, "#4F46E5"],
+       ["amazon", "Revenue per Channel, Amazon — " + perTitle, "#FF9900"],
+       ["shopify", "Revenue per Channel, Shopify — " + perTitle, "#96BF48"]].forEach(function (g) {
+        var p = rev.period(g[0]), a = p.prev, b = p.cur;
         revCol += '<div class="sub-card"><div class="sc-title">' + esc(g[1]) + "</div>" +
-          (a === null || b === null ? notAvailable("Q1 months missing in d10_02")
-            : compareBars(y0, a, y1, b, g[2], money2) + changeLine(a, b) + openNote(rev.q1Open)) + sourcedLine() + "</div>";
+          (a === null || b === null ? notAvailable(perMissing)
+            : compareBars(y0, a, y1, b, g[2], money2) + changeLine(a, b)) + pendingNote(rev.pending(g[0])) + sourcedLine() + "</div>";
       });
-      var ka = rev.q1(y0, "kickstarter"), kb = rev.q1(y1, "kickstarter");
+      var kp = rev.period("kickstarter"), ka = kp.prev, kb = kp.cur;
       var ksWhen = rev.ksMonths.length ? "in " + rev.ksMonths.map(function (m) { return shortMonth(m.ym); }).join(", ") : "";
-      revCol += '<div class="sub-card"><div class="sc-title">Revenue per Campaign, Kickstarter — Q1 ' + y0 + " vs. Q1 " + y1 + "</div>" +
-        (ka === null || kb === null ? notAvailable("Q1 months missing in d10_02")
+      revCol += '<div class="sub-card"><div class="sc-title">Revenue per Campaign, Kickstarter — ' + esc(perTitle) + "</div>" +
+        (ka === null || kb === null ? notAvailable(perMissing)
           : (function () {
               var bars = '<div class="compare-bars">' +
                 '<div class="cbar"><div class="bv">' + money2(ka) + '</div><div class="bf" style="height:' + (ka || kb ? Math.max(2, Math.round(ka / Math.max(ka, kb) * 63)) : 8) + 'px;background:#CBD5E1;"></div><div class="bl">' + y0 + "</div></div>" +
                 '<div class="cbar' + (ka || kb ? " hi" : "") + '"><div class="bv">' + money2(kb) + '</div><div class="bf" style="height:' + (ka || kb ? Math.max(2, Math.round(kb / Math.max(ka, kb) * 63)) : 8) + 'px;background:#F4A300;"></div><div class="bl">' + y1 + "</div></div></div>";
               return bars + (ka === 0 && kb === 0
-                ? '<div class="det" style="text-align:center;">No activity in Q1 of either year — Kickstarter revenue is recognized once, ' + esc(ksWhen) + (ksWhen ? ", " : "") + "when rewards ship, not spread across months</div>"
+                ? '<div class="det" style="text-align:center;">No activity in ' + esc(per) + " of either year — Kickstarter revenue is recognized once, " + esc(ksWhen) + (ksWhen ? ", " : "") + "when rewards ship, not spread across months</div>"
                 : changeLine(ka, kb));
-            })()) + sourcedLine() + "</div>";
+            })()) + pendingNote(rev.pending("kickstarter")) + sourcedLine() + "</div>";
     }
 
     // Inventory column
@@ -747,7 +804,7 @@
           (rev.fyAvg !== null ? " · dashed line = FY" + y0 + " monthly average, " + money2(rev.fyAvg) : "") + "</div>" +
         lineChart([{ data: s25.data, color: "#CBD5E1", label: y0 }, { data: s26.data, open: s26.open, color: "#4F46E5", label: y1, dots: true }], rev.fyAvg,
           { label: "Monthly revenue, " + y0 + " vs " + y1, avgLabel: "FY" + y0 + " average" }) + sourcedLine() + "</div>" +
-      '<div class="chart-card"><h2 class="section">Monthly figures</h2>' + monthTable(rev, "total", true) + sourcedLine() + "</div>" +
+      '<div class="chart-card"><h2 class="section">Monthly figures</h2>' + dataAsOfLine(rev, false) + monthTable(rev, "total", true) + sourcedLine() + "</div>" +
       '<h3 class="group-head">Revenue by Channel</h3>' +
       '<div class="summary-widget light"><div class="lbl">Current split</div>' +
         '<div style="display:flex;gap:24px;margin-top:6px;flex-wrap:wrap;">' + channelNow("amazon", "Amazon") + channelNow("shopify", "Shopify") + "</div>" +
@@ -918,7 +975,8 @@
         "<tr><td>Marketing &amp; Ads (profit after ads)</td><td>Losing money — review ad spend</td><td>— (no amber tier)</td><td>Profitable</td></tr>" +
       "</table></div>" +
       '<div class="det" style="margin:10px 0 6px;">Marketing\'s ad-spend-% thresholds (15%/10%) are proposed by us, pending sign-off — not confirmed.</div>' +
-      '<div class="det" style="margin:0 0 24px;">FY ad spend ratio: This ratio uses total revenue including Kickstarter, unlike the Amazon+Shopify-only basis used for revenue trend metrics elsewhere, because it measures company-wide spend efficiency, not channel trend.</div>' +
+      '<div class="det" style="margin:0 0 6px;">FY ad spend ratio: This ratio uses total revenue including Kickstarter, unlike the Amazon+Shopify-only basis used for revenue trend metrics elsewhere, because it measures company-wide spend efficiency, not channel trend.</div>' +
+      '<div class="det" style="margin:0 0 24px;">Revenue "Data as of": only the saved revenue update query (supabase/revenue_update_query.sql) moves this time. Edits typed directly into the Supabase Table Editor change the figures but not "Data as of".</div>' +
       '<h2 class="section">Decision Matrix</h2><div class="table-wrap"><table class="dtbl">' +
         "<tr><th>KPI</th><th>Decision point</th><th>Current rule</th><th>Status</th></tr>" +
         grp("Revenue") +
