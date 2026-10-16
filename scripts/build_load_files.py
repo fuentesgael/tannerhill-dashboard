@@ -137,6 +137,12 @@ SKU_CROSSWALK = [
 # can insert-or-update one row per month. Approved 15 Oct 2026; the only change to an existing table.
 UNIQUE_COLUMNS = {"d10_02_revenue_by_month": ["Month"]}
 
+# Schema-only columns: in the table, not in the load CSV (Postgres fills them). updated_at records
+# when a row's numbers last changed; the dashboard shows the latest one as "Data as of".
+# Approved 16 Oct 2026. On an already-deployed table the column is added with no value for the
+# existing rows (their change time was never recorded), then defaults to now() for new rows.
+EXTRA_COLUMNS = {"d10_02_revenue_by_month": [("updated_at", "timestamptz", "now()")]}
+
 # Staging table for weekly revenue batch files (sources/d11_revenue_batches/). Columns match the
 # batch files' header exactly. Loaded by a project member through the Supabase dashboard, never read
 # by the public page, so it gets row level security with no anon policy (anon can't read or write it).
@@ -368,8 +374,17 @@ def main():
         sql.append("create table if not exists %s (" % t)
         uniq = UNIQUE_COLUMNS.get(name, [])
         defs = ["  source_row integer primary key"] + ["  %s %s%s" % (qi(c), SQL_TYPE[cl], " unique" if c in uniq else "") for c, cl in cols]
+        defs += ["  %s %s default %s" % (qi(c), ty, dflt) for c, ty, dflt in EXTRA_COLUMNS.get(name, [])]
         sql.append(",\n".join(defs))
         sql.append(");")
+        for c, ty, dflt in EXTRA_COLUMNS.get(name, []):
+            # Same guard as the unique constraint below: reach a table that is already deployed.
+            sql.append("do $$ begin")
+            sql.append("  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '%s' and column_name = '%s') then" % (name, c))
+            sql.append("    alter table %s add column %s %s;" % (t, qi(c), ty))
+            sql.append("    alter table %s alter column %s set default %s;" % (t, qi(c), dflt))
+            sql.append("  end if;")
+            sql.append("end $$;")
         for c in uniq:
             # "create table if not exists" skips a table that is already deployed, so add the
             # constraint to an existing table too (Postgres' default name for the inline one).
