@@ -367,9 +367,12 @@
     var fy = prevYear ? byYear(prevYear) : [];
     var ytd = thisYear ? byYear(thisYear) : [];
     var openIn = function (list) { return list.filter(function (m) { return !m.closed; }).map(function (m) { return shortMonth(m.ym); }); };
-    // Year-over-year period for the Executive Summary comparisons: every month of this year that
-    // has a row (closed or not), against the same calendar months of last year.
-    var periodNums = ytd.map(function (m) { return +m.ym.slice(5, 7); });
+    // Year-over-year period for the Executive Summary comparisons: every CLOSED month of this year,
+    // against the same calendar months of last year (same closed-only rule as the single-month card).
+    // Months not yet closed are shown separately as received-so-far, never added to the comparison.
+    var periodMonths = ytd.filter(function (m) { return m.closed; });
+    var pendingMonths = ytd.filter(function (m) { return !m.closed; });
+    var periodNums = periodMonths.map(function (m) { return +m.ym.slice(5, 7); });
     var periodPrev = fy.filter(function (m) { return periodNums.indexOf(+m.ym.slice(5, 7)) >= 0; });
     return {
       months: months, byYear: byYear, latest: latest, lastYear: lastYear, thisYear: thisYear, prevYear: prevYear,
@@ -385,9 +388,9 @@
       periodLabel: monthRangeLabel(periodNums),
       period: function (key) {
         return { prev: periodNums.length && periodPrev.length === periodNums.length ? sumOf(periodPrev, key) : null,
-                 cur: periodNums.length ? sumOf(ytd, key) : null };
+                 cur: periodNums.length ? sumOf(periodMonths, key) : null };
       },
-      periodOpen: openIn(ytd),
+      pending: function (key) { return pendingMonths.map(function (m) { return { label: shortMonth(m.ym), v: m[key] }; }); },
       dataAsOf: revenueDataAsOf(t.rows),
       ksMonths: months.filter(function (m) { return m.kickstarter > 0; })
     };
@@ -403,6 +406,13 @@
         : "the updated_at column isn't in Supabase yet (re-run supabase/schema.sql)");
     }
     return '<div class="data-asof' + (small ? " small" : "") + '">' + txt + "</div>";
+  }
+  // Months not yet closed: received-so-far totals, labelled as left out of the comparison above.
+  function pendingNote(list) {
+    if (!list.length) return "";
+    return '<div class="open-note">Not yet included above: ' + list.map(function (p) {
+      return esc(p.label) + " " + (p.v !== null ? money2(p.v) : "—") + " received so far";
+    }).join(", ") + " (" + (list.length === 1 ? "month" : "months") + " not yet closed)</div>";
   }
   function openNote(list) {
     return list.length ? '<div class="open-note">Includes ' + esc(list.join(", ")) + ", not yet closed</div>" : "";
@@ -649,16 +659,16 @@
         '<div class="s-cap">' + (L ? esc(shortMonth(L.ym)) + ", latest closed month" + (LY ? " · vs. " + money2(LY.total) + " " + esc(shortMonth(LY.ym)) + " · " + signedPct((L.total - LY.total) / LY.total) : "") : "No closed month") + "</div>" +
         dataAsOfLine(rev, true) + sourcedLine() + sectionOwnerLine("revenue") + "</div>";
       var y0 = rev.prevYear, y1 = rev.thisYear;
-      // Period grows with the data: every month of this year with a row vs. the same months last year.
-      var per = rev.periodLabel, perTitle = per + " " + y0 + " vs. " + per + " " + y1;
-      var perMissing = "the same months of " + y0 + " aren't all in d10_02";
+      // Period grows with the data: every closed month of this year vs. the same months last year.
+      var per = rev.periodLabel, perTitle = per ? per + " " + y0 + " vs. " + per + " " + y1 : y0 + " vs. " + y1;
+      var perMissing = per ? "the same months of " + y0 + " aren't all in d10_02" : "no " + y1 + " month is closed yet";
       [["total", "Overall Revenue — " + perTitle, "#4F46E5"],
        ["amazon", "Revenue per Channel, Amazon — " + perTitle, "#FF9900"],
        ["shopify", "Revenue per Channel, Shopify — " + perTitle, "#96BF48"]].forEach(function (g) {
         var p = rev.period(g[0]), a = p.prev, b = p.cur;
         revCol += '<div class="sub-card"><div class="sc-title">' + esc(g[1]) + "</div>" +
           (a === null || b === null ? notAvailable(perMissing)
-            : compareBars(y0, a, y1, b, g[2], money2) + changeLine(a, b) + openNote(rev.periodOpen)) + sourcedLine() + "</div>";
+            : compareBars(y0, a, y1, b, g[2], money2) + changeLine(a, b)) + pendingNote(rev.pending(g[0])) + sourcedLine() + "</div>";
       });
       var kp = rev.period("kickstarter"), ka = kp.prev, kb = kp.cur;
       var ksWhen = rev.ksMonths.length ? "in " + rev.ksMonths.map(function (m) { return shortMonth(m.ym); }).join(", ") : "";
@@ -671,7 +681,7 @@
               return bars + (ka === 0 && kb === 0
                 ? '<div class="det" style="text-align:center;">No activity in ' + esc(per) + " of either year — Kickstarter revenue is recognized once, " + esc(ksWhen) + (ksWhen ? ", " : "") + "when rewards ship, not spread across months</div>"
                 : changeLine(ka, kb));
-            })()) + sourcedLine() + "</div>";
+            })()) + pendingNote(rev.pending("kickstarter")) + sourcedLine() + "</div>";
     }
 
     // Inventory column
@@ -965,7 +975,8 @@
         "<tr><td>Marketing &amp; Ads (profit after ads)</td><td>Losing money — review ad spend</td><td>— (no amber tier)</td><td>Profitable</td></tr>" +
       "</table></div>" +
       '<div class="det" style="margin:10px 0 6px;">Marketing\'s ad-spend-% thresholds (15%/10%) are proposed by us, pending sign-off — not confirmed.</div>' +
-      '<div class="det" style="margin:0 0 24px;">FY ad spend ratio: This ratio uses total revenue including Kickstarter, unlike the Amazon+Shopify-only basis used for revenue trend metrics elsewhere, because it measures company-wide spend efficiency, not channel trend.</div>' +
+      '<div class="det" style="margin:0 0 6px;">FY ad spend ratio: This ratio uses total revenue including Kickstarter, unlike the Amazon+Shopify-only basis used for revenue trend metrics elsewhere, because it measures company-wide spend efficiency, not channel trend.</div>' +
+      '<div class="det" style="margin:0 0 24px;">Revenue "Data as of": only the saved revenue update query (supabase/revenue_update_query.sql) moves this time. Edits typed directly into the Supabase Table Editor change the figures but not "Data as of".</div>' +
       '<h2 class="section">Decision Matrix</h2><div class="table-wrap"><table class="dtbl">' +
         "<tr><th>KPI</th><th>Decision point</th><th>Current rule</th><th>Status</th></tr>" +
         grp("Revenue") +
